@@ -1,0 +1,802 @@
+--------- beginning of main
+08-09 14:46:40.905 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 934,header 0xec9987c0 
+08-09 14:46:40.905 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 934, timeStamp: 1001105320000, inSize: 849, inOffset: 0
+08-09 14:46:40.905 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:40.905 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=1
+08-09 14:46:40.906 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105160000
+08-09 14:46:40.906 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=0
+08-09 14:46:40.906 I/VSP     (  678): AV1DecDecode,240,picid 930,header 0xec99a830 
+08-09 14:46:40.906 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 930, consume byte: 849
+08-09 14:46:40.906 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 930, pts: 1001105160000
+08-09 14:46:40.907 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 930
+08-09 14:46:40.907 I/mali_gralloc(  678): unregister: id=0x2a30001d2c5, base=0xea715000, importpid=678
+08-09 14:46:40.907 I/mali_gralloc(19712): register: id=0x2a30001d2c5, importpid=678
+08-09 14:46:40.907 V/SimpleUnisocC2Component(  678): processed frame #934
+08-09 14:46:40.907 I/mali_gralloc(19712): unregister: id=0x2a30001d2c5, base=0x0, importpid=19712
+08-09 14:46:40.907 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 934
+08-09 14:46:40.907 V/SimpleUnisocC2Component(  678): start processing frame #935
+08-09 14:46:40.915 D/TranCellSignalStrengthImpl( 1382): [LTE] dbm: -80
+08-09 14:46:40.916 D/TranCellSignalStrengthImpl( 1382): [LTE] dbm: -80
+08-09 14:46:40.919 D/TranCellSignalStrengthImpl( 1080): [LTE] dbm: -80
+08-09 14:46:40.921 D/TranPhoneInterfaceManagerEx( 1382): [onSignalStrengthsChanged]
+08-09 14:46:40.921 D/TranSmartAllocController( 1382): mDefaultDataSubId = 9  subId = 9
+08-09 14:46:40.921 D/TranSmartAllocController( 1382): mSupport = true  mBwAllocEnable = true mSimReady =true  mScreenOn =true
+08-09 14:46:40.921 D/Dito    ( 1458): mcc=404, mnc=27
+08-09 14:46:40.922 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709475
+08-09 14:46:40.924 I/DefaultDialerCache( 1080): mPreviousDefaultDialer = com.sh.smart.caller, currentDefaultDialer = com.sh.smart.caller
+08-09 14:46:40.924 I/MultipleDialerDeviceUtil( 1080): isMultipleDialerDevice start 0
+--------- beginning of system
+08-09 14:46:40.924 I/Telecom ( 1080): DefaultDialerCache: Package Manager could not find ComponentName:com.android.incallui: TSI.getCallStateUsingPackage@/ro
+08-09 14:46:40.925 D/UpLinkDataController( 1382): onSignalStrengthsChanged
+08-09 14:46:40.926 D/UpLinkDataController( 1382): IdleState.processMessage:2
+08-09 14:46:40.939 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709476
+08-09 14:46:40.943 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:40.954 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec99ea30,iRefCount:0
+08-09 14:46:40.954 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:40.954 I/mali_gralloc(  678): register: id=0x2a30001d2cb, importpid=678
+08-09 14:46:40.955 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:40.955 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 935,header 0xec99a830 
+08-09 14:46:40.955 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 935, timeStamp: 1001105360000, inSize: 5, inOffset: 0
+08-09 14:46:40.955 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:40.957 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105200000
+08-09 14:46:40.958 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=0
+08-09 14:46:40.958 I/VSP     (  678): AV1DecDecode,240,picid 931,header 0xec998cd0 
+08-09 14:46:40.958 I/C2UnisocAv1Dec(  678): process, decRet: 0, 3ms, dec_out.frameEffective: 1, has_pic: 0, picId: 931, consume byte: 0
+08-09 14:46:40.958 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 931, pts: 1001105200000
+08-09 14:46:40.959 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 931
+08-09 14:46:40.959 I/mali_gralloc(  678): unregister: id=0x2a30001d2c7, base=0xe62b9000, importpid=678
+08-09 14:46:40.959 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:40.959 I/mali_gralloc(19712): register: id=0x2a30001d2c7, importpid=678
+08-09 14:46:40.959 I/mali_gralloc(19712): unregister: id=0x2a30001d2c7, base=0x0, importpid=19712
+08-09 14:46:40.959 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:40.959 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 935,header 0xec99a830 
+08-09 14:46:40.959 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 935, timeStamp: 1001105360000, inSize: 5, inOffset: 0
+08-09 14:46:40.960 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:40.960 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=1
+08-09 14:46:40.960 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105240000
+08-09 14:46:40.960 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=0
+08-09 14:46:40.960 I/VSP     (  678): AV1DecDecode,240,picid 932,header 0xec993a50 
+08-09 14:46:40.960 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 932, consume byte: 5
+08-09 14:46:40.960 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 932, pts: 1001105240000
+08-09 14:46:40.961 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 932
+08-09 14:46:40.961 I/mali_gralloc(  678): unregister: id=0x2a30001d2c8, base=0xe61aa000, importpid=678
+08-09 14:46:40.961 I/mali_gralloc(19712): register: id=0x2a30001d2c8, importpid=678
+08-09 14:46:40.961 I/mali_gralloc(19712): unregister: id=0x2a30001d2c8, base=0x0, importpid=19712
+08-09 14:46:40.961 V/SimpleUnisocC2Component(  678): processed frame #935
+08-09 14:46:40.961 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 935
+08-09 14:46:40.961 V/SimpleUnisocC2Component(  678): start processing frame #936
+08-09 14:46:40.972 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709478
+08-09 14:46:40.977 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:40.987 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec993420,iRefCount:0
+08-09 14:46:40.987 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:40.988 I/mali_gralloc(  678): register: id=0x2a30001d2bb, importpid=678
+08-09 14:46:40.988 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,93
+08-09 14:46:40.988 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 936,header 0xec998cd0 
+08-09 14:46:40.988 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 936, timeStamp: 1001105400000, inSize: 280, inOffset: 0
+08-09 14:46:40.988 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:40.989 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=1
+08-09 14:46:40.989 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105280000
+08-09 14:46:40.989 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=0
+08-09 14:46:40.989 I/VSP     (  678): AV1DecDecode,240,picid 933,header 0xec99c6c0 
+08-09 14:46:40.989 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 933, consume byte: 280
+08-09 14:46:40.989 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 933, pts: 1001105280000
+08-09 14:46:40.990 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 933
+08-09 14:46:40.990 I/mali_gralloc(  678): unregister: id=0x2a30001d2ca, base=0xe6084000, importpid=678
+08-09 14:46:40.990 I/mali_gralloc(19712): register: id=0x2a30001d2ca, importpid=678
+08-09 14:46:40.990 I/mali_gralloc(19712): unregister: id=0x2a30001d2ca, base=0x0, importpid=19712
+08-09 14:46:40.990 V/SimpleUnisocC2Component(  678): processed frame #936
+08-09 14:46:40.990 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 936
+08-09 14:46:40.990 V/SimpleUnisocC2Component(  678): start processing frame #937
+08-09 14:46:41.005 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709480
+08-09 14:46:41.017 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.021 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709481
+08-09 14:46:41.037 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98b2f0,iRefCount:0
+08-09 14:46:41.037 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.038 I/mali_gralloc(  678): register: id=0x2a30001d2bc, importpid=678
+08-09 14:46:41.038 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.038 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 937,header 0xec993a50 
+08-09 14:46:41.038 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 937, timeStamp: 1001105440000, inSize: 5, inOffset: 0
+08-09 14:46:41.038 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.038 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=1
+08-09 14:46:41.038 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:41.038 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 5
+08-09 14:46:41.039 V/SimpleUnisocC2Component(  678): processed frame #937
+08-09 14:46:41.039 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 937
+08-09 14:46:41.039 V/SimpleUnisocC2Component(  678): start processing frame #938
+08-09 14:46:41.055 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709483
+08-09 14:46:41.058 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.080 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98ca30,iRefCount:0
+08-09 14:46:41.080 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.080 I/mali_gralloc(  678): register: id=0x2a30001d2bd, importpid=678
+08-09 14:46:41.080 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,e1
+08-09 14:46:41.080 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 938,header 0xec99c6c0 
+08-09 14:46:41.080 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 938, timeStamp: 1001105480000, inSize: 1436, inOffset: 0
+08-09 14:46:41.081 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.081 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=1
+08-09 14:46:41.081 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105320000
+08-09 14:46:41.081 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=0
+08-09 14:46:41.082 I/VSP     (  678): AV1DecDecode,240,picid 934,header 0xec9987c0 
+08-09 14:46:41.082 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 934, consume byte: 1436
+08-09 14:46:41.082 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 934, pts: 1001105320000
+08-09 14:46:41.082 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 934
+08-09 14:46:41.082 I/mali_gralloc(  678): unregister: id=0x2a30001d2c9, base=0xe602f000, importpid=678
+08-09 14:46:41.082 V/SimpleUnisocC2Component(  678): processed frame #938
+08-09 14:46:41.082 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 938
+08-09 14:46:41.082 V/SimpleUnisocC2Component(  678): start processing frame #939
+08-09 14:46:41.083 I/mali_gralloc(19712): register: id=0x2a30001d2c9, importpid=678
+08-09 14:46:41.083 I/mali_gralloc(19712): unregister: id=0x2a30001d2c9, base=0x0, importpid=19712
+08-09 14:46:41.088 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709485
+08-09 14:46:41.096 W/TraceableOnGlobalLayout(19712): TraceableOnGlobalLayoutListener.onGlobalLayout[oxv] is called 650
+08-09 14:46:41.098 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.104 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98fe50,iRefCount:0
+08-09 14:46:41.104 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.104 I/mali_gralloc(  678): register: id=0x2a30001d2bf, importpid=678
+08-09 14:46:41.104 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.104 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 939,header 0xec9987c0 
+08-09 14:46:41.104 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 939, timeStamp: 1001105520000, inSize: 5, inOffset: 0
+08-09 14:46:41.105 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.105 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105360000
+08-09 14:46:41.105 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=0
+08-09 14:46:41.106 I/VSP     (  678): AV1DecDecode,240,picid 935,header 0xec99a830 
+08-09 14:46:41.106 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 0, picId: 935, consume byte: 0
+08-09 14:46:41.106 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 935, pts: 1001105360000
+08-09 14:46:41.106 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 935
+08-09 14:46:41.106 I/mali_gralloc(  678): unregister: id=0x2a30001d2cb, base=0xea715000, importpid=678
+08-09 14:46:41.106 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.106 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.106 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 939,header 0xec9987c0 
+08-09 14:46:41.106 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 939, timeStamp: 1001105520000, inSize: 5, inOffset: 0
+08-09 14:46:41.107 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.107 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105400000
+08-09 14:46:41.107 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=0
+08-09 14:46:41.107 I/VSP     (  678): AV1DecDecode,240,picid 936,header 0xec998cd0 
+08-09 14:46:41.107 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 0, picId: 936, consume byte: 0
+08-09 14:46:41.107 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 936, pts: 1001105400000
+08-09 14:46:41.108 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 936
+08-09 14:46:41.108 I/mali_gralloc(  678): unregister: id=0x2a30001d2bb, base=0xe62b9000, importpid=678
+08-09 14:46:41.108 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.108 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.108 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 939,header 0xec9987c0 
+08-09 14:46:41.108 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 939, timeStamp: 1001105520000, inSize: 5, inOffset: 0
+08-09 14:46:41.109 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.109 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=1
+08-09 14:46:41.109 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105440000
+08-09 14:46:41.109 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=0
+08-09 14:46:41.109 I/VSP     (  678): AV1DecDecode,240,picid 937,header 0xec993a50 
+08-09 14:46:41.109 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 937, consume byte: 5
+08-09 14:46:41.109 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 937, pts: 1001105440000
+08-09 14:46:41.110 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 937
+08-09 14:46:41.110 I/mali_gralloc(  678): unregister: id=0x2a30001d2bc, base=0xe61aa000, importpid=678
+08-09 14:46:41.110 V/SimpleUnisocC2Component(  678): processed frame #939
+08-09 14:46:41.110 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 939
+08-09 14:46:41.110 V/SimpleUnisocC2Component(  678): start processing frame #940
+08-09 14:46:41.111 I/mali_gralloc(19712): register: id=0x2a30001d2cb, importpid=678
+08-09 14:46:41.111 I/mali_gralloc(19712): unregister: id=0x2a30001d2cb, base=0x0, importpid=19712
+08-09 14:46:41.111 I/mali_gralloc(19712): register: id=0x2a30001d2bb, importpid=678
+08-09 14:46:41.111 I/mali_gralloc(19712): unregister: id=0x2a30001d2bb, base=0x0, importpid=19712
+08-09 14:46:41.112 I/mali_gralloc(19712): register: id=0x2a30001d2bc, importpid=678
+08-09 14:46:41.112 I/mali_gralloc(19712): unregister: id=0x2a30001d2bc, base=0x0, importpid=19712
+08-09 14:46:41.122 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709494
+08-09 14:46:41.138 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.154 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec99ea30,iRefCount:0
+08-09 14:46:41.154 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.154 I/mali_gralloc(  678): register: id=0x2a30001d2be, importpid=678
+08-09 14:46:41.154 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,c8
+08-09 14:46:41.154 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 940,header 0xec99a830 
+08-09 14:46:41.154 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 940, timeStamp: 1001105560000, inSize: 333, inOffset: 0
+08-09 14:46:41.155 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.155 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=1
+08-09 14:46:41.155 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:41.155 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 333
+08-09 14:46:41.155 V/SimpleUnisocC2Component(  678): processed frame #940
+08-09 14:46:41.155 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 940
+08-09 14:46:41.155 V/SimpleUnisocC2Component(  678): start processing frame #941
+08-09 14:46:41.171 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709504
+08-09 14:46:41.179 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.187 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec993420,iRefCount:0
+08-09 14:46:41.187 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.188 I/mali_gralloc(  678): register: id=0x2a30001d2c0, importpid=678
+08-09 14:46:41.188 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.188 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 941,header 0xec998cd0 
+08-09 14:46:41.188 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 941, timeStamp: 1001105600000, inSize: 5, inOffset: 0
+08-09 14:46:41.189 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.189 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=1
+08-09 14:46:41.189 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:41.189 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 5
+08-09 14:46:41.189 V/SimpleUnisocC2Component(  678): processed frame #941
+08-09 14:46:41.189 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 941
+08-09 14:46:41.189 V/SimpleUnisocC2Component(  678): start processing frame #942
+08-09 14:46:41.205 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709506
+08-09 14:46:41.222 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709507
+08-09 14:46:41.225 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.237 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98b2f0,iRefCount:0
+08-09 14:46:41.237 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.237 I/mali_gralloc(  678): register: id=0x2a30001d2c1, importpid=678
+08-09 14:46:41.238 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,ba
+08-09 14:46:41.238 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 942,header 0xec993a50 
+08-09 14:46:41.238 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 942, timeStamp: 1001105640000, inSize: 575, inOffset: 0
+08-09 14:46:41.238 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.241 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=1
+08-09 14:46:41.241 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105480000
+08-09 14:46:41.242 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=0
+08-09 14:46:41.242 I/VSP     (  678): AV1DecDecode,240,picid 938,header 0xec99c6c0 
+08-09 14:46:41.242 I/C2UnisocAv1Dec(  678): process, decRet: 0, 4ms, dec_out.frameEffective: 1, has_pic: 1, picId: 938, consume byte: 575
+08-09 14:46:41.242 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 938, pts: 1001105480000
+08-09 14:46:41.242 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 938
+08-09 14:46:41.242 I/mali_gralloc(  678): unregister: id=0x2a30001d2bd, base=0xe6084000, importpid=678
+08-09 14:46:41.243 V/SimpleUnisocC2Component(  678): processed frame #942
+08-09 14:46:41.243 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 942
+08-09 14:46:41.243 V/SimpleUnisocC2Component(  678): start processing frame #943
+08-09 14:46:41.244 I/mali_gralloc(19712): register: id=0x2a30001d2bd, importpid=678
+08-09 14:46:41.244 I/mali_gralloc(19712): unregister: id=0x2a30001d2bd, base=0x0, importpid=19712
+08-09 14:46:41.255 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709509
+08-09 14:46:41.258 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.280 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98ca30,iRefCount:0
+08-09 14:46:41.280 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.280 I/mali_gralloc(  678): register: id=0x2a30001d2c2, importpid=678
+08-09 14:46:41.281 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,a5
+08-09 14:46:41.281 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 943,header 0xec99c6c0 
+08-09 14:46:41.281 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 943, timeStamp: 1001105680000, inSize: 426, inOffset: 0
+08-09 14:46:41.281 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.281 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=1
+08-09 14:46:41.281 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105520000
+08-09 14:46:41.282 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=0
+08-09 14:46:41.282 I/VSP     (  678): AV1DecDecode,240,picid 939,header 0xec9987c0 
+08-09 14:46:41.282 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 939, consume byte: 426
+08-09 14:46:41.282 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 939, pts: 1001105520000
+08-09 14:46:41.282 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 939
+08-09 14:46:41.282 I/mali_gralloc(  678): unregister: id=0x2a30001d2bf, base=0xe602f000, importpid=678
+08-09 14:46:41.284 V/SimpleUnisocC2Component(  678): processed frame #943
+08-09 14:46:41.284 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 943
+08-09 14:46:41.284 V/SimpleUnisocC2Component(  678): start processing frame #944
+08-09 14:46:41.284 I/mali_gralloc(19712): register: id=0x2a30001d2bf, importpid=678
+08-09 14:46:41.284 I/mali_gralloc(19712): unregister: id=0x2a30001d2bf, base=0x0, importpid=19712
+08-09 14:46:41.288 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709511
+08-09 14:46:41.296 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.304 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98fe50,iRefCount:0
+08-09 14:46:41.304 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.304 I/mali_gralloc(  678): register: id=0x2a30001d2c3, importpid=678
+08-09 14:46:41.305 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.305 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 944,header 0xec9987c0 
+08-09 14:46:41.305 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 944, timeStamp: 1001105720000, inSize: 5, inOffset: 0
+08-09 14:46:41.305 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.305 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=1
+08-09 14:46:41.305 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105560000
+08-09 14:46:41.306 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=0
+08-09 14:46:41.306 I/VSP     (  678): AV1DecDecode,240,picid 940,header 0xec99a830 
+08-09 14:46:41.306 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 940, consume byte: 5
+08-09 14:46:41.306 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 940, pts: 1001105560000
+08-09 14:46:41.306 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 940
+08-09 14:46:41.306 I/mali_gralloc(  678): unregister: id=0x2a30001d2be, base=0xea715000, importpid=678
+08-09 14:46:41.307 V/SimpleUnisocC2Component(  678): processed frame #944
+08-09 14:46:41.307 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 944
+08-09 14:46:41.307 V/SimpleUnisocC2Component(  678): start processing frame #945
+08-09 14:46:41.307 I/mali_gralloc(19712): register: id=0x2a30001d2be, importpid=678
+08-09 14:46:41.307 I/mali_gralloc(19712): unregister: id=0x2a30001d2be, base=0x0, importpid=19712
+08-09 14:46:41.322 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709520
+08-09 14:46:41.329 W/Thread-13674( 1080): type=1400 audit(0.0:357528): avc: denied { read } for name="raw_data_als_thermal" dev="sysfs" ino=35845 scontext=u:r:system_server:s0 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0
+08-09 14:46:41.333 W/TranThermalBacklightCtrl( 1080): queryAmbientLux FileNotFoundException
+08-09 14:46:41.334 D/TranThermalBacklightCtrl( 1080): Brightness=0.26987097 AutoBackLight=true AmbientLux=111.29937 APTemp=44.087
+08-09 14:46:41.334 I/TranThermalBacklightCtrl( 1080): current status=level_1
+08-09 14:46:41.338 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.338 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709521
+08-09 14:46:41.354 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec99ea30,iRefCount:0
+08-09 14:46:41.354 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.355 I/mali_gralloc(  678): register: id=0x2a30001d2c4, importpid=678
+08-09 14:46:41.355 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,84
+08-09 14:46:41.355 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 945,header 0xec99a830 
+08-09 14:46:41.355 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 945, timeStamp: 1001105760000, inSize: 3072, inOffset: 0
+08-09 14:46:41.356 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.356 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=1
+08-09 14:46:41.356 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105600000
+08-09 14:46:41.357 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=0
+08-09 14:46:41.357 I/VSP     (  678): AV1DecDecode,240,picid 941,header 0xec998cd0 
+08-09 14:46:41.357 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 941, consume byte: 3072
+08-09 14:46:41.357 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 941, pts: 1001105600000
+08-09 14:46:41.358 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 941
+08-09 14:46:41.358 I/mali_gralloc(  678): unregister: id=0x2a30001d2c0, base=0xe62b9000, importpid=678
+08-09 14:46:41.358 I/mali_gralloc(19712): register: id=0x2a30001d2c0, importpid=678
+08-09 14:46:41.358 I/mali_gralloc(19712): unregister: id=0x2a30001d2c0, base=0x0, importpid=19712
+08-09 14:46:41.358 V/SimpleUnisocC2Component(  678): processed frame #945
+08-09 14:46:41.358 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 945
+08-09 14:46:41.358 V/SimpleUnisocC2Component(  678): start processing frame #946
+08-09 14:46:41.371 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709523
+08-09 14:46:41.382 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.387 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec993420,iRefCount:0
+08-09 14:46:41.387 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.387 I/mali_gralloc(  678): register: id=0x2a30001d2c6, importpid=678
+08-09 14:46:41.388 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.388 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 946,header 0xec998cd0 
+08-09 14:46:41.388 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 946, timeStamp: 1001105800000, inSize: 5, inOffset: 0
+08-09 14:46:41.389 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.389 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105640000
+08-09 14:46:41.390 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=0
+08-09 14:46:41.390 I/VSP     (  678): AV1DecDecode,240,picid 942,header 0xec993a50 
+08-09 14:46:41.391 I/C2UnisocAv1Dec(  678): process, decRet: 0, 3ms, dec_out.frameEffective: 1, has_pic: 0, picId: 942, consume byte: 0
+08-09 14:46:41.391 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 942, pts: 1001105640000
+08-09 14:46:41.392 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 942
+08-09 14:46:41.392 I/mali_gralloc(  678): unregister: id=0x2a30001d2c1, base=0xe61aa000, importpid=678
+08-09 14:46:41.392 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.392 I/mali_gralloc(19712): register: id=0x2a30001d2c1, importpid=678
+08-09 14:46:41.392 I/mali_gralloc(19712): unregister: id=0x2a30001d2c1, base=0x0, importpid=19712
+08-09 14:46:41.392 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.392 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 946,header 0xec998cd0 
+08-09 14:46:41.392 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 946, timeStamp: 1001105800000, inSize: 5, inOffset: 0
+08-09 14:46:41.392 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.393 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105680000
+08-09 14:46:41.393 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=0
+08-09 14:46:41.393 I/VSP     (  678): AV1DecDecode,240,picid 943,header 0xec99c6c0 
+08-09 14:46:41.393 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 0, picId: 943, consume byte: 0
+08-09 14:46:41.393 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 943, pts: 1001105680000
+08-09 14:46:41.395 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 943
+08-09 14:46:41.395 I/mali_gralloc(  678): unregister: id=0x2a30001d2c2, base=0xe6084000, importpid=678
+08-09 14:46:41.395 I/mali_gralloc(19712): register: id=0x2a30001d2c2, importpid=678
+08-09 14:46:41.395 I/mali_gralloc(19712): unregister: id=0x2a30001d2c2, base=0x0, importpid=19712
+08-09 14:46:41.395 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.395 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.395 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 946,header 0xec998cd0 
+08-09 14:46:41.395 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 946, timeStamp: 1001105800000, inSize: 5, inOffset: 0
+08-09 14:46:41.396 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.396 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105720000
+08-09 14:46:41.396 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=0
+08-09 14:46:41.397 I/VSP     (  678): AV1DecDecode,240,picid 944,header 0xec9987c0 
+08-09 14:46:41.397 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 0, picId: 944, consume byte: 0
+08-09 14:46:41.397 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 944, pts: 1001105720000
+08-09 14:46:41.398 I/mali_gralloc(19712): register: id=0x2a30001d2c3, importpid=678
+08-09 14:46:41.398 I/mali_gralloc(19712): unregister: id=0x2a30001d2c3, base=0x0, importpid=19712
+08-09 14:46:41.398 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 944
+08-09 14:46:41.398 I/mali_gralloc(  678): unregister: id=0x2a30001d2c3, base=0xe602f000, importpid=678
+08-09 14:46:41.399 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.399 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.399 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 946,header 0xec998cd0 
+08-09 14:46:41.399 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 946, timeStamp: 1001105800000, inSize: 5, inOffset: 0
+08-09 14:46:41.399 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.399 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=1
+08-09 14:46:41.399 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:41.399 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 5
+08-09 14:46:41.399 V/SimpleUnisocC2Component(  678): processed frame #946
+08-09 14:46:41.399 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 946
+08-09 14:46:41.400 V/SimpleUnisocC2Component(  678): start processing frame #947
+08-09 14:46:41.405 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709525
+08-09 14:46:41.417 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.421 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709526
+08-09 14:46:41.437 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98b2f0,iRefCount:0
+08-09 14:46:41.437 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.437 I/mali_gralloc(  678): register: id=0x2a30001d2c5, importpid=678
+08-09 14:46:41.438 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,ab
+08-09 14:46:41.438 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 947,header 0xec993a50 
+08-09 14:46:41.438 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 947, timeStamp: 1001105840000, inSize: 432, inOffset: 0
+08-09 14:46:41.438 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.439 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=1
+08-09 14:46:41.439 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:41.439 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 432
+08-09 14:46:41.439 V/SimpleUnisocC2Component(  678): processed frame #947
+08-09 14:46:41.439 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 947
+08-09 14:46:41.439 V/SimpleUnisocC2Component(  678): start processing frame #948
+08-09 14:46:41.455 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709528
+08-09 14:46:41.459 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.470 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98ca30,iRefCount:0
+08-09 14:46:41.470 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.471 I/mali_gralloc(  678): register: id=0x2a30001d2c7, importpid=678
+08-09 14:46:41.471 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.471 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 948,header 0xec99c6c0 
+08-09 14:46:41.471 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 948, timeStamp: 1001105880000, inSize: 5, inOffset: 0
+08-09 14:46:41.472 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.472 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=1
+08-09 14:46:41.472 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:41.472 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 5
+08-09 14:46:41.472 V/SimpleUnisocC2Component(  678): processed frame #948
+08-09 14:46:41.473 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 948
+08-09 14:46:41.473 V/SimpleUnisocC2Component(  678): start processing frame #949
+08-09 14:46:41.488 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709530
+08-09 14:46:41.501 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.504 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98fe50,iRefCount:0
+08-09 14:46:41.504 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.504 I/mali_gralloc(  678): register: id=0x2a30001d2c8, importpid=678
+08-09 14:46:41.505 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,c2
+08-09 14:46:41.505 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 949,header 0xec9987c0 
+08-09 14:46:41.505 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 949, timeStamp: 1001105920000, inSize: 1262, inOffset: 0
+08-09 14:46:41.506 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.506 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=1
+08-09 14:46:41.506 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105760000
+08-09 14:46:41.507 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=0
+08-09 14:46:41.507 I/VSP     (  678): AV1DecDecode,240,picid 945,header 0xec99a830 
+08-09 14:46:41.507 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 945, consume byte: 1262
+08-09 14:46:41.507 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 945, pts: 1001105760000
+08-09 14:46:41.507 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 945
+08-09 14:46:41.508 I/mali_gralloc(  678): unregister: id=0x2a30001d2c4, base=0xea715000, importpid=678
+08-09 14:46:41.508 V/SimpleUnisocC2Component(  678): processed frame #949
+08-09 14:46:41.508 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 949
+08-09 14:46:41.508 I/mali_gralloc(19712): register: id=0x2a30001d2c4, importpid=678
+08-09 14:46:41.508 V/SimpleUnisocC2Component(  678): start processing frame #950
+08-09 14:46:41.510 I/mali_gralloc(19712): unregister: id=0x2a30001d2c4, base=0x0, importpid=19712
+08-09 14:46:41.521 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709532
+08-09 14:46:41.538 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709533
+08-09 14:46:41.542 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.554 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec99ea30,iRefCount:0
+08-09 14:46:41.554 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.555 I/mali_gralloc(  678): register: id=0x2a30001d2ca, importpid=678
+08-09 14:46:41.555 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.555 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 950,header 0xec99a830 
+08-09 14:46:41.555 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 950, timeStamp: 1001105960000, inSize: 5, inOffset: 0
+08-09 14:46:41.556 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.556 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105800000
+08-09 14:46:41.557 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=0
+08-09 14:46:41.557 I/VSP     (  678): AV1DecDecode,240,picid 946,header 0xec998cd0 
+08-09 14:46:41.558 I/C2UnisocAv1Dec(  678): process, decRet: 0, 2ms, dec_out.frameEffective: 1, has_pic: 0, picId: 946, consume byte: 0
+08-09 14:46:41.558 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 946, pts: 1001105800000
+08-09 14:46:41.558 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 946
+08-09 14:46:41.558 I/mali_gralloc(  678): unregister: id=0x2a30001d2c6, base=0xe62b9000, importpid=678
+08-09 14:46:41.558 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.558 I/mali_gralloc(19712): register: id=0x2a30001d2c6, importpid=678
+08-09 14:46:41.558 I/mali_gralloc(19712): unregister: id=0x2a30001d2c6, base=0x0, importpid=19712
+08-09 14:46:41.559 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.559 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 950,header 0xec99a830 
+08-09 14:46:41.559 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 950, timeStamp: 1001105960000, inSize: 5, inOffset: 0
+08-09 14:46:41.559 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.559 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=1
+08-09 14:46:41.559 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105840000
+08-09 14:46:41.560 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=0
+08-09 14:46:41.560 I/VSP     (  678): AV1DecDecode,240,picid 947,header 0xec993a50 
+08-09 14:46:41.560 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 947, consume byte: 5
+08-09 14:46:41.560 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 947, pts: 1001105840000
+08-09 14:46:41.560 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 947
+08-09 14:46:41.560 I/mali_gralloc(  678): unregister: id=0x2a30001d2c5, base=0xe61aa000, importpid=678
+08-09 14:46:41.561 V/SimpleUnisocC2Component(  678): processed frame #950
+08-09 14:46:41.561 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 950
+08-09 14:46:41.561 V/SimpleUnisocC2Component(  678): start processing frame #951
+08-09 14:46:41.561 I/mali_gralloc(19712): register: id=0x2a30001d2c5, importpid=678
+08-09 14:46:41.561 I/mali_gralloc(19712): unregister: id=0x2a30001d2c5, base=0x0, importpid=19712
+08-09 14:46:41.571 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709535
+08-09 14:46:41.585 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.587 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec993420,iRefCount:0
+08-09 14:46:41.587 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.587 I/mali_gralloc(  678): register: id=0x2a30001d2c9, importpid=678
+08-09 14:46:41.588 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,da
+08-09 14:46:41.588 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 951,header 0xec998cd0 
+08-09 14:46:41.588 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 951, timeStamp: 1001106000000, inSize: 479, inOffset: 0
+08-09 14:46:41.589 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.589 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=1
+08-09 14:46:41.589 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105880000
+08-09 14:46:41.589 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=0
+08-09 14:46:41.589 I/VSP     (  678): AV1DecDecode,240,picid 948,header 0xec99c6c0 
+08-09 14:46:41.589 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 948, consume byte: 479
+08-09 14:46:41.589 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 948, pts: 1001105880000
+08-09 14:46:41.590 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 948
+08-09 14:46:41.590 I/mali_gralloc(  678): unregister: id=0x2a30001d2c7, base=0xe6084000, importpid=678
+08-09 14:46:41.590 V/SimpleUnisocC2Component(  678): processed frame #951
+08-09 14:46:41.590 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 951
+08-09 14:46:41.590 V/SimpleUnisocC2Component(  678): start processing frame #952
+08-09 14:46:41.590 I/mali_gralloc(19712): register: id=0x2a30001d2c7, importpid=678
+08-09 14:46:41.591 I/mali_gralloc(19712): unregister: id=0x2a30001d2c7, base=0x0, importpid=19712
+08-09 14:46:41.605 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709537
+08-09 14:46:41.622 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709538
+08-09 14:46:41.623 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.637 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98b2f0,iRefCount:0
+08-09 14:46:41.637 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.637 I/mali_gralloc(  678): register: id=0x2a30001d2cb, importpid=678
+08-09 14:46:41.638 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.638 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 952,header 0xec993a50 
+08-09 14:46:41.638 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 952, timeStamp: 1001106040000, inSize: 5, inOffset: 0
+08-09 14:46:41.639 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.639 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=1
+08-09 14:46:41.639 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:41.639 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 5
+08-09 14:46:41.639 V/SimpleUnisocC2Component(  678): processed frame #952
+08-09 14:46:41.639 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 952
+08-09 14:46:41.639 V/SimpleUnisocC2Component(  678): start processing frame #953
+08-09 14:46:41.654 D/GNSSMGT (  947): gnss_gst_process(): the hor accuracy is 15.000000, ver accuracy :15.000000, speed accuracy:5.000000, bear accuracy :5.000000
+08-09 14:46:41.654 D/GNSSMGT (  947): nmea_reader_update_time: fix_time: 1786180602, mseconds: 688, fix timestamp: 1786180602688
+08-09 14:46:41.654 E/GNSSMGT (  947): nmea_reader_update_latlong : 20.028666, 73.716888, N, E
+08-09 14:46:41.654 D/GNSSMGT (  947): parse_rmc_token: in RMC, fixStatus=V
+08-09 14:46:41.654 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709540
+08-09 14:46:41.657 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.659 D/GNSSMGT (  947): gps_handleFlashType: gps save flash information
+08-09 14:46:41.659 D/GNSSMGT (  947): gpsSaveEph2Ram: Rec packet [T:0x9, SubT:0x1F]: cnt=0x7F34
+08-09 14:46:41.681 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98ca30,iRefCount:0
+08-09 14:46:41.681 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.681 I/mali_gralloc(  678): register: id=0x2a30001d2bb, importpid=678
+08-09 14:46:41.682 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,e2
+08-09 14:46:41.682 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 953,header 0xec99c6c0 
+08-09 14:46:41.682 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 953, timeStamp: 1001106080000, inSize: 2085, inOffset: 0
+08-09 14:46:41.682 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.682 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=1
+08-09 14:46:41.682 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105920000
+08-09 14:46:41.683 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=0
+08-09 14:46:41.683 I/VSP     (  678): AV1DecDecode,240,picid 949,header 0xec9987c0 
+08-09 14:46:41.684 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 949, consume byte: 2085
+08-09 14:46:41.684 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 949, pts: 1001105920000
+08-09 14:46:41.684 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 949
+08-09 14:46:41.684 I/mali_gralloc(  678): unregister: id=0x2a30001d2c8, base=0xe602f000, importpid=678
+08-09 14:46:41.684 V/SimpleUnisocC2Component(  678): processed frame #953
+08-09 14:46:41.684 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 953
+08-09 14:46:41.684 V/SimpleUnisocC2Component(  678): start processing frame #954
+08-09 14:46:41.685 I/mali_gralloc(19712): register: id=0x2a30001d2c8, importpid=678
+08-09 14:46:41.685 I/mali_gralloc(19712): unregister: id=0x2a30001d2c8, base=0x0, importpid=19712
+08-09 14:46:41.688 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709542
+08-09 14:46:41.702 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.704 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98fe50,iRefCount:0
+08-09 14:46:41.704 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.704 I/mali_gralloc(  678): register: id=0x2a30001d2bc, importpid=678
+08-09 14:46:41.705 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.705 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 954,header 0xec9987c0 
+08-09 14:46:41.705 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 954, timeStamp: 1001106120000, inSize: 5, inOffset: 0
+08-09 14:46:41.706 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.706 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001105960000
+08-09 14:46:41.707 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=0
+08-09 14:46:41.707 I/VSP     (  678): AV1DecDecode,240,picid 950,header 0xec99a830 
+08-09 14:46:41.707 I/C2UnisocAv1Dec(  678): process, decRet: 0, 2ms, dec_out.frameEffective: 1, has_pic: 0, picId: 950, consume byte: 0
+08-09 14:46:41.707 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 950, pts: 1001105960000
+08-09 14:46:41.708 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 950
+08-09 14:46:41.708 I/mali_gralloc(  678): unregister: id=0x2a30001d2ca, base=0xea715000, importpid=678
+08-09 14:46:41.708 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.708 I/mali_gralloc(19712): register: id=0x2a30001d2ca, importpid=678
+08-09 14:46:41.708 I/mali_gralloc(19712): unregister: id=0x2a30001d2ca, base=0x0, importpid=19712
+08-09 14:46:41.709 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.709 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 954,header 0xec9987c0 
+08-09 14:46:41.709 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 954, timeStamp: 1001106120000, inSize: 5, inOffset: 0
+08-09 14:46:41.709 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.710 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001106000000
+08-09 14:46:41.710 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=0
+08-09 14:46:41.710 I/VSP     (  678): AV1DecDecode,240,picid 951,header 0xec998cd0 
+08-09 14:46:41.710 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 0, picId: 951, consume byte: 0
+08-09 14:46:41.710 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 951, pts: 1001106000000
+08-09 14:46:41.711 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 951
+08-09 14:46:41.711 I/mali_gralloc(  678): unregister: id=0x2a30001d2c9, base=0xe62b9000, importpid=678
+08-09 14:46:41.711 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.711 I/mali_gralloc(19712): register: id=0x2a30001d2c9, importpid=678
+08-09 14:46:41.711 I/mali_gralloc(19712): unregister: id=0x2a30001d2c9, base=0x0, importpid=19712
+08-09 14:46:41.711 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.711 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 954,header 0xec9987c0 
+08-09 14:46:41.712 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 954, timeStamp: 1001106120000, inSize: 5, inOffset: 0
+08-09 14:46:41.712 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.712 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=1
+08-09 14:46:41.712 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001106040000
+08-09 14:46:41.713 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=0
+08-09 14:46:41.713 I/VSP     (  678): AV1DecDecode,240,picid 952,header 0xec993a50 
+08-09 14:46:41.713 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 952, consume byte: 5
+08-09 14:46:41.713 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 952, pts: 1001106040000
+08-09 14:46:41.714 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 952
+08-09 14:46:41.714 I/mali_gralloc(  678): unregister: id=0x2a30001d2cb, base=0xe61aa000, importpid=678
+08-09 14:46:41.714 I/mali_gralloc(19712): register: id=0x2a30001d2cb, importpid=678
+08-09 14:46:41.714 I/mali_gralloc(19712): unregister: id=0x2a30001d2cb, base=0x0, importpid=19712
+08-09 14:46:41.715 V/SimpleUnisocC2Component(  678): processed frame #954
+08-09 14:46:41.715 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 954
+08-09 14:46:41.715 V/SimpleUnisocC2Component(  678): start processing frame #955
+08-09 14:46:41.718 D/AlarmManager( 1080): waitForAlarm result:4currentTime=1786267001718, elapsedRealtime=205970936
+08-09 14:46:41.718 I/AlarmManager( 1080): going to acquire mWakeLock actually.
+08-09 14:46:41.719 D/AlarmManager( 1080): sending alarm.type = 2, action = null, alarm = Alarm{e7288f0 type 2 origWhen 205970936 whenElapsed 205970936 android}, cn = null, operation = null, listener=android.app.AlarmManager$ListenerWrapper@7349549, listenerTag=SoftApManager softap datalimi check, workSource=null
+08-09 14:46:41.719 D/AlarmManagerService( 1080): set alarm to kernel: 205974.819000000, type=2 
+08-09 14:46:41.720 I/AlarmManager( 1080): going to release mWakeLock actually.
+08-09 14:46:41.721 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709544
+08-09 14:46:41.723 D/TranHotspotDataMonitor( 1080): mRxBytes: 6339354723 mTxBytes:14105691459
+08-09 14:46:41.723 W/SoftApManager( 1080): DIFF 1304447507
+08-09 14:46:41.723 W/SoftApManager( 1080): datalimit kick 1304447507
+08-09 14:46:41.724 V/AlarmManager( 1080): set(null) : type=2 listener=android.app.AlarmManager$ListenerWrapper@7349549 listenerTag=SoftApManager softap datalimi check workSource=null callingPackage=android callingUid=1000 triggerAtTime=205971941 win=0 tElapsed=205971941 maxElapsed=205971941 interval=0 flags=0x9
+08-09 14:46:41.724 D/AlarmManager( 1080): Add alarm packageName=android, type=2, when=205971941, tag=SoftApManager softap datalimi check, callingUid=1000, callingPackage=android
+08-09 14:46:41.724 D/AlarmManagerService( 1080): set alarm to kernel: 205971.941000000, type=2 
+08-09 14:46:41.738 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709545
+08-09 14:46:41.742 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.754 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec99ea30,iRefCount:0
+08-09 14:46:41.754 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.754 I/mali_gralloc(  678): register: id=0x2a30001d2bd, importpid=678
+08-09 14:46:41.755 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,dd
+08-09 14:46:41.755 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 955,header 0xec99a830 
+08-09 14:46:41.755 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 955, timeStamp: 1001106160000, inSize: 482, inOffset: 0
+08-09 14:46:41.755 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.755 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=1
+08-09 14:46:41.756 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:41.756 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 482
+08-09 14:46:41.756 V/SimpleUnisocC2Component(  678): processed frame #955
+08-09 14:46:41.756 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 955
+08-09 14:46:41.756 V/SimpleUnisocC2Component(  678): start processing frame #956
+08-09 14:46:41.771 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709547
+08-09 14:46:41.776 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.787 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec993420,iRefCount:0
+08-09 14:46:41.787 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.787 I/mali_gralloc(  678): register: id=0x2a30001d2bf, importpid=678
+08-09 14:46:41.788 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.788 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 956,header 0xec998cd0 
+08-09 14:46:41.788 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 956, timeStamp: 1001106200000, inSize: 5, inOffset: 0
+08-09 14:46:41.788 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.788 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=1
+08-09 14:46:41.788 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:41.788 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 5
+08-09 14:46:41.789 V/SimpleUnisocC2Component(  678): processed frame #956
+08-09 14:46:41.789 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 956
+08-09 14:46:41.789 V/SimpleUnisocC2Component(  678): start processing frame #957
+08-09 14:46:41.805 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709549
+08-09 14:46:41.821 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709557
+08-09 14:46:41.825 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.837 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98b2f0,iRefCount:0
+08-09 14:46:41.837 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.837 I/mali_gralloc(  678): register: id=0x2a30001d2be, importpid=678
+08-09 14:46:41.838 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,d8
+08-09 14:46:41.838 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 957,header 0xec993a50 
+08-09 14:46:41.838 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 957, timeStamp: 1001106240000, inSize: 733, inOffset: 0
+08-09 14:46:41.838 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.838 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=1
+08-09 14:46:41.838 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001106080000
+08-09 14:46:41.839 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=0
+08-09 14:46:41.839 I/VSP     (  678): AV1DecDecode,240,picid 953,header 0xec99c6c0 
+08-09 14:46:41.839 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 953, consume byte: 733
+08-09 14:46:41.839 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 953, pts: 1001106080000
+08-09 14:46:41.839 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 953
+08-09 14:46:41.839 I/mali_gralloc(  678): unregister: id=0x2a30001d2bb, base=0xe6084000, importpid=678
+08-09 14:46:41.840 V/SimpleUnisocC2Component(  678): processed frame #957
+08-09 14:46:41.840 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 957
+08-09 14:46:41.840 V/SimpleUnisocC2Component(  678): start processing frame #958
+08-09 14:46:41.841 I/mali_gralloc(19712): register: id=0x2a30001d2bb, importpid=678
+08-09 14:46:41.841 I/mali_gralloc(19712): unregister: id=0x2a30001d2bb, base=0x0, importpid=19712
+08-09 14:46:41.844 D/SmartBandWith_Controller2( 1080): [handleMessage] what: 1004
+08-09 14:46:41.845 D/SmartBandWith_Controller2( 1080): [isNetworkRateSatisfy]mUid = 10138, curWhiteAppByte = 1922178686 Byte
+08-09 14:46:41.845 D/SmartBandWith_Controller2( 1080): [isNetworkRateSatisfy]System totalRate = 94.09603 kbps
+08-09 14:46:41.845 D/SmartBandWith_Controller2( 1080): system network is out of limit scale or fg App not using
+08-09 14:46:41.845 D/SmartBandWith_Controller2( 1080): isNetworkRateSatisfy: false
+08-09 14:46:41.855 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709559
+08-09 14:46:41.864 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.872 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98ca30,iRefCount:0
+08-09 14:46:41.872 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.872 I/mali_gralloc(  678): register: id=0x2a30001d2c0, importpid=678
+08-09 14:46:41.873 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,f9
+08-09 14:46:41.873 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 958,header 0xec99c6c0 
+08-09 14:46:41.873 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 958, timeStamp: 1001106280000, inSize: 510, inOffset: 0
+08-09 14:46:41.873 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.873 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=1
+08-09 14:46:41.873 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001106120000
+08-09 14:46:41.875 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=0
+08-09 14:46:41.876 I/VSP     (  678): AV1DecDecode,240,picid 954,header 0xec9987c0 
+08-09 14:46:41.876 I/C2UnisocAv1Dec(  678): process, decRet: 0, 2ms, dec_out.frameEffective: 1, has_pic: 1, picId: 954, consume byte: 510
+08-09 14:46:41.876 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 954, pts: 1001106120000
+08-09 14:46:41.876 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 954
+08-09 14:46:41.877 I/mali_gralloc(  678): unregister: id=0x2a30001d2bc, base=0xe602f000, importpid=678
+08-09 14:46:41.877 I/mali_gralloc(19712): register: id=0x2a30001d2bc, importpid=678
+08-09 14:46:41.877 I/mali_gralloc(19712): unregister: id=0x2a30001d2bc, base=0x0, importpid=19712
+08-09 14:46:41.877 V/SimpleUnisocC2Component(  678): processed frame #958
+08-09 14:46:41.877 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 958
+08-09 14:46:41.877 V/SimpleUnisocC2Component(  678): start processing frame #959
+08-09 14:46:41.888 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709561
+08-09 14:46:41.902 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.904 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98fe50,iRefCount:0
+08-09 14:46:41.905 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.905 I/mali_gralloc(  678): register: id=0x2a30001d2c1, importpid=678
+08-09 14:46:41.905 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,23
+08-09 14:46:41.905 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 959,header 0xec9987c0 
+08-09 14:46:41.905 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 959, timeStamp: 1001106320000, inSize: 39, inOffset: 0
+08-09 14:46:41.905 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.905 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=1
+08-09 14:46:41.906 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001106160000
+08-09 14:46:41.906 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=0
+08-09 14:46:41.906 I/VSP     (  678): AV1DecDecode,240,picid 955,header 0xec99a830 
+08-09 14:46:41.907 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 1, picId: 955, consume byte: 39
+08-09 14:46:41.907 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 955, pts: 1001106160000
+08-09 14:46:41.908 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 955
+08-09 14:46:41.908 I/mali_gralloc(  678): unregister: id=0x2a30001d2bd, base=0xea715000, importpid=678
+08-09 14:46:41.908 I/mali_gralloc(19712): register: id=0x2a30001d2bd, importpid=678
+08-09 14:46:41.908 I/mali_gralloc(19712): unregister: id=0x2a30001d2bd, base=0x0, importpid=19712
+08-09 14:46:41.908 V/SimpleUnisocC2Component(  678): processed frame #959
+08-09 14:46:41.908 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 959
+08-09 14:46:41.908 V/SimpleUnisocC2Component(  678): start processing frame #960
+08-09 14:46:41.921 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709563
+08-09 14:46:41.938 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709564
+08-09 14:46:41.945 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.954 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec99ea30,iRefCount:0
+08-09 14:46:41.954 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.954 I/mali_gralloc(  678): register: id=0x2a30001d2c2, importpid=678
+08-09 14:46:41.954 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,c0
+08-09 14:46:41.954 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 960,header 0xec99a830 
+08-09 14:46:41.954 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99a830, pBufCtrl->phyAddr: 0x0, frameIndex: 960, timeStamp: 1001106360000, inSize: 9731, inOffset: 0
+08-09 14:46:41.955 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.955 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99a830; iRefCount=1
+08-09 14:46:41.955 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001106200000
+08-09 14:46:41.957 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=0
+08-09 14:46:41.957 I/VSP     (  678): AV1DecDecode,240,picid 956,header 0xec998cd0 
+08-09 14:46:41.957 I/C2UnisocAv1Dec(  678): process, decRet: 0, 2ms, dec_out.frameEffective: 1, has_pic: 1, picId: 956, consume byte: 9731
+08-09 14:46:41.957 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 956, pts: 1001106200000
+08-09 14:46:41.957 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 956
+08-09 14:46:41.957 I/mali_gralloc(  678): unregister: id=0x2a30001d2bf, base=0xe62b9000, importpid=678
+08-09 14:46:41.957 I/mali_gralloc(19712): register: id=0x2a30001d2bf, importpid=678
+08-09 14:46:41.957 I/mali_gralloc(19712): unregister: id=0x2a30001d2bf, base=0x0, importpid=19712
+08-09 14:46:41.958 V/SimpleUnisocC2Component(  678): processed frame #960
+08-09 14:46:41.958 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 960
+08-09 14:46:41.958 V/SimpleUnisocC2Component(  678): start processing frame #961
+08-09 14:46:41.971 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709566
+08-09 14:46:41.983 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:41.987 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec993420,iRefCount:0
+08-09 14:46:41.987 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:41.987 I/mali_gralloc(  678): register: id=0x2a30001d2c3, importpid=678
+08-09 14:46:41.988 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.988 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 961,header 0xec998cd0 
+08-09 14:46:41.988 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 961, timeStamp: 1001106400000, inSize: 5, inOffset: 0
+08-09 14:46:41.989 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.989 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001106240000
+08-09 14:46:41.990 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=0
+08-09 14:46:41.990 I/VSP     (  678): AV1DecDecode,240,picid 957,header 0xec993a50 
+08-09 14:46:41.990 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 0, picId: 957, consume byte: 0
+08-09 14:46:41.990 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 957, pts: 1001106240000
+08-09 14:46:41.990 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 957
+08-09 14:46:41.991 I/mali_gralloc(  678): unregister: id=0x2a30001d2be, base=0xe61aa000, importpid=678
+08-09 14:46:41.991 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.991 I/mali_gralloc(19712): register: id=0x2a30001d2be, importpid=678
+08-09 14:46:41.991 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.991 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 961,header 0xec998cd0 
+08-09 14:46:41.991 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 961, timeStamp: 1001106400000, inSize: 5, inOffset: 0
+08-09 14:46:41.992 I/mali_gralloc(19712): unregister: id=0x2a30001d2be, base=0x0, importpid=19712
+08-09 14:46:41.993 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.993 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001106280000
+08-09 14:46:41.994 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=0
+08-09 14:46:41.994 I/VSP     (  678): AV1DecDecode,240,picid 958,header 0xec99c6c0 
+08-09 14:46:41.994 I/C2UnisocAv1Dec(  678): process, decRet: 0, 2ms, dec_out.frameEffective: 1, has_pic: 0, picId: 958, consume byte: 0
+08-09 14:46:41.994 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 958, pts: 1001106280000
+08-09 14:46:41.995 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 958
+08-09 14:46:41.995 I/mali_gralloc(  678): unregister: id=0x2a30001d2c0, base=0xe6084000, importpid=678
+08-09 14:46:41.995 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.995 I/mali_gralloc(19712): register: id=0x2a30001d2c0, importpid=678
+08-09 14:46:41.995 I/mali_gralloc(19712): unregister: id=0x2a30001d2c0, base=0x0, importpid=19712
+08-09 14:46:41.995 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.995 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 961,header 0xec998cd0 
+08-09 14:46:41.995 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 961, timeStamp: 1001106400000, inSize: 5, inOffset: 0
+08-09 14:46:41.996 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.996 I/VSP     (  678): dav1d_output_one_frame,302,8,360,640,640,1001106320000
+08-09 14:46:41.997 I/C2UnisocAv1Dec(  678): VSP_unbind_cb, phyAddr: 0x0, pHeader: 0xec9987c0; iRefCount=0
+08-09 14:46:41.997 I/VSP     (  678): AV1DecDecode,240,picid 959,header 0xec9987c0 
+08-09 14:46:41.997 I/C2UnisocAv1Dec(  678): process, decRet: 0, 1ms, dec_out.frameEffective: 1, has_pic: 0, picId: 959, consume byte: 0
+08-09 14:46:41.997 I/C2UnisocAv1Dec(  678): drainOneOutputBuffer, pBufCtrl: 0xec9987c0, pBufCtrl->phyAddr: 0x0, frameIndex: 959, pts: 1001106320000
+08-09 14:46:41.998 V/SimpleUnisocC2Component(  678): returning pending work, frameIndex: 959
+08-09 14:46:41.998 I/mali_gralloc(19712): register: id=0x2a30001d2c1, importpid=678
+08-09 14:46:41.998 I/mali_gralloc(  678): unregister: id=0x2a30001d2c1, base=0xe602f000, importpid=678
+08-09 14:46:41.998 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.998 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.998 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 961,header 0xec998cd0 
+08-09 14:46:41.998 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 961, timeStamp: 1001106400000, inSize: 5, inOffset: 0
+08-09 14:46:41.998 I/mali_gralloc(19712): unregister: id=0x2a30001d2c1, base=0x0, importpid=19712
+08-09 14:46:41.999 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:41.999 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:41.999 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 0, picId: 0, consume byte: 0
+08-09 14:46:41.999 V/C2UnisocAv1Dec(  678): Bytes consumed is zero.
+08-09 14:46:41.999 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:41.999 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 961,header 0xec998cd0 
+08-09 14:46:42.000 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec998cd0, pBufCtrl->phyAddr: 0x0, frameIndex: 961, timeStamp: 1001106400000, inSize: 5, inOffset: 0
+08-09 14:46:42.000 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:42.000 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec998cd0; iRefCount=1
+08-09 14:46:42.000 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:42.000 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 5
+08-09 14:46:42.000 V/SimpleUnisocC2Component(  678): processed frame #961
+08-09 14:46:42.000 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 961
+08-09 14:46:42.000 V/SimpleUnisocC2Component(  678): start processing frame #962
+08-09 14:46:42.005 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709568
+08-09 14:46:42.018 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:42.021 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709569
+08-09 14:46:42.037 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98b2f0,iRefCount:0
+08-09 14:46:42.037 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:42.037 I/mali_gralloc(  678): register: id=0x2a30001d2c4, importpid=678
+08-09 14:46:42.038 I/C2UnisocAv1Dec(  678): bitstream, 12,0,32,96
+08-09 14:46:42.038 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 962,header 0xec993a50 
+08-09 14:46:42.038 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec993a50, pBufCtrl->phyAddr: 0x0, frameIndex: 962, timeStamp: 1001106440000, inSize: 539, inOffset: 0
+08-09 14:46:42.039 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:42.039 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec993a50; iRefCount=1
+08-09 14:46:42.039 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:42.039 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 539
+08-09 14:46:42.039 V/SimpleUnisocC2Component(  678): processed frame #962
+08-09 14:46:42.039 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 962
+08-09 14:46:42.039 V/SimpleUnisocC2Component(  678): start processing frame #963
+08-09 14:46:42.055 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709571
+08-09 14:46:42.063 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:42.070 D/C2UnisocVideoDecoderComponent(  678): fetch one queue free block:0xec98ca30,iRefCount:0
+08-09 14:46:42.070 V/C2UnisocAv1Dec(  678): fetchGraphicBlock, stride: 640, sliceHeight: 360
+08-09 14:46:42.070 I/mali_gralloc(  678): register: id=0x2a30001d2c6, importpid=678
+08-09 14:46:42.071 I/C2UnisocAv1Dec(  678): bitstream, 12,0,1a,1
+08-09 14:46:42.071 I/VSP     (  678): AV1Dec_SetCurRecPic,98,picid 963,header 0xec99c6c0 
+08-09 14:46:42.071 I/C2UnisocAv1Dec(  678): setDecodeArgs, pBufCtrl: 0xec99c6c0, pBufCtrl->phyAddr: 0x0, frameIndex: 963, timeStamp: 1001106480000, inSize: 5, inOffset: 0
+08-09 14:46:42.071 I/VSP     (  678): AV1DecDecode,181, sucess -2, p010 flag: 0 
+08-09 14:46:42.071 I/C2UnisocAv1Dec(  678): VSP_bind_cb, phyAddr: 0x0, pHeader: 0xec99c6c0; iRefCount=1
+08-09 14:46:42.071 E/VSP     (  678): dav1d_output_one_frame,283, Try again
+08-09 14:46:42.071 I/C2UnisocAv1Dec(  678): process, decRet: 0, 0ms, dec_out.frameEffective: 0, has_pic: 1, picId: 0, consume byte: 5
+08-09 14:46:42.071 V/SimpleUnisocC2Component(  678): processed frame #963
+08-09 14:46:42.071 I/SimpleUnisocC2Component(  678): queue pending work, frameIndex: 963
+08-09 14:46:42.071 V/SimpleUnisocC2Component(  678): start processing frame #964
+08-09 14:46:42.088 D/SurfaceFlinger(  726): unisoc-graphics, commit has frameMissed:2, vysncId:87709573
+08-09 14:46:42.093 I/Hiber/importantScene( 1080): gps: packageName=com.strava
+08-09 14:46:42.093 D/Hiber/appStateMachine( 1080): uid:10374, pkg=com.strava  can't transition from R to M ,importcase is : gps
+08-09 14:46:42.097 I/audio_hw_primary(  668): app type:0x   0, is_voip:0, device:2, pcm:-270234816, usecase:0x   8
+08-09 14:46:42.098 W/TraceableOnGlobalLayout(19712): TraceableOnGlobalLayoutListener.onGlobalLayout[oxv] is called 651
