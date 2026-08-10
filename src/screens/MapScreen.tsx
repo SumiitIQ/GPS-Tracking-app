@@ -8,8 +8,8 @@ import {
   Animated,
   Platform,
   Alert,
-  Alert,
   Share,
+  DeviceEventEmitter,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as Location from 'expo-location';
@@ -19,6 +19,7 @@ import { ARCGIS_API_KEY } from '../constants/supabase';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { generateGPX, TrackPoint } from '../lib/gpx';
+import { LOCATION_TASK_NAME } from '../lib/backgroundTask';
 
 // ─── ArcGIS WebView Template ─────────────────────────────────────────────────
 const getArcGISHtml = (apiKey: string) => `
@@ -193,29 +194,83 @@ export default function MapScreen() {
 
   // ─── Request Permissions & Start Watching ──────────────────────────────────
   useEffect(() => {
+    let bgListener: any;
+
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert(
-          'GPS Required',
-          'PrecisionTrack needs GPS access to track you. Please enable Location in Settings.',
-          [{ text: 'OK' }]
-        );
+      const { status: fgStatus } = await Location.requestForegroundPermissionsAsync();
+      const { status: bgStatus } = await Location.requestBackgroundPermissionsAsync();
+      
+      if (fgStatus !== 'granted') {
+        Alert.alert('GPS Required', 'PrecisionTrack needs GPS access to track you.', [{ text: 'OK' }]);
         return;
       }
 
+      // ── RESTORE STATE IF KILLED ──
+      const trackingStr = await AsyncStorage.getItem('is_tracking');
+      if (trackingStr === 'true') {
+        setIsTracking(true);
+        isTrackingRef.current = true;
+        
+        const startTimeStr = await AsyncStorage.getItem('tracking_start_time');
+        if (startTimeStr) {
+          const startTime = parseInt(startTimeStr, 10);
+          setElapsedSeconds(Math.floor((Date.now() - startTime) / 1000));
+          timerRef.current = setInterval(() => {
+            setElapsedSeconds(Math.floor((Date.now() - startTime) / 1000));
+          }, 1000);
+        }
+
+        const ptsStr = await AsyncStorage.getItem('bg_locations');
+        if (ptsStr) {
+          const pts = JSON.parse(ptsStr);
+          trackPoints.current = pts;
+          
+          let dist = 0;
+          for(let i=1; i<pts.length; i++) {
+             dist += getDistanceMeters(pts[i-1].lat, pts[i-1].lng, pts[i].lat, pts[i].lng);
+          }
+          setTotalDistance(dist);
+          
+          if (pts.length > 0) {
+            lastRecordedPos.current = { lat: pts[pts.length-1].lat, lng: pts[pts.length-1].lng };
+          }
+        }
+      }
+
+      // ── LISTEN FOR BACKGROUND POINTS ──
+      bgListener = DeviceEventEmitter.addListener('onBackgroundLocation', (newPoints: any[]) => {
+        if (!isTrackingRef.current) return;
+        
+        let distAccum = 0;
+        newPoints.forEach(pt => {
+           if (lastRecordedPos.current) {
+             const dist = getDistanceMeters(lastRecordedPos.current.lat, lastRecordedPos.current.lng, pt.lat, pt.lng);
+             if (dist >= MIN_DISTANCE_TO_RECORD_M) {
+               distAccum += dist;
+               lastRecordedPos.current = { lat: pt.lat, lng: pt.lng };
+               trackPoints.current.push(pt);
+             }
+           } else {
+             lastRecordedPos.current = { lat: pt.lat, lng: pt.lng };
+             trackPoints.current.push(pt);
+           }
+        });
+        
+        if (distAccum > 0) {
+          setTotalDistance(prev => prev + distAccum);
+        }
+      });
+
+      // Always watch foreground for immediate blue dot & accuracy updates
       locationSubscription.current = await Location.watchPositionAsync(
-        {
-          accuracy: Location.Accuracy.High, // High accuracy (GPS + Wifi + Cell) for instant lock anywhere
-          timeInterval: 500,    // 500ms = ultra-responsive, twice as fast as Strava
-          distanceInterval: 0,  // Every update regardless of distance (we filter internally)
-        },
+        { accuracy: Location.Accuracy.High, timeInterval: 1000, distanceInterval: 0 },
         handleLocationUpdate
       );
     })();
 
     return () => {
       locationSubscription.current?.remove();
+      if (bgListener) bgListener.remove();
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
@@ -243,45 +298,61 @@ export default function MapScreen() {
       `);
     }
 
-    // ── Distance accumulation ───────────────────────────────────────────────
-    if (isTrackingRef.current) {
-      if (lastRecordedPos.current) {
-        const dist = getDistanceMeters(
-          lastRecordedPos.current.lat,
-          lastRecordedPos.current.lng,
-          latitude,
-          longitude
-        );
-        if (dist >= MIN_DISTANCE_TO_RECORD_M) {
-          setTotalDistance((prev) => prev + dist);
-          lastRecordedPos.current = { lat: latitude, lng: longitude };
-          trackPoints.current.push({ lat: latitude, lng: longitude, elevation: loc.coords.altitude || undefined, timestamp: new Date() });
-        }
-      } else {
-        lastRecordedPos.current = { lat: latitude, lng: longitude };
-        trackPoints.current.push({ lat: latitude, lng: longitude, elevation: loc.coords.altitude || undefined, timestamp: new Date() });
-      }
-    }
+    // Distance is now handled by the background event emitter, 
+    // so we don't duplicate it here. We only use handleLocationUpdate for UI live location!
   }, [isTracking]);
 
   // ─── Controls ────────────────────────────────────────────────────────────
-  const startTracking = () => {
+  const startTracking = async () => {
     setIsTracking(true);
     isTrackingRef.current = true;
     setTotalDistance(0);
     setElapsedSeconds(0);
     lastRecordedPos.current = null;
     trackPoints.current = [];
-    timerRef.current = setInterval(() => setElapsedSeconds((s) => s + 1), 1000);
+    
+    const startTime = Date.now();
+    await AsyncStorage.setItem('is_tracking', 'true');
+    await AsyncStorage.setItem('tracking_start_time', startTime.toString());
+    await AsyncStorage.removeItem('bg_locations');
+    
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => setElapsedSeconds(Math.floor((Date.now() - startTime) / 1000)), 1000);
+    
     if (webViewRef.current) {
       webViewRef.current.injectJavaScript('if(window.clearTrack) window.clearTrack(); true;');
     }
+
+    try {
+      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        accuracy: Location.Accuracy.High,
+        timeInterval: 2000,
+        distanceInterval: MIN_DISTANCE_TO_RECORD_M,
+        showsBackgroundLocationIndicator: true,
+        foregroundService: {
+          notificationTitle: "SummitIQ",
+          notificationBody: "Tracking active. Tap to open app.",
+          notificationColor: "#fc4c02",
+        }
+      });
+    } catch (e) {
+      console.error('Failed to start bg location', e);
+    }
   };
 
-  const stopTracking = () => {
+  const stopTracking = async () => {
     setIsTracking(false);
     isTrackingRef.current = false;
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+    
+    await AsyncStorage.setItem('is_tracking', 'false');
+    await AsyncStorage.removeItem('tracking_start_time');
+    
+    try {
+      await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+    } catch (e) {
+      console.error('Failed to stop bg location', e);
+    }
   };
 
   const finishTracking = async () => {

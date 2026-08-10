@@ -1,3 +1,4 @@
+import '../lib/backgroundTask';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { View, ActivityIndicator } from 'react-native';
 import { Slot, useRouter, useSegments } from 'expo-router';
