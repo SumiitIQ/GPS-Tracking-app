@@ -1,5 +1,7 @@
 import { Tabs } from 'expo-router';
-import { Platform, Text } from 'react-native';
+import { Platform } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Theme } from '../../theme/Theme';
 
 export default function TabLayout() {
   return (
@@ -7,41 +9,54 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#0e0e0e',
-          borderTopColor: 'rgba(255,255,255,0.06)',
+          backgroundColor: 'rgba(247, 249, 252, 0.9)', // surface with opacity
+          borderTopColor: 'rgba(197, 198, 202, 0.3)', // outlineVariant/30
           paddingBottom: Platform.OS === 'ios' ? 20 : 10,
-          paddingTop: 10,
+          paddingTop: 8,
           height: Platform.OS === 'ios' ? 85 : 65,
+          position: 'absolute', // For blur effect
+          elevation: 0,
         },
-        tabBarActiveTintColor: '#3b82f6',
-        tabBarInactiveTintColor: '#6b7280',
+        tabBarActiveTintColor: Theme.colors.secondary,
+        tabBarInactiveTintColor: Theme.colors.onSurfaceVariant,
+        tabBarLabelStyle: {
+          ...Theme.typography.labelCaps,
+          marginTop: 4,
+        },
       }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="home" size={24} color={color} />,
+        }}
+      />
       <Tabs.Screen
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: () => <Text>🌍</Text>, // we will use real icons later
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="explore" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="record"
         options={{
           title: 'Record',
-          tabBarIcon: () => <Text>🔴</Text>,
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="fiber-manual-record" size={28} color={Theme.colors.secondary} />,
         }}
       />
       <Tabs.Screen
-        name="navigate"
+        name="routes"
         options={{
-          title: 'Navigate',
-          tabBarIcon: () => <Text>🧭</Text>,
+          title: 'Routes',
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="terrain" size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: () => <Text>👤</Text>,
+          tabBarIcon: ({ color, size }) => <MaterialIcons name="person" size={24} color={color} />,
         }}
       />
     </Tabs>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SummitIQ - Offline Maps</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration from Design System -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#64ff92",
+                        "primary-fixed": "#e2e2e5",
+                        "on-surface-variant": "#44474a",
+                        "on-background": "#191c1e",
+                        "on-error": "#ffffff",
+                        "surface": "#f7f9fc",
+                        "surface-variant": "#e0e3e6",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#30e375",
+                        "surface-container-high": "#e6e8eb",
+                        "on-tertiary-container": "#009949",
+                        "tertiary": "#000200",
+                        "primary": "#000101",
+                        "surface-container-low": "#f2f4f7",
+                        "secondary-container": "#cd4800",
+                        "primary-container": "#1a1c1e",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "on-surface": "#191c1e",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#c6c6c9",
+                        "secondary-fixed": "#ffdbce",
+                        "on-secondary-fixed": "#370e00",
+                        "on-primary-fixed": "#1a1c1e",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f7f9fc",
+                        "surface-container-highest": "#e0e3e6",
+                        "secondary": "#a33800",
+                        "inverse-primary": "#c6c6c9",
+                        "background": "#f7f9fc",
+                        "surface-tint": "#5d5e61",
+                        "surface-dim": "#d8dadd",
+                        "on-tertiary-fixed": "#00210b",
+                        "on-tertiary-fixed-variant": "#005224",
+                        "on-primary-fixed-variant": "#454749",
+                        "error": "#ba1a1a",
+                        "outline": "#75777a",
+                        "tertiary-container": "#00220b",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#eff1f4",
+                        "outline-variant": "#c5c6ca",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#802a00",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-container": "#fffbff",
+                        "on-primary-container": "#838486",
+                        "surface-container": "#eceef1",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "40px",
+                        "margin-mobile": "20px",
+                        "xs": "8px",
+                        "sm": "16px",
+                        "base": "4px",
+                        "margin-desktop": "48px",
+                        "md": "24px",
+                        "gutter": "16px",
+                        "xl": "64px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "metric-lg": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "metric-sm": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "metric-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "metric-sm": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Custom scrollbar for web */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e0e3e6;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-xl flex flex-col font-sans antialiased overflow-x-hidden md:max-w-md md:mx-auto md:border-x md:border-outline-variant/30 md:shadow-lg relative">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 md:max-w-md md:left-1/2 md:-translate-x-1/2 border-b border-outline-variant/30 bg-surface/80 backdrop-blur-xl transition-all duration-300" id="top-nav">
+<div class="flex justify-between items-center px-margin-mobile py-xs w-full">
+<button class="text-on-surface-variant hover:bg-surface-container-high transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Offline Maps</h1>
+<div class="w-[40px]"></div> <!-- Spacer for center alignment -->
+</div>
+</header>
+<!-- Main Canvas Content -->
+<main class="flex-1 mt-[70px] px-margin-mobile pt-sm pb-xl flex flex-col gap-lg">
+<!-- Section 1: Storage Usage -->
+<section class="flex flex-col gap-sm animate-[fadeIn_0.5s_ease-out]">
+<div class="flex justify-between items-end">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Storage Usage</h2>
+<span class="font-metric-sm text-metric-sm text-on-surface">1.2 GB / 64 GB</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-2 overflow-hidden flex border border-outline-variant/30">
+<div class="bg-secondary h-2 rounded-l-full" style="width: 2%"></div>
+<div class="bg-primary h-2" style="width: 15%"></div>
+</div>
+<div class="flex gap-md mt-base">
+<div class="flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">SummitIQ Maps</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Other Apps</span>
+</div>
+</div>
+</section>
+<!-- Section 2: Active Downloads -->
+<section class="flex flex-col gap-sm animate-[fadeIn_0.6s_ease-out]">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Active Downloads</h2>
+<!-- Precision Metric Tile: Downloading -->
+<div class="bg-surface-container-low border border-outline-variant/30 rounded-xl p-sm flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div class="flex items-start gap-sm">
+<div class="w-10 h-10 rounded-lg bg-surface flex items-center justify-center border border-outline-variant/50">
+<span class="material-symbols-outlined text-secondary" data-icon="downloading">downloading</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-md text-headline-md text-primary leading-tight">Harishchandragad Trek</h3>
+<span class="font-body-md text-body-md text-on-surface-variant">High-Res Topo Map</span>
+</div>
+</div>
+<span class="font-metric-lg text-metric-lg text-secondary">45%</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1 mt-xs overflow-hidden">
+<div class="bg-secondary h-1 rounded-full animate-pulse transition-all duration-1000" style="width: 45%"></div>
+</div>
+<div class="flex justify-between mt-base">
+<span class="font-metric-sm text-metric-sm text-on-surface-variant">1,240 / 2,750 Tiles</span>
+<span class="font-metric-sm text-metric-sm text-on-surface-variant">~2 mins remaining</span>
+</div>
+</div>
+</section>
+<!-- Section 3: Downloaded Routes -->
+<section class="flex flex-col gap-sm animate-[fadeIn_0.7s_ease-out]">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Downloaded Routes</h2>
+<!-- Map Card: Route 1 -->
+<div class="bg-surface-container-low border border-outline-variant/30 rounded-xl p-sm flex items-center justify-between group hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-sm">
+<div class="w-12 h-12 rounded-lg bg-surface overflow-hidden relative border border-outline-variant/50 shrink-0">
+<div class="bg-cover bg-center w-full h-full opacity-80" data-alt="A highly detailed, top-down satellite view of a rugged mountain ridge. The terrain is characterized by sharp, dark gray rocky spines and deep valleys casting strong shadows in harsh, direct sunlight. The color palette is minimal, focusing on raw earth tones, stark whites, and deep blacks, reflecting a minimalist-technical aesthetic suited for high-altitude exploration mapping." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDSP8HZVQ2DZ6M9CO_wgY5bzwyeJMvmj41E5mN7JSuc14VnfhMbwnNR3xafm1SiYHLnWdlrTA7Y7wd0y_DOkTc--CCh3Y2Oyv49OiXwkQzRXr_zsUTZSc6fdP6gQgGXye351xGOXMDDz7WS0MSLscmmxw34dOgXHmFE_lIZZtK4Jvj2QuwABjOdTbFGzyKxB1AuDHMzfmasKo96OGD1J0gt6yP5myH1T6tHlp7nFFvQei-foRyq-ihVsg')"></div>
+</div>
+<div class="flex flex-col gap-base">
+<h3 class="font-headline-md text-headline-md text-primary text-[16px] leading-tight">Kalsubai Peak</h3>
+<div class="flex items-center gap-xs">
+<div class="bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full flex items-center gap-1 border border-tertiary-fixed/30">
+<span class="material-symbols-outlined text-[12px]" data-icon="check_circle">check_circle</span>
+<span class="font-label-caps text-[10px] uppercase font-bold">Ready</span>
+</div>
+<span class="font-metric-sm text-metric-sm text-on-surface-variant text-[12px]">240 MB</span>
+</div>
+</div>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-full transition-colors active:scale-95 flex shrink-0">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Map Card: Route 2 -->
+<div class="bg-surface-container-low border border-outline-variant/30 rounded-xl p-sm flex items-center justify-between group hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-sm">
+<div class="w-12 h-12 rounded-lg bg-surface overflow-hidden relative border border-outline-variant/50 shrink-0">
+<div class="bg-cover bg-center w-full h-full opacity-80" data-alt="A high-contrast topographical map segment showing a deep, narrow canyon system. The visual style uses sharp contour lines in slate gray against a light stone background, emphasizing steep gradients. Minimalist-technical approach, simulating high-end outdoor navigation software rendering of a rugged valley under bright, even lighting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD_1ZInrifUX5oq4aPo8YTNaT9SvKs5VJ0tnLdD-1wD6S15iU3W_eIGfRhWHcvB_N7CPgl-QrpI_To1uTFfEe1myDz4eiaeKBC8O1CaDDw97XLz9MEhgYl_ntnWadw2DZvGBvB5wk6Q6LaIPigLZJSGjTjnaSeQdAbjfrJq_YkTJlqZJLgiM8WX0PUmoKkJADGkJzkn4IoOys5_QY6ehymySlBVVstgyyGBPc0UYEPHRkG_z9wyhycTMg')"></div>
+</div>
+<div class="flex flex-col gap-base">
+<h3 class="font-headline-md text-headline-md text-primary text-[16px] leading-tight">Sandhan Valley</h3>
+<div class="flex items-center gap-xs">
+<div class="bg-tertiary-container text-on-tertiary-container px-2 py-0.5 rounded-full flex items-center gap-1 border border-tertiary-fixed/30">
+<span class="material-symbols-outlined text-[12px]" data-icon="check_circle">check_circle</span>
+<span class="font-label-caps text-[10px] uppercase font-bold">Ready</span>
+</div>
+<span class="font-metric-sm text-metric-sm text-on-surface-variant text-[12px]">185 MB</span>
+</div>
+</div>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-full transition-colors active:scale-95 flex shrink-0">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+<!-- Map Card: Route 3 -->
+<div class="bg-surface-container-low border border-outline-variant/30 rounded-xl p-sm flex items-center justify-between group hover:bg-surface-container transition-colors opacity-60">
+<div class="flex items-center gap-sm">
+<div class="w-12 h-12 rounded-lg bg-surface overflow-hidden relative border border-outline-variant/50 shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="map">map</span>
+</div>
+<div class="flex flex-col gap-base">
+<h3 class="font-headline-md text-headline-md text-primary text-[16px] leading-tight">Rajmachi Fort</h3>
+<div class="flex items-center gap-xs">
+<div class="bg-surface-variant text-on-surface-variant px-2 py-0.5 rounded-full flex items-center gap-1 border border-outline-variant/50">
+<span class="material-symbols-outlined text-[12px]" data-icon="cloud_off">cloud_off</span>
+<span class="font-label-caps text-[10px] uppercase font-bold">Paused</span>
+</div>
+<span class="font-metric-sm text-metric-sm text-on-surface-variant text-[12px]">10 / 120 MB</span>
+</div>
+</div>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest rounded-full transition-colors active:scale-95 flex shrink-0">
+<span class="material-symbols-outlined" data-icon="play_arrow">play_arrow</span>
+</button>
+</div>
+</section>
+<!-- Add New Area Button -->
+<button class="mt-sm w-full bg-primary text-on-primary font-headline-md text-headline-md py-sm rounded-xl flex items-center justify-center gap-xs hover:bg-primary-container transition-colors active:scale-95 shadow-sm">
+<span class="material-symbols-outlined" data-icon="add_location">add_location</span>
+            Select New Area
+        </button>
+</main>
+<style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<script>
+        // Simple scroll effect for TopNav shadow
+        const topNav = document.getElementById('top-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                topNav.classList.add('shadow-sm');
+                topNav.classList.replace('border-outline-variant/30', 'border-outline-variant/50');
+            } else {
+                topNav.classList.remove('shadow-sm');
+                topNav.classList.replace('border-outline-variant/50', 'border-outline-variant/30');
+            }
+        });
+    </script>
+</body></html>

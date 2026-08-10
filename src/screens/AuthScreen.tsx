@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#060912' },
 
   bgBase: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: '#060912',
   },
 

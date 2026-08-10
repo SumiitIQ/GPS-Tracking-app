@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SummitIQ - Experience Level</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "inverse-on-surface": "#eff1f4",
+                      "surface-variant": "#e0e3e6",
+                      "outline-variant": "#c5c6ca",
+                      "surface": "#f7f9fc",
+                      "primary-fixed": "#e2e2e5",
+                      "secondary-fixed": "#ffdbce",
+                      "outline": "#75777a",
+                      "inverse-surface": "#2d3133",
+                      "surface-tint": "#5d5e61",
+                      "on-secondary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-container": "#fffbff",
+                      "surface-container-high": "#e6e8eb",
+                      "background": "#f7f9fc",
+                      "primary-fixed-dim": "#c6c6c9",
+                      "on-primary-fixed-variant": "#454749",
+                      "on-tertiary": "#ffffff",
+                      "on-surface-variant": "#44474a",
+                      "primary-container": "#1a1c1e",
+                      "on-surface": "#191c1e",
+                      "on-primary": "#ffffff",
+                      "secondary-container": "#cd4800",
+                      "tertiary-container": "#00220b",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#00210b",
+                      "on-background": "#191c1e",
+                      "on-tertiary-container": "#009949",
+                      "on-error": "#ffffff",
+                      "on-secondary-fixed": "#370e00",
+                      "tertiary-fixed-dim": "#30e375",
+                      "on-tertiary-fixed-variant": "#005224",
+                      "tertiary-fixed": "#64ff92",
+                      "error": "#ba1a1a",
+                      "secondary": "#a33800",
+                      "inverse-primary": "#c6c6c9",
+                      "secondary-fixed-dim": "#ffb59a",
+                      "surface-container": "#eceef1",
+                      "primary": "#000101",
+                      "on-primary-container": "#838486",
+                      "surface-container-low": "#f2f4f7",
+                      "surface-bright": "#f7f9fc",
+                      "surface-dim": "#d8dadd",
+                      "surface-container-highest": "#e0e3e6",
+                      "on-secondary-fixed-variant": "#802a00",
+                      "error-container": "#ffdad6",
+                      "on-primary-fixed": "#1a1c1e",
+                      "tertiary": "#000200"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "md": "24px",
+                      "xl": "64px",
+                      "margin-desktop": "48px",
+                      "lg": "40px",
+                      "sm": "16px",
+                      "gutter": "16px",
+                      "base": "4px",
+                      "margin-mobile": "20px",
+                      "xs": "8px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "metric-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "metric-lg": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "metric-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "metric-lg": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom radio button styles for cards */
+        .level-radio:checked + div {
+            border-color: #cd4800; /* secondary-container (Summit Orange) */
+            background-color: rgba(205, 72, 0, 0.05);
+        }
+        .level-radio:checked + div .icon-container {
+            color: #cd4800;
+        }
+        
+        /* Custom checkbox styles for chips */
+        .interest-checkbox:checked + label {
+            background-color: #2d3133; /* inverse-surface */
+            color: #ffffff; /* on-secondary */
+            border-color: #2d3133;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased selection:bg-secondary-container selection:text-white">
+<!-- TopAppBar - Linear flow, so we suppress the global nav and use a transactional header -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-b border-outline-variant/30 px-margin-mobile py-xs flex justify-between items-center h-16">
+<button aria-label="Go back" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors text-on-surface">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">Experience Level</span>
+<div class="flex items-center gap-1 mt-1">
+<div class="w-8 h-1 bg-secondary-container rounded-full"></div>
+<div class="w-8 h-1 bg-secondary-container rounded-full"></div>
+<div class="w-8 h-1 bg-surface-container-highest rounded-full"></div>
+</div>
+</div>
+<div class="w-10 h-10"></div> <!-- Spacer for center alignment -->
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-24 pb-32 px-margin-mobile flex flex-col max-w-md mx-auto w-full">
+<div class="mb-lg">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-xs">What is your trekking level?</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">This helps us recommend routes that match your technical skill and physical endurance.</p>
+</div>
+<!-- Experience Level Cards -->
+<div class="flex flex-col gap-sm mb-lg">
+<!-- Beginner Card -->
+<label class="relative cursor-pointer group">
+<input class="level-radio sr-only" name="experience_level" type="radio" value="beginner"/>
+<div class="p-sm rounded-xl border border-surface-container-highest bg-surface-container-lowest transition-all duration-200 hover:border-outline-variant">
+<div class="flex items-start gap-sm">
+<div class="icon-container mt-1 text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined fill text-3xl" style="font-variation-settings: 'FILL' 1;">landscape</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Beginner</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">New to trekking. Prefer well-marked trails and gradual inclines.</p>
+</div>
+</div>
+</div>
+</label>
+<!-- Intermediate Card (Pre-selected) -->
+<label class="relative cursor-pointer group">
+<input checked="" class="level-radio sr-only" name="experience_level" type="radio" value="intermediate"/>
+<div class="p-sm rounded-xl border border-surface-container-highest bg-surface-container-lowest transition-all duration-200 hover:border-outline-variant">
+<div class="flex items-start gap-sm">
+<div class="icon-container mt-1 text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined fill text-3xl" style="font-variation-settings: 'FILL' 1;">terrain</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Intermediate</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Comfortable with long distances and moderate elevation gain. Familiar with basic navigation.</p>
+</div>
+</div>
+</div>
+</label>
+<!-- Advanced Card -->
+<label class="relative cursor-pointer group">
+<input class="level-radio sr-only" name="experience_level" type="radio" value="advanced"/>
+<div class="p-sm rounded-xl border border-surface-container-highest bg-surface-container-lowest transition-all duration-200 hover:border-outline-variant">
+<div class="flex items-start gap-sm">
+<div class="icon-container mt-1 text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined fill text-3xl" style="font-variation-settings: 'FILL' 1;">volcano</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Advanced</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Experienced in technical terrain, high altitude, and off-trail navigation. High endurance.</p>
+</div>
+</div>
+</div>
+</label>
+</div>
+<!-- Technical Detail Section -->
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-sm">Primary Interests</h4>
+<div class="flex flex-wrap gap-xs">
+<div class="relative">
+<input checked="" class="interest-checkbox sr-only" id="interest-alpine" type="checkbox"/>
+<label class="inline-flex items-center px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface font-metric-sm text-metric-sm cursor-pointer transition-colors hover:bg-surface-container-low select-none" for="interest-alpine">
+                        Alpine
+                    </label>
+</div>
+<div class="relative">
+<input class="interest-checkbox sr-only" id="interest-technical" type="checkbox"/>
+<label class="inline-flex items-center px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface font-metric-sm text-metric-sm cursor-pointer transition-colors hover:bg-surface-container-low select-none" for="interest-technical">
+                        Technical
+                    </label>
+</div>
+<div class="relative">
+<input checked="" class="interest-checkbox sr-only" id="interest-endurance" type="checkbox"/>
+<label class="inline-flex items-center px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface font-metric-sm text-metric-sm cursor-pointer transition-colors hover:bg-surface-container-low select-none" for="interest-endurance">
+                        Endurance
+                    </label>
+</div>
+<div class="relative">
+<input class="interest-checkbox sr-only" id="interest-photography" type="checkbox"/>
+<label class="inline-flex items-center px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface font-metric-sm text-metric-sm cursor-pointer transition-colors hover:bg-surface-container-low select-none" for="interest-photography">
+                        Photography
+                    </label>
+</div>
+<div class="relative">
+<input class="interest-checkbox sr-only" id="interest-fastpacking" type="checkbox"/>
+<label class="inline-flex items-center px-4 py-2 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface font-metric-sm text-metric-sm cursor-pointer transition-colors hover:bg-surface-container-low select-none" for="interest-fastpacking">
+                        Fast-packing
+                    </label>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Action -->
+<div class="fixed bottom-0 left-0 w-full bg-surface/90 backdrop-blur-xl border-t border-outline-variant/20 p-margin-mobile z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<div class="max-w-md mx-auto w-full">
+<button class="w-full bg-secondary-container hover:bg-secondary text-on-secondary font-headline-md text-headline-md py-4 rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2">
+                Continue
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</body></html>

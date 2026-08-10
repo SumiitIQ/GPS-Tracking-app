@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Explore Map - SummitIQ</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#370e00",
+                        "tertiary-fixed-dim": "#30e375",
+                        "surface-container-high": "#e6e8eb",
+                        "on-surface-variant": "#44474a",
+                        "outline": "#75777a",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#000101",
+                        "secondary-fixed-dim": "#ffb59a",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed": "#1a1c1e",
+                        "on-surface": "#191c1e",
+                        "secondary-container": "#cd4800",
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "background": "#f7f9fc",
+                        "surface-container-low": "#f2f4f7",
+                        "surface-dim": "#d8dadd",
+                        "tertiary-fixed": "#64ff92",
+                        "on-secondary-container": "#fffbff",
+                        "on-primary": "#ffffff",
+                        "secondary": "#a33800",
+                        "surface-variant": "#e0e3e6",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#00220b",
+                        "on-tertiary-fixed-variant": "#005224",
+                        "tertiary": "#000200",
+                        "surface-bright": "#f7f9fc",
+                        "surface": "#f7f9fc",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#c6c6c9",
+                        "secondary-fixed": "#ffdbce",
+                        "on-primary-container": "#838486",
+                        "on-tertiary-container": "#009949",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c5c6ca",
+                        "on-tertiary-fixed": "#00210b",
+                        "surface-container-highest": "#e0e3e6",
+                        "primary-container": "#1a1c1e",
+                        "inverse-on-surface": "#eff1f4",
+                        "on-primary-fixed-variant": "#454749",
+                        "surface-tint": "#5d5e61",
+                        "surface-container": "#eceef1",
+                        "primary-fixed": "#e2e2e5",
+                        "on-secondary-fixed-variant": "#802a00",
+                        "primary-fixed-dim": "#c6c6c9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "16px",
+                        "lg": "40px",
+                        "xs": "8px",
+                        "md": "24px",
+                        "xl": "64px",
+                        "base": "4px",
+                        "margin-desktop": "48px",
+                        "gutter": "16px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "metric-lg": ["JetBrains Mono"],
+                        "metric-sm": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "metric-lg": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "metric-sm": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.material-symbols-outlined[data-weight="fill"] {
+    font-variation-settings: "FILL" 1
+    }
+/* Map Background Simulation */
+.map-bg {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCh_jGoDJbol8VzWF76xlR2hFBG0rlogZtXMHNvX3ASrNb7M9kjt-P2ZbB_Ji3PN6e7J8nWY3QuKs8xdFL9D-hK55OKKKGcxKU5iXc0QR57bRXUt-bLTDgiWfoAOeuXPEtUkk6dN_0W9fW7fvd-2U9lsN5PMHrSJlnF0ZFEr32OCWMcGSqjz1j4wa0aUO8h67oVRKlkWnHkP2OQdo1jMtwJygSfj78uUxORCC9nWzpogLCvm76vR5mxbA);
+    background-size: cover;
+    background-position: center
+    }
+/* Draggable Bottom Sheet Animation */
+#bottom-sheet {
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)
+    }</style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-hidden h-screen w-screen flex flex-col relative">
+<!-- TopAppBar (Web) -->
+<header class="hidden md:flex fixed top-0 w-full z-50 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl border-b border-outline-variant/30 flex justify-between items-center px-margin-mobile py-xs">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" data-icon="location_on">location_on</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed">SummitIQ</span>
+</div>
+<nav class="flex gap-md">
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors font-headline-md text-headline-md px-sm py-xs rounded-DEFAULT" href="#">Home</a>
+<a class="text-primary font-bold active:scale-95 duration-200 hover:bg-surface-container-high transition-colors font-headline-md text-headline-md px-sm py-xs rounded-DEFAULT" href="#">Explore</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors font-headline-md text-headline-md px-sm py-xs rounded-DEFAULT" href="#">Record</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors font-headline-md text-headline-md px-sm py-xs rounded-DEFAULT" href="#">Routes</a>
+<a class="text-on-surface-variant hover:bg-surface-container-high transition-colors font-headline-md text-headline-md px-sm py-xs rounded-DEFAULT" href="#">Profile</a>
+</nav>
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" data-icon="notifications">notifications</span>
+</header>
+<!-- Main Map Canvas -->
+<main class="flex-1 relative w-full h-full">
+<!-- Map Background (Placeholder) -->
+<div class="absolute inset-0 w-full h-full map-bg" data-alt="A highly detailed, technical topographic map interface showing mountainous terrain. Contour lines are sharp and visible. The map uses a minimalist, low-contrast grayscale palette to emphasize the data. A bright orange route polyline snakes through a valley. The overall aesthetic is rugged, precise, and professional, characteristic of a high-end alpine navigation tool." data-location="Sandhan Valley" style=""></div>
+<!-- Search Bar Overlay (Mobile & Web) -->
+<div class="absolute top-margin-mobile md:top-[80px] left-margin-mobile right-margin-mobile md:left-1/2 md:-translate-x-1/2 md:w-[480px] z-40">
+<div class="bg-surface/90 backdrop-blur-md border border-outline-variant rounded-full flex items-center px-sm py-xs shadow-sm">
+<span class="material-symbols-outlined text-on-surface-variant mr-xs" data-icon="search">search</span>
+<input class="flex-1 bg-transparent border-none text-on-surface focus:ring-0 font-body-md placeholder:text-on-surface-variant" placeholder="Near me" type="text"/>
+<div class="h-6 w-[1px] bg-outline-variant mx-xs"></div>
+<button class="p-xs text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</button>
+</div>
+</div>
+<!-- Map Markers -->
+<div class="absolute top-[40%] left-[30%] z-30 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-error/10 text-error px-xs py-base rounded-full border border-error/20 font-label-caps text-label-caps mb-1 backdrop-blur-sm shadow-sm whitespace-nowrap">Hard</div>
+<span class="material-symbols-outlined text-error text-[32px] drop-shadow-md" data-icon="location_on" data-weight="fill">location_on</span>
+</div>
+<div class="absolute top-[60%] left-[60%] z-30 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-tertiary-fixed-dim/20 text-on-tertiary-container px-xs py-base rounded-full border border-tertiary-fixed-dim/30 font-label-caps text-label-caps mb-1 backdrop-blur-sm shadow-sm whitespace-nowrap">Easy</div>
+<span class="material-symbols-outlined text-on-tertiary-container text-[32px] drop-shadow-md" data-icon="location_on" data-weight="fill">location_on</span>
+</div>
+<!-- Current Location Pulse -->
+<div class="absolute top-[50%] left-[50%] z-20 transform -translate-x-1/2 -translate-y-1/2">
+<div class="relative flex h-6 w-6">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-6 w-6 bg-secondary border-2 border-surface"></span>
+</div>
+</div>
+<!-- Draggable Bottom Sheet (Partially Visible) -->
+<div class="absolute bottom-[80px] md:bottom-lg left-0 right-0 md:left-margin-desktop md:right-auto md:w-[400px] bg-surface rounded-t-xl md:rounded-xl border-t md:border border-outline-variant shadow-[0_-4px_20px_rgba(0,0,0,0.1)] md:shadow-lg z-40 transform translate-y-[20%]" id="bottom-sheet">
+<!-- Drag Handle (Mobile) -->
+<div class="w-full flex justify-center py-xs md:hidden cursor-pointer" onclick="toggleSheet()">
+<div class="w-[32px] h-[4px] bg-outline-variant rounded-full"></div>
+</div>
+<div class="p-sm flex flex-col gap-sm">
+<div class="flex justify-between items-start">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold">Sandhan Valley Trek</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="star">star</span>
+                            4.8 <span class="text-outline mx-1">•</span> 1.2k followers
+                        </p>
+</div>
+<!-- Difficulty Badge -->
+<div class="bg-error/10 text-error px-sm py-xs rounded-full font-label-caps text-label-caps flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span>
+                        HARD
+                    </div>
+</div>
+<!-- Precision Metric Tiles -->
+<div class="grid grid-cols-3 gap-xs mt-xs">
+<div class="border border-outline-variant rounded-DEFAULT p-xs flex flex-col items-center bg-surface-container-lowest">
+<span class="font-label-caps text-label-caps text-on-surface-variant">ELEVATION</span>
+<span class="font-metric-lg text-metric-lg text-on-surface mt-1">1120m</span>
+</div>
+<div class="border border-outline-variant rounded-DEFAULT p-xs flex flex-col items-center bg-surface-container-lowest">
+<span class="font-label-caps text-label-caps text-on-surface-variant">DISTANCE</span>
+<span class="font-metric-lg text-metric-lg text-on-surface mt-1">12km</span>
+</div>
+<div class="border border-outline-variant rounded-DEFAULT p-xs flex flex-col items-center bg-surface-container-lowest">
+<span class="font-label-caps text-label-caps text-on-surface-variant">EST TIME</span>
+<span class="font-metric-lg text-metric-lg text-on-surface mt-1">6h</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface/90 dark:bg-inverse-surface/90 backdrop-blur-xl border-t border-outline-variant/20 shadow-sm rounded-t-xl flex justify-around items-center pt-xs pb-[env(safe-area-inset-bottom,16px)] px-base">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low active:scale-90 transition-transform duration-150 p-xs rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-bold hover:bg-surface-container-low active:scale-90 transition-transform duration-150 p-xs rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="explore" data-weight="fill">explore</span>
+<span class="font-label-caps text-label-caps text-secondary dark:text-secondary-fixed-dim">Explore</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low active:scale-90 transition-transform duration-150 p-xs rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="fiber_manual_record">fiber_manual_record</span>
+<span class="font-label-caps text-label-caps">Record</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low active:scale-90 transition-transform duration-150 p-xs rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="terrain">terrain</span>
+<span class="font-label-caps text-label-caps">Routes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low active:scale-90 transition-transform duration-150 p-xs rounded-DEFAULT" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-caps text-label-caps">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple bottom sheet interaction for demonstration
+        let sheetOpen = false;
+        function toggleSheet() {
+            const sheet = document.getElementById('bottom-sheet');
+            if (sheetOpen) {
+                sheet.style.transform = 'translateY(20%)';
+            } else {
+                sheet.style.transform = 'translateY(0)';
+            }
+            sheetOpen = !sheetOpen;
+        }
+    </script>
+</body></html>

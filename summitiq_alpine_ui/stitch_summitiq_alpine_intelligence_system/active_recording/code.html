@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>SummitIQ - Active Recording</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#370e00",
+                    "tertiary-fixed-dim": "#30e375",
+                    "surface-container-high": "#e6e8eb",
+                    "on-surface-variant": "#44474a",
+                    "outline": "#75777a",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#000101",
+                    "secondary-fixed-dim": "#ffb59a",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#1a1c1e",
+                    "on-surface": "#191c1e",
+                    "secondary-container": "#cd4800",
+                    "on-background": "#191c1e",
+                    "inverse-surface": "#2d3133",
+                    "background": "#f7f9fc",
+                    "surface-container-low": "#f2f4f7",
+                    "surface-dim": "#d8dadd",
+                    "tertiary-fixed": "#64ff92",
+                    "on-secondary-container": "#fffbff",
+                    "on-primary": "#ffffff",
+                    "secondary": "#a33800",
+                    "surface-variant": "#e0e3e6",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#00220b",
+                    "on-tertiary-fixed-variant": "#005224",
+                    "tertiary": "#000200",
+                    "surface-bright": "#f7f9fc",
+                    "surface": "#f7f9fc",
+                    "on-error": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#c6c6c9",
+                    "secondary-fixed": "#ffdbce",
+                    "on-primary-container": "#838486",
+                    "on-tertiary-container": "#009949",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#c5c6ca",
+                    "on-tertiary-fixed": "#00210b",
+                    "surface-container-highest": "#e0e3e6",
+                    "primary-container": "#1a1c1e",
+                    "inverse-on-surface": "#eff1f4",
+                    "on-primary-fixed-variant": "#454749",
+                    "surface-tint": "#5d5e61",
+                    "surface-container": "#eceef1",
+                    "primary-fixed": "#e2e2e5",
+                    "on-secondary-fixed-variant": "#802a00",
+                    "primary-fixed-dim": "#c6c6c9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sm": "16px",
+                    "lg": "40px",
+                    "xs": "8px",
+                    "md": "24px",
+                    "xl": "64px",
+                    "base": "4px",
+                    "margin-desktop": "48px",
+                    "gutter": "16px",
+                    "margin-mobile": "20px"
+            },
+            "fontFamily": {
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "headline-lg-mobile": [
+                            "Inter"
+                    ],
+                    "metric-lg": [
+                            "JetBrains Mono"
+                    ],
+                    "metric-sm": [
+                            "JetBrains Mono"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "label-caps": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "metric-lg": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "metric-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "56px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>body {
+    -webkit-tap-highlight-color: transparent
+    }
+.drag-handle::before {
+    content: "";
+    display: block;
+    width: 32px;
+    height: 4px;
+    background-color: #E2E8F0;
+    border-radius: 2px;
+    margin: 0 auto
+    }
+.glass-panel {
+    background: rgba(247, 249, 252, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px)
+    }
+.map-bg {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuD7ckf5ZdcjBzvGVgIcSdWZGOuZuoSjVT1gLoE5EF-1lSrl3AqNQziApqLBgaBEpXOyxvCqioODCr6VUwIJTDdVgscDjsJs7k5Xpwl9ugGFOm14D-TXBlptT934VuznCcEG-FVgi9gBz_K2xbC9bqbde5aFdFMdl5TAVFPQKrtknVM0han4F9E0sc7ljAz_339QvHODc2LBZ3l_wA4uMgUxNpQGwG6x21jq0fAuhpq_fIrjg6ZJop7T-A);
+    background-size: cover;
+    background-position: center
+    }</style>
+</head>
+<body class="bg-background text-on-background h-screen w-screen overflow-hidden flex flex-col font-body-md">
+<!-- Top Navigation / Status -->
+<header class="fixed top-0 w-full z-50 glass-panel border-b border-outline-variant/30 flex justify-between items-center px-margin-mobile py-sm">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">my_location</span>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">GPS Accuracy</span>
+<span class="font-metric-sm text-metric-sm text-on-surface">High (3m)</span>
+</div>
+</div>
+<div class="flex flex-col items-center">
+<h1 class="font-headline-md text-headline-md text-primary font-bold">Recording Trek</h1>
+</div>
+<div class="flex items-center gap-xs">
+<div class="flex flex-col items-end">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-wider">Battery</span>
+<span class="font-metric-sm text-metric-sm text-on-surface">84%</span>
+</div>
+<span class="material-symbols-outlined text-primary">battery_5_bar</span>
+</div>
+</header>
+<!-- Map Area -->
+<main class="flex-1 relative w-full h-full bg-surface-container">
+<!-- Live Map Background -->
+<div class="absolute inset-0 map-bg" data-alt="A detailed, high-contrast topographical map view of Kalsubai Peak in Maharashtra, India. The map features crisp, geometric contour lines in a dark basalt color against a pale stone background, typical of high-end mountaineering equipment displays. A bright Summit Orange route line cuts sharply across the terrain, indicating an active hiking trail. The visual style is minimalist and technical, optimized for clear readability in bright sunlight with no decorative flourishes." data-location="Kalsubai Peak, Maharashtra, India" style=""></div>
+<!-- Live Route Indicator Overlay -->
+<div class="absolute top-[88px] left-1/2 -translate-x-1/2 glass-panel border border-outline-variant px-sm py-xs rounded-full shadow-sm flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+<span class="font-metric-sm text-metric-sm text-on-surface whitespace-nowrap">Following Route: Kalsubai Ridge</span>
+</div>
+<!-- Center Reticle -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+<span class="material-symbols-outlined text-secondary text-[40px] drop-shadow-md" style="font-variation-settings: 'FILL' 1;">add_location</span>
+</div>
+</main>
+<!-- Bottom Sheet (Draggable Metrics) -->
+<section class="fixed bottom-0 w-full z-40 bg-surface rounded-t-[24px] shadow-[0_-4px_24px_rgba(0,0,0,0.1)] border-t border-outline/20 flex flex-col transition-transform duration-300 ease-out translate-y-[0%]" id="metricsSheet">
+<div class="w-full pt-3 pb-2 flex justify-center cursor-grab active:cursor-grabbing" id="dragHandleArea">
+<div class="drag-handle w-8 h-1 bg-outline-variant rounded-full"></div>
+</div>
+<div class="px-margin-mobile pb-margin-desktop flex flex-col gap-md">
+<!-- Time Display -->
+<div class="flex flex-col items-center justify-center border-b border-outline-variant/30 pb-sm">
+<span class="font-label-caps text-label-caps text-outline uppercase tracking-widest mb-1">Elapsed Time</span>
+<span class="font-metric-lg text-[48px] leading-[56px] font-bold text-primary tracking-tighter">01:12:45</span>
+</div>
+<!-- Metrics Grid (Bento Style) -->
+<div class="grid grid-cols-2 gap-xs">
+<div class="bg-surface-container-lowest border border-outline-variant p-sm rounded-lg flex flex-col justify-between h-[88px]">
+<span class="font-label-caps text-label-caps text-outline uppercase">Distance</span>
+<div class="flex items-baseline gap-1">
+<span class="font-metric-lg text-metric-lg text-primary">3.42</span>
+<span class="font-metric-sm text-metric-sm text-outline">km</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-sm rounded-lg flex flex-col justify-between h-[88px]">
+<span class="font-label-caps text-label-caps text-outline uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> Elevation
+                    </span>
+<div class="flex items-baseline gap-1">
+<span class="font-metric-lg text-metric-lg text-tertiary-fixed-dim">+240</span>
+<span class="font-metric-sm text-metric-sm text-outline">m</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-sm rounded-lg flex flex-col justify-between h-[88px] col-span-2">
+<span class="font-label-caps text-label-caps text-outline uppercase">Pace</span>
+<div class="flex items-baseline gap-1">
+<span class="font-metric-lg text-metric-lg text-primary">18:20</span>
+<span class="font-metric-sm text-metric-sm text-outline">/km</span>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex gap-sm mt-xs">
+<button class="flex-1 bg-secondary text-on-secondary font-headline-md text-headline-md font-bold py-[16px] rounded-lg shadow-sm active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pause</span>
+                    Pause
+                </button>
+<button class="w-[64px] h-[64px] bg-surface-container-high border border-outline-variant rounded-lg flex items-center justify-center active:bg-surface-dim transition-colors">
+<span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">push_pin</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Bottom Nav is suppressed as this is a task-focused functional screen -->
+<script>
+        // Simple drag interaction for the bottom sheet (visual only for this prototype)
+        const sheet = document.getElementById('metricsSheet');
+        const handle = document.getElementById('dragHandleArea');
+        let isExpanded = true;
+        let startY = 0;
+
+        handle.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        }, {passive: true});
+
+        handle.addEventListener('touchend', (e) => {
+            const endY = e.changedTouches[0].clientY;
+            const diff = endY - startY;
+            
+            if (diff > 50 && isExpanded) {
+                // Collapse
+                sheet.style.transform = 'translateY(65%)';
+                isExpanded = false;
+            } else if (diff < -50 && !isExpanded) {
+                // Expand
+                sheet.style.transform = 'translateY(0%)';
+                isExpanded = true;
+            }
+        }, {passive: true});
+        
+        // Desktop click to toggle for preview purposes
+        handle.addEventListener('click', () => {
+             if (isExpanded) {
+                sheet.style.transform = 'translateY(65%)';
+                isExpanded = false;
+            } else {
+                sheet.style.transform = 'translateY(0%)';
+                isExpanded = true;
+            }
+        });
+    </script>
+</body></html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SummitIQ - Route Details Download</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#64ff92",
+                      "primary-fixed": "#e2e2e5",
+                      "on-surface-variant": "#44474a",
+                      "on-background": "#191c1e",
+                      "on-error": "#ffffff",
+                      "surface": "#f7f9fc",
+                      "surface-variant": "#e0e3e6",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed-dim": "#30e375",
+                      "surface-container-high": "#e6e8eb",
+                      "on-tertiary-container": "#009949",
+                      "tertiary": "#000200",
+                      "primary": "#000101",
+                      "surface-container-low": "#f2f4f7",
+                      "secondary-container": "#cd4800",
+                      "primary-container": "#1a1c1e",
+                      "secondary-fixed-dim": "#ffb59a",
+                      "on-surface": "#191c1e",
+                      "error-container": "#ffdad6",
+                      "primary-fixed-dim": "#c6c6c9",
+                      "secondary-fixed": "#ffdbce",
+                      "on-secondary-fixed": "#370e00",
+                      "on-primary-fixed": "#1a1c1e",
+                      "on-tertiary": "#ffffff",
+                      "surface-bright": "#f7f9fc",
+                      "surface-container-highest": "#e0e3e6",
+                      "secondary": "#a33800",
+                      "inverse-primary": "#c6c6c9",
+                      "background": "#f7f9fc",
+                      "surface-tint": "#5d5e61",
+                      "surface-dim": "#d8dadd",
+                      "on-tertiary-fixed": "#00210b",
+                      "on-tertiary-fixed-variant": "#005224",
+                      "on-primary-fixed-variant": "#454749",
+                      "error": "#ba1a1a",
+                      "outline": "#75777a",
+                      "tertiary-container": "#00220b",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#eff1f4",
+                      "outline-variant": "#c5c6ca",
+                      "on-primary": "#ffffff",
+                      "on-secondary-fixed-variant": "#802a00",
+                      "inverse-surface": "#2d3133",
+                      "on-secondary-container": "#fffbff",
+                      "on-primary-container": "#838486",
+                      "surface-container": "#eceef1",
+                      "on-secondary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "lg": "40px",
+                      "margin-mobile": "20px",
+                      "xs": "8px",
+                      "sm": "16px",
+                      "base": "4px",
+                      "margin-desktop": "48px",
+                      "md": "24px",
+                      "gutter": "16px",
+                      "xl": "64px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "metric-lg": ["JetBrains Mono"],
+                      "headline-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "metric-sm": ["JetBrains Mono"],
+                      "headline-lg-mobile": ["Inter"],
+                      "display-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "metric-lg": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "metric-sm": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .spin { animation: spin 1.5s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col font-body-md relative pb-20 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-outline-variant/30 flex justify-between items-center px-margin-mobile py-xs h-16 md:h-[72px]">
+<div class="flex items-center gap-4">
+<button class="text-primary hover:bg-surface-container-high transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg font-bold text-primary">SummitIQ</h1>
+</div>
+<button class="text-primary hover:bg-surface-container-high transition-colors active:scale-95 duration-200 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">more_vert</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow pt-16 md:pt-[72px] pb-24 relative z-0 flex flex-col">
+<!-- Map Header Section -->
+<div class="relative w-full h-[40vh] md:h-[50vh] bg-surface-container-low border-b border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="High resolution topographical map view of a rugged mountain region. The map shows contour lines, elevation data, and a highlighted red route line winding through steep terrain. Minimalist technical aesthetic with sharp contrasts, ideal for a hiking or mountaineering application. The scene is brightly lit, evoking a clear day on the peaks." data-location="Kedarkantha Peak" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpIsedHcgeqQr8Ex-IgsYEkycCG1FQxhtMHVJ6C587HIWPU7VOy5j51QopW5KcCPIoOUNdCB8ZXRKDzdhg1HFQKL7nIVweeEA4CmwSwg7zTMedl-4Rlt1ib3QplxWq5hx7RzqGkL_fjA7EDPqSFAuyGQwLl8ZXGXEZOMQDMprBzrHyN_NM4XMzCcVv95Bms1yE8Ir6zPo3RawocJttbECWl2CE15bpoW_b_Ig0tFTBxfqvokjVRRQoTQ"/>
+<!-- Map Overlay Gradient for Text Legibility -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-0 left-0 w-full p-margin-mobile md:p-margin-desktop text-on-primary">
+<div class="flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-tertiary-fixed tracking-wider uppercase">Uttarakhand, India</span>
+<h2 class="font-display-lg text-display-lg text-on-primary m-0">Kedarkantha Summit</h2>
+<div class="flex flex-wrap gap-xs mt-sm">
+<div class="px-sm py-base rounded-full bg-surface-container-low/20 backdrop-blur-md border border-outline-variant/30 text-on-primary font-label-caps text-label-caps flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">landscape</span>
+<span>3,800m Peak</span>
+</div>
+<div class="px-sm py-base rounded-full bg-tertiary-container/80 backdrop-blur-md border border-tertiary-fixed/30 text-tertiary-fixed font-label-caps text-label-caps flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">signal_cellular_alt</span>
+<span>Moderate</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Draggable Bottom Sheet Overlay (Download Options) -->
+<div class="fixed inset-x-0 bottom-0 z-40 flex justify-center w-full transform translate-y-0 transition-transform duration-300 md:relative md:inset-auto md:w-full md:max-w-3xl md:mx-auto md:-mt-8 md:rounded-xl md:shadow-lg">
+<div class="w-full bg-surface-container-low rounded-t-[24px] md:rounded-xl border border-outline-variant/50 shadow-[0_-4px_24px_rgba(0,0,0,0.1)] flex flex-col p-margin-mobile gap-md">
+<!-- Drag Handle (Mobile Only) -->
+<div class="w-12 h-1.5 bg-outline-variant rounded-full mx-auto md:hidden -mt-2 mb-2"></div>
+<!-- Sheet Header -->
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Download Route</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Available for offline navigation</p>
+</div>
+<div class="font-metric-lg text-metric-lg text-primary bg-surface p-sm rounded-lg border border-outline-variant/50">
+                        142 <span class="font-label-caps text-label-caps text-on-surface-variant">MB</span>
+</div>
+</div>
+<!-- Divider -->
+<hr class="border-outline-variant/30"/>
+<!-- Download Options -->
+<div class="flex flex-col gap-sm">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Map Detail</h4>
+<div class="grid grid-cols-2 gap-xs">
+<button class="border border-outline-variant p-sm rounded-lg flex flex-col items-center justify-center gap-2 bg-surface hover:bg-surface-container transition-colors text-primary">
+<span class="material-symbols-outlined">map</span>
+<span class="font-metric-sm text-metric-sm">Standard</span>
+</button>
+<button class="border-2 border-secondary p-sm rounded-lg flex flex-col items-center justify-center gap-2 bg-surface-container-highest text-secondary relative overflow-hidden">
+<span class="absolute top-2 right-2 material-symbols-outlined text-[16px]">check_circle</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">layers</span>
+<span class="font-metric-sm text-metric-sm font-bold">High Detail</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-sm mt-2">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Included Content</h4>
+<div class="flex items-center justify-between p-sm border border-outline-variant/50 rounded-lg bg-surface">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">route</span>
+<span class="font-body-md text-body-md font-medium">GPX Track</span>
+</div>
+<span class="material-symbols-outlined text-secondary">check</span>
+</div>
+<div class="flex items-center justify-between p-sm border border-outline-variant/50 rounded-lg bg-surface">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">grid_on</span>
+<span class="font-body-md text-body-md font-medium">Terrain Tiles</span>
+</div>
+<span class="material-symbols-outlined text-secondary">check</span>
+</div>
+<div class="flex items-center justify-between p-sm border border-outline-variant/50 rounded-lg bg-surface">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined">location_on</span>
+<span class="font-body-md text-body-md font-medium">Waypoints</span>
+</div>
+<span class="material-symbols-outlined text-secondary">check</span>
+</div>
+</div>
+<!-- Downloading Action Button -->
+<button class="mt-4 w-full bg-secondary text-on-secondary py-md rounded-xl font-headline-md text-headline-md flex items-center justify-center gap-3 active:scale-[0.98] transition-transform shadow-sm relative overflow-hidden pointer-events-none opacity-90">
+<div class="absolute left-0 top-0 bottom-0 bg-secondary-container w-[45%] opacity-40"></div>
+<span class="material-symbols-outlined spin">progress_activity</span>
+<span>Downloading... 45%</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Hidden on MD up) -->
+<nav class="md:hidden bg-surface/90 dark:bg-inverse-surface/90 backdrop-blur-xl fixed bottom-0 w-full z-50 rounded-t-xl border-t border-outline-variant/20 shadow-sm flex justify-around items-center pt-xs pb-safe px-base h-20">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low active:scale-90 transition-transform duration-150 p-2 rounded-lg w-16">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-caps text-label-caps mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-bold hover:bg-surface-container-low active:scale-90 transition-transform duration-150 p-2 rounded-lg w-16">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label-caps text-label-caps mt-1">Explore</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low active:scale-90 transition-transform duration-150 p-2 rounded-lg w-16">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">fiber_manual_record</span>
+<span class="font-label-caps text-label-caps mt-1">Record</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low active:scale-90 transition-transform duration-150 p-2 rounded-lg w-16">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">terrain</span>
+<span class="font-label-caps text-label-caps mt-1">Routes</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container-low active:scale-90 transition-transform duration-150 p-2 rounded-lg w-16">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-caps text-label-caps mt-1">Profile</span>
+</button>
+</nav>
+</body></html>

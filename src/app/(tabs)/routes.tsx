@@ -3,10 +3,10 @@ import { View, StyleSheet } from 'react-native';
 import { Theme } from '../../theme/Theme';
 import { Typography } from '../../components/ui/Typography';
 
-export default function ExploreScreen() {
+export default function RoutesScreen() {
   return (
     <View style={styles.container}>
-      <Typography variant="headlineLg" color={Theme.colors.primary}>Explore</Typography>
+      <Typography variant="headlineLg" color={Theme.colors.primary}>Routes</Typography>
     </View>
   );
 }
