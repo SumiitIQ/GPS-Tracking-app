@@ -13,10 +13,10 @@ export default function ProfileTab() {
 
   useFocusEffect(
     useCallback(() => {
-      if (user) {
+      if (user?.id) {
         fetchMyRoutes();
       }
-    }, [user])
+    }, [user?.id])
   );
 
   const fetchMyRoutes = async () => {

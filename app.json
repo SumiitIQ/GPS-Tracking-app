@@ -5,11 +5,11 @@
     "owner": "mrcoder.420",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/summit-logo.jpg",
     "scheme": "precisiontrackmobile",
     "userInterfaceStyle": "dark",
     "ios": {
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/images/summit-logo.jpg",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "PrecisionTrack uses GPS to show your exact location on the map.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "PrecisionTrack uses GPS in the background to track your route even when the app is minimized."
@@ -22,19 +22,24 @@
           "apiKey": "AIzaSyDummyKeyForArcGISOverlayWeAreUsingArcGISTilesAnyway123"
         }
       },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_LOCATION",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.WAKE_LOCK"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#0a0a1a",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/images/summit-logo.jpg"
       },
-      "permissions": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_BACKGROUND_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_FINE_LOCATION"
-      ],
+      "notification": {
+        "icon": "./assets/images/summit-logo.jpg",
+        "color": "#fc4c02"
+      },
+
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -48,15 +53,17 @@
         {
           "locationAlwaysAndWhenInUsePermission": "PrecisionTrack uses GPS to track your route.",
           "locationAlwaysPermission": "PrecisionTrack uses GPS in the background.",
-          "locationWhenInUsePermission": "PrecisionTrack uses GPS to show your location."
+          "locationWhenInUsePermission": "PrecisionTrack uses GPS to show your location.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isIosBackgroundLocationEnabled": true
         }
       ],
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#0a0a1a",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#000000",
+          "image": "./assets/images/summit-logo.jpg",
+          "imageWidth": 300
         }
       ]
     ],

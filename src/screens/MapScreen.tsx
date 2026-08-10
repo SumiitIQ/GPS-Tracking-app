@@ -349,7 +349,10 @@ export default function MapScreen() {
     await AsyncStorage.removeItem('tracking_start_time');
     
     try {
-      await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+      const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+      if (hasStarted) {
+        await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+      }
     } catch (e) {
       console.error('Failed to stop bg location', e);
     }

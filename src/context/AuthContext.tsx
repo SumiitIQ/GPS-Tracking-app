@@ -93,11 +93,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    const unsubscribeNet = NetInfo.addEventListener(state => {
-      if (state.isConnected && user) {
-        processOfflineQueue(user);
-      }
-    });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -115,6 +110,72 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return () => {
       subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const processOfflineQueue = async (u: User) => {
+      try {
+        const existing = await AsyncStorage.getItem('pending_tracks');
+        if (!existing) return;
+        
+        const tracks = JSON.parse(existing);
+        const remaining = [];
+        
+        for (const track of tracks) {
+          if (track.userId !== u.id) {
+            remaining.push(track);
+            continue;
+          }
+          
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('gpx-routes')
+            .upload(`${u.id}/${track.gpxData.fileName}`, track.gpxData.content, {
+              contentType: 'application/gpx+xml',
+              upsert: true
+            });
+            
+          if (uploadError) {
+            remaining.push(track);
+            continue;
+          }
+  
+          const { data: publicUrlData } = supabase.storage
+            .from('gpx-routes')
+            .getPublicUrl(`${u.id}/${track.gpxData.fileName}`);
+          
+          const { error: dbError } = await supabase.from('routes').insert({
+            title: 'My Expedition (Offline Sync)',
+            gpx_url: publicUrlData.publicUrl,
+            distance: track.distance,
+            elevation_gain: 0,
+            submitter_id: u.id,
+            created_at: track.timestamp
+          });
+          
+          if (dbError) {
+             remaining.push(track);
+          }
+        }
+        
+        if (remaining.length !== tracks.length) {
+          await AsyncStorage.setItem('pending_tracks', JSON.stringify(remaining));
+        } else if (remaining.length === 0) {
+          await AsyncStorage.removeItem('pending_tracks');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    if (!user) return;
+    
+    const unsubscribeNet = NetInfo.addEventListener(state => {
+      if (state.isConnected && user) {
+        processOfflineQueue(user);
+      }
+    });
+    return () => {
       unsubscribeNet();
     };
   }, [user]);
