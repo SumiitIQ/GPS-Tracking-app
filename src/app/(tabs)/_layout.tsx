@@ -46,9 +46,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="routes"
+        name="navigate"
         options={{
-          title: 'Routes',
+          title: 'Navigate',
           tabBarIcon: ({ color, size }) => <MaterialIcons name="terrain" size={24} color={color} />,
         }}
       />
