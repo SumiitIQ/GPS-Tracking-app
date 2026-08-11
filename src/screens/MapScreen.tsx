@@ -294,19 +294,18 @@ export default function MapScreen() {
     // Always update UI state so user sees current signal strength
     setAccuracy(acc ? Math.round(acc) : null);
     setGpsReady(true);
-
-    // ── Anti-glitch accuracy filter ─────────────────────────────────────────
-    if (acc !== null && acc > MAX_ACCURACY_M) return;
-
     setSpeed(spd && spd > 0 ? spd * 3.6 : 0); // m/s → km/h
 
     currentPos.current = { lat: latitude, lng: longitude, heading: heading || 0 };
+
+    // Only add to track if accuracy is good enough
+    const isValidForTracking = acc !== null && acc <= MAX_ACCURACY_M;
 
     // ── Inject Location into ArcGIS WebView ─────────────────────────────────
     if (webViewRef.current) {
       webViewRef.current.injectJavaScript(`
         if (window.updateLocation) {
-          window.updateLocation(${latitude}, ${longitude}, ${heading || 0}, ${followModeRef.current}, ${isTrackingRef.current});
+          window.updateLocation(${latitude}, ${longitude}, ${heading || 0}, ${followModeRef.current}, ${isTrackingRef.current && isValidForTracking});
         }
         true;
       `);
@@ -679,7 +678,7 @@ const styles = StyleSheet.create({
   speedBadge: {
     position: 'absolute',
     right: 16,
-    bottom: 270,
+    bottom: Platform.OS === 'android' ? 300 : 340,
     backgroundColor: 'rgba(0,0,0,0.8)',
     borderRadius: 12,
     paddingHorizontal: 14,
