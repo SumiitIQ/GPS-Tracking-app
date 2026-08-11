@@ -571,16 +571,16 @@ export default function MapScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* ── SPEED BADGE ──────────────────────────────────────────────────── */}
-      {gpsReady && (
-        <View style={styles.speedBadge} pointerEvents="none">
-          <Text style={styles.speedVal}>{speed.toFixed(1)}</Text>
-          <Text style={styles.speedUnit}>km/h</Text>
-        </View>
-      )}
-
       {/* ── BOTTOM PANEL (Strava style) ───────────────────────────────────── */}
       <View style={styles.bottomPanel}>
+        {/* ── SPEED BADGE ──────────────────────────────────────────────────── */}
+        {gpsReady && (
+          <View style={styles.speedBadge} pointerEvents="none">
+            <Text style={styles.speedVal}>{speed.toFixed(1)}</Text>
+            <Text style={styles.speedUnit}>km/h</Text>
+          </View>
+        )}
+
         {/* Status Bar */}
         <View style={[styles.statusBar, isTracking && styles.statusBarActive]}>
           <Text style={styles.statusText}>
@@ -678,7 +678,7 @@ const styles = StyleSheet.create({
   speedBadge: {
     position: 'absolute',
     right: 16,
-    bottom: Platform.OS === 'android' ? 300 : 340,
+    top: -70,
     backgroundColor: 'rgba(0,0,0,0.8)',
     borderRadius: 12,
     paddingHorizontal: 14,
