@@ -172,7 +172,7 @@ function getDistanceMeters(lat1: number, lon1: number, lat2: number, lon2: numbe
 }
 
 const MIN_DISTANCE_TO_RECORD_M = 2;
-const MAX_ACCURACY_M = 25;
+const MAX_ACCURACY_M = 50;
 
 export default function MapScreen() {
   const { user, signOut } = useAuth();
@@ -291,12 +291,14 @@ export default function MapScreen() {
   const handleLocationUpdate = useCallback((loc: Location.LocationObject) => {
     const { latitude, longitude, accuracy: acc, speed: spd, heading } = loc.coords;
 
+    // Always update UI state so user sees current signal strength
+    setAccuracy(acc ? Math.round(acc) : null);
+    setGpsReady(true);
+
     // ── Anti-glitch accuracy filter ─────────────────────────────────────────
     if (acc !== null && acc > MAX_ACCURACY_M) return;
 
-    setAccuracy(acc ? Math.round(acc) : null);
     setSpeed(spd && spd > 0 ? spd * 3.6 : 0); // m/s → km/h
-    setGpsReady(true);
 
     currentPos.current = { lat: latitude, lng: longitude, heading: heading || 0 };
 
