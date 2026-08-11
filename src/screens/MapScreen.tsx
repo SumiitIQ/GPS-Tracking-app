@@ -11,6 +11,8 @@ import {
   Share,
   DeviceEventEmitter,
   PermissionsAndroid,
+  Modal,
+  TextInput,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as Location from 'expo-location';
@@ -205,6 +207,12 @@ export default function MapScreen() {
   const [isPaused, setIsPaused] = useState(false);
   const isTrackingRef = useRef(false);
 
+  // ── Pre-Tracking Form ─────────────────────────────────────────────────────
+  const [showStartModal, setShowStartModal] = useState(false);
+  const [trailName, setTrailName] = useState('');
+  const [activityType, setActivityType] = useState('Trekking');
+  const trailMetadata = useRef({ name: '', type: 'Trekking' });
+
   // ─── Request Permissions & Start Watching ──────────────────────────────────
   useEffect(() => {
     let bgListener: any;
@@ -331,7 +339,14 @@ export default function MapScreen() {
   }, [isTracking]);
 
   // ─── Controls ────────────────────────────────────────────────────────────
-  const startTracking = async () => {
+  const startTracking = () => {
+    setShowStartModal(true);
+  };
+
+  const confirmStartTracking = async () => {
+    setShowStartModal(false);
+    trailMetadata.current = { name: trailName.trim() || 'My Expedition', type: activityType };
+    
     setIsTracking(true);
     setIsPaused(false);
     isTrackingRef.current = true;
@@ -443,8 +458,8 @@ export default function MapScreen() {
 
     try {
       const gpxData = await generateGPX(trackPoints.current, {
-        name: 'My Expedition',
-        desc: `Distance: ${formatDist(totalDistance)}, Time: ${formatTime(elapsedSeconds)}`
+        name: trailMetadata.current.name,
+        desc: `Activity: ${trailMetadata.current.type}\nDistance: ${formatDist(totalDistance)}, Time: ${formatTime(elapsedSeconds)}`
       });
 
       const netState = await NetInfo.fetch();
@@ -458,7 +473,9 @@ export default function MapScreen() {
             gpxData,
             distance: totalDistance,
             elapsedSeconds,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            trailName: trailMetadata.current.name,
+            activityType: trailMetadata.current.type
           };
           const existing = await AsyncStorage.getItem('pending_tracks');
           const tracks = existing ? JSON.parse(existing) : [];
@@ -596,6 +613,48 @@ export default function MapScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* ── START TRACKING MODAL ──────────────────────────────────────────── */}
+      <Modal visible={showStartModal} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Start New Track</Text>
+            
+            <Text style={styles.modalLabel}>Trail / Location Name</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="e.g. Everest Base Camp"
+              placeholderTextColor="#6b7280"
+              value={trailName}
+              onChangeText={setTrailName}
+            />
+
+            <Text style={styles.modalLabel}>Activity Type</Text>
+            <View style={styles.activityRow}>
+              {['Trekking', 'Hiking', 'Other'].map(type => (
+                <TouchableOpacity
+                  key={type}
+                  style={[styles.activityBtn, activityType === type && styles.activityBtnActive]}
+                  onPress={() => setActivityType(type)}
+                >
+                  <Text style={[styles.activityBtnText, activityType === type && styles.activityBtnTextActive]}>
+                    {type}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity style={styles.modalCancelBtn} onPress={() => setShowStartModal(false)}>
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalStartBtn} onPress={confirmStartTracking}>
+                <Text style={styles.modalStartText}>Begin</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {/* ── BOTTOM PANEL (Strava style) ───────────────────────────────────── */}
       <View style={styles.bottomPanel}>
         {/* ── SPEED BADGE ──────────────────────────────────────────────────── */}
@@ -670,6 +729,52 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#000' },
   map: { flex: 1 },
+
+  // ── Modal
+  modalOverlay: {
+    flex: 1, backgroundColor: 'rgba(0,0,0,0.8)',
+    justifyContent: 'flex-end'
+  },
+  modalContent: {
+    backgroundColor: '#1c1c1e',
+    borderTopLeftRadius: 24, borderTopRightRadius: 24,
+    padding: 24, paddingBottom: Platform.OS === 'ios' ? 40 : 24,
+  },
+  modalTitle: { color: '#fff', fontSize: 24, fontWeight: '800', marginBottom: 24 },
+  modalLabel: { color: '#9ca3af', fontSize: 13, fontWeight: '600', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 },
+  modalInput: {
+    backgroundColor: '#000', color: '#fff',
+    borderRadius: 12, paddingHorizontal: 16, paddingVertical: 14,
+    fontSize: 16, marginBottom: 24,
+    borderWidth: 1, borderColor: '#374151'
+  },
+  activityRow: { flexDirection: 'row', gap: 10, marginBottom: 32 },
+  activityBtn: {
+    flex: 1, paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: '#000',
+    borderWidth: 1, borderColor: '#374151',
+    alignItems: 'center'
+  },
+  activityBtnActive: {
+    backgroundColor: 'rgba(34,197,94,0.15)',
+    borderColor: '#22c55e'
+  },
+  activityBtnText: { color: '#9ca3af', fontSize: 14, fontWeight: '600' },
+  activityBtnTextActive: { color: '#22c55e' },
+  modalActions: { flexDirection: 'row', gap: 12 },
+  modalCancelBtn: {
+    flex: 1, paddingVertical: 16, borderRadius: 50,
+    backgroundColor: '#000', borderWidth: 1, borderColor: '#374151',
+    alignItems: 'center'
+  },
+  modalCancelText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  modalStartBtn: {
+    flex: 2, paddingVertical: 16, borderRadius: 50,
+    backgroundColor: '#22c55e',
+    alignItems: 'center'
+  },
+  modalStartText: { color: '#fff', fontSize: 16, fontWeight: '800' },
 
   // ── Top HUD
   topHud: {
