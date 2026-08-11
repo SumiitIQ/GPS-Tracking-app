@@ -66,7 +66,7 @@ export default function ProfileTab() {
         <FlatList
           data={routes}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100 }}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 130 }}
           renderItem={({ item }) => (
             <View style={styles.card}>
               <Text style={styles.cardTitle}>{item.title || 'My Expedition'}</Text>

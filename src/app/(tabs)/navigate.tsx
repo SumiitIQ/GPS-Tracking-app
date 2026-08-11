@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
   statusOff: { borderColor: '#ef4444' },
   statusText: { color: '#fff', fontWeight: '900', letterSpacing: 1 },
   
-  bottomHud: { position: 'absolute', bottom: Platform.OS === 'android' ? 20 : 40, left: 20, right: 20, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
+  bottomHud: { position: 'absolute', bottom: Platform.OS === 'android' ? 85 : 125, left: 20, right: 20, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
   titleCard: { flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', padding: 16, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', marginRight: 10 },
   titleText: { color: '#fff', fontSize: 18, fontWeight: '800' },
   titleSub: { color: '#9ca3af', fontSize: 12, marginTop: 4, fontWeight: '600' },
