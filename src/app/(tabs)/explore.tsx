@@ -14,7 +14,8 @@ const getExploreMapHtml = (apiKey: string, treks: any[]) => `
     <title>ArcGIS Map</title>
     <style>
       html, body, #viewDiv { padding: 0; margin: 0; height: 100%; width: 100%; background: #000; overflow: hidden; }
-      .esri-ui { display: none !important; }
+      .esri-search { margin-top: 110px; margin-right: 10px; }
+      .esri-attribution { display: none !important; }
     </style>
     <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/dark/main.css" />
     <script src="https://js.arcgis.com/4.30/"></script>
@@ -29,8 +30,9 @@ const getExploreMapHtml = (apiKey: string, treks: any[]) => `
         "esri/Graphic",
         "esri/geometry/Point",
         "esri/symbols/SimpleMarkerSymbol",
-        "esri/symbols/TextSymbol"
-      ], function(esriConfig, Map, SceneView, Graphic, Point, SimpleMarkerSymbol, TextSymbol) {
+        "esri/symbols/TextSymbol",
+        "esri/widgets/Search"
+      ], function(esriConfig, Map, SceneView, Graphic, Point, SimpleMarkerSymbol, TextSymbol, Search) {
         esriConfig.apiKey = "${apiKey}";
         
         const map = new Map({ basemap: "satellite", ground: "world-elevation" });
@@ -40,6 +42,14 @@ const getExploreMapHtml = (apiKey: string, treks: any[]) => `
           camera: { position: { x: 78.9629, y: 20.5937, z: 15000000 }, tilt: 0 }, // Center of India view
           environment: { starsEnabled: true, atmosphereEnabled: true },
           ui: { components: [] }
+        });
+
+        const searchWidget = new Search({
+          view: view,
+          popupEnabled: false
+        });
+        view.ui.add(searchWidget, {
+          position: "top-right"
         });
 
         const treks = ${JSON.stringify(treks)};
