@@ -61,9 +61,11 @@ const getArcGISHtml = (apiKey: string, routeLineJSON: string) => `
         view.when(() => {
           if (routeCoords && routeCoords.length > 0) {
             const polyline = new Polyline({ paths: [routeCoords] });
-            const lineSymbol = new SimpleLineSymbol({ color: [239, 68, 68, 0.8], width: 4 });
-            const routeGraphic = new Graphic({ geometry: polyline, symbol: lineSymbol });
-            view.graphics.add(routeGraphic);
+            const outerSymbol = new SimpleLineSymbol({ color: [0, 85, 170, 0.9], width: 8, join: "round", cap: "round" });
+            const innerSymbol = new SimpleLineSymbol({ color: [59, 130, 246, 1], width: 4, join: "round", cap: "round" });
+            const routeGraphicOuter = new Graphic({ geometry: polyline, symbol: outerSymbol });
+            const routeGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
+            view.graphics.addMany([routeGraphicOuter, routeGraphicInner]);
             view.goTo(polyline.extent.expand(1.2));
           }
         });

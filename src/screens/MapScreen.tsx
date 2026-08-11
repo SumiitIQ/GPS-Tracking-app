@@ -61,7 +61,8 @@ const getArcGISHtml = (apiKey: string) => `
         });
 
         let markerGraphic = null;
-        let routeGraphic = null;
+        let routeGraphicOuter = null;
+        let routeGraphicInner = null;
         let routePaths = [];
         
         // ── Smooth Interpolation Logic ──
@@ -99,10 +100,8 @@ const getArcGISHtml = (apiKey: string) => `
 
         window.clearTrack = function() {
           routePaths = [];
-          if (routeGraphic) {
-            view.graphics.remove(routeGraphic);
-            routeGraphic = null;
-          }
+          if (routeGraphicOuter) { view.graphics.remove(routeGraphicOuter); routeGraphicOuter = null; }
+          if (routeGraphicInner) { view.graphics.remove(routeGraphicInner); routeGraphicInner = null; }
         };
 
         // Global function callable from React Native
@@ -128,15 +127,21 @@ const getArcGISHtml = (apiKey: string) => `
 
           if (isTracking) {
             routePaths.push([lng, lat]);
-            if (!routeGraphic) {
+            if (!routeGraphicInner) {
               const polyline = new Polyline({ paths: [routePaths] });
-              const lineSymbol = new SimpleLineSymbol({ color: [59, 130, 246, 0.8], width: 5 });
-              routeGraphic = new Graphic({ geometry: polyline, symbol: lineSymbol });
-              view.graphics.add(routeGraphic, 0); 
+              
+              const outerSymbol = new SimpleLineSymbol({ color: [0, 85, 170, 0.9], width: 8, join: "round", cap: "round" });
+              routeGraphicOuter = new Graphic({ geometry: polyline, symbol: outerSymbol });
+              
+              const innerSymbol = new SimpleLineSymbol({ color: [59, 130, 246, 1], width: 4, join: "round", cap: "round" });
+              routeGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
+              
+              view.graphics.addMany([routeGraphicOuter, routeGraphicInner], 0); 
             } else {
-              const geom = routeGraphic.geometry.clone();
+              const geom = routeGraphicInner.geometry.clone();
               geom.paths[0] = routePaths;
-              routeGraphic.geometry = geom;
+              routeGraphicOuter.geometry = geom;
+              routeGraphicInner.geometry = geom;
             }
           }
           
@@ -165,8 +170,8 @@ function getDistanceMeters(lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * Math.acos(Math.max(-1, Math.min(1, cosPhi)));
 }
 
-const MIN_DISTANCE_TO_RECORD_M = 10;
-const MAX_ACCURACY_M = 2000;
+const MIN_DISTANCE_TO_RECORD_M = 2;
+const MAX_ACCURACY_M = 25;
 
 export default function MapScreen() {
   const { user, signOut } = useAuth();
