@@ -190,6 +190,7 @@ export default function MapScreen() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [isTracking, setIsTracking] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const isTrackingRef = useRef(false);
 
   // ─── Request Permissions & Start Watching ──────────────────────────────────
@@ -305,19 +306,18 @@ export default function MapScreen() {
   // ─── Controls ────────────────────────────────────────────────────────────
   const startTracking = async () => {
     setIsTracking(true);
+    setIsPaused(false);
     isTrackingRef.current = true;
     setTotalDistance(0);
     setElapsedSeconds(0);
     lastRecordedPos.current = null;
     trackPoints.current = [];
     
-    const startTime = Date.now();
     await AsyncStorage.setItem('is_tracking', 'true');
-    await AsyncStorage.setItem('tracking_start_time', startTime.toString());
     await AsyncStorage.removeItem('bg_locations');
     
     if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => setElapsedSeconds(Math.floor((Date.now() - startTime) / 1000)), 1000);
+    timerRef.current = setInterval(() => setElapsedSeconds(prev => prev + 1), 1000);
     
     if (webViewRef.current) {
       webViewRef.current.injectJavaScript('if(window.clearTrack) window.clearTrack(); true;');
@@ -340,13 +340,52 @@ export default function MapScreen() {
     }
   };
 
+  const pauseTracking = async () => {
+    setIsPaused(true);
+    isTrackingRef.current = false;
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+    
+    try {
+      const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
+      if (hasStarted) {
+        await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
+      }
+    } catch (e) {
+      console.error('Failed to pause bg location', e);
+    }
+  };
+
+  const resumeTracking = async () => {
+    setIsPaused(false);
+    isTrackingRef.current = true;
+    
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => setElapsedSeconds(prev => prev + 1), 1000);
+    
+    try {
+      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        accuracy: Location.Accuracy.High,
+        timeInterval: 2000,
+        distanceInterval: MIN_DISTANCE_TO_RECORD_M,
+        showsBackgroundLocationIndicator: true,
+        foregroundService: {
+          notificationTitle: "SummitIQ",
+          notificationBody: "Tracking active. Tap to open app.",
+          notificationColor: "#fc4c02",
+        }
+      });
+    } catch (e) {
+      console.error('Failed to resume bg location', e);
+    }
+  };
+
   const stopTracking = async () => {
     setIsTracking(false);
+    setIsPaused(false);
     isTrackingRef.current = false;
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
     
     await AsyncStorage.setItem('is_tracking', 'false');
-    await AsyncStorage.removeItem('tracking_start_time');
     
     try {
       const hasStarted = await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME);
@@ -533,7 +572,7 @@ export default function MapScreen() {
         {/* Status Bar */}
         <View style={[styles.statusBar, isTracking && styles.statusBarActive]}>
           <Text style={styles.statusText}>
-            {isTracking ? '🔴  Recording' : '⬛  Stopped'}
+            {isTracking ? (isPaused ? '⏸  Paused' : '🔴  Recording') : '⬛  Stopped'}
           </Text>
           <TouchableOpacity>
             <Text style={styles.expandIcon}>↗</Text>
@@ -560,9 +599,15 @@ export default function MapScreen() {
         <View style={styles.controlRow}>
           {isTracking ? (
             <>
-              <TouchableOpacity style={styles.resumeBtn} onPress={stopTracking}>
-                <Text style={styles.resumeBtnText}>▶  Resume</Text>
-              </TouchableOpacity>
+              {isPaused ? (
+                <TouchableOpacity style={styles.resumeBtn} onPress={resumeTracking}>
+                  <Text style={styles.resumeBtnText}>▶  Resume</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity style={styles.resumeBtn} onPress={pauseTracking}>
+                  <Text style={styles.resumeBtnText}>⏸  Pause</Text>
+                </TouchableOpacity>
+              )}
               <TouchableOpacity style={styles.finishBtn} onPress={finishTracking}>
                 <View style={styles.finishIcon} />
                 <Text style={styles.finishBtnText}>Finish</Text>
