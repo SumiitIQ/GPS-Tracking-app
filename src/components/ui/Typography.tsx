@@ -12,7 +12,7 @@ export function Typography({ variant = 'bodyMd', color = Theme.colors.onSurface,
   const typoStyle = Theme.typography[variant];
   return (
     <Text style={[typoStyle, { color }, style]} {...props}>
-      {children}
+      {children || ' '}
     </Text>
   );
 }
