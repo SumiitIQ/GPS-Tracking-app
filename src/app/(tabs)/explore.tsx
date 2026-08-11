@@ -5,6 +5,10 @@ import {
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useRouter } from 'expo-router';
+import * as Location from 'expo-location';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system/legacy';
+import { DOMParser } from '@xmldom/xmldom';
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabase';
 import { ARCGIS_API_KEY } from '../../constants/supabase';
@@ -31,11 +35,14 @@ const getExploreMapHtml = (apiKey: string, treks: any[]) => `
         "esri/config",
         "esri/Map",
         "esri/views/SceneView",
+        "esri/layers/GraphicsLayer",
         "esri/Graphic",
         "esri/geometry/Point",
         "esri/symbols/SimpleMarkerSymbol",
-        "esri/symbols/TextSymbol"
-      ], function(esriConfig, Map, SceneView, Graphic, Point, SimpleMarkerSymbol, TextSymbol) {
+        "esri/symbols/TextSymbol",
+        "esri/geometry/Polyline",
+        "esri/symbols/SimpleLineSymbol"
+      ], function(esriConfig, Map, SceneView, GraphicsLayer, Graphic, Point, SimpleMarkerSymbol, TextSymbol, Polyline, SimpleLineSymbol) {
         esriConfig.apiKey = "${apiKey}";
         
         const map = new Map({ basemap: "satellite", ground: "world-elevation" });
@@ -46,6 +53,11 @@ const getExploreMapHtml = (apiKey: string, treks: any[]) => `
           environment: { starsEnabled: true, atmosphereEnabled: true },
           ui: { components: [] }
         });
+
+        const trackingLayer = new GraphicsLayer({
+          elevationInfo: { mode: "on-the-ground" }
+        });
+        map.add(trackingLayer);
 
         const treks = ${JSON.stringify(treks)};
         
@@ -85,14 +97,14 @@ const getExploreMapHtml = (apiKey: string, treks: any[]) => `
             })
           });
 
-          view.graphics.addMany([outerGraphic, innerGraphic, textGraphic]);
+          trackingLayer.addMany([outerGraphic, innerGraphic, textGraphic]);
         });
         
         view.on("click", function(event) {
           view.hitTest(event).then(function(response) {
             if (response.results.length) {
               var graphic = response.results.filter(function (result) {
-                return result.graphic.layer === view.graphics && result.graphic.attributes;
+                return result.graphic.layer === trackingLayer && result.graphic.attributes;
               })[0];
               if (graphic) {
                 window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'MARKER_CLICK', id: graphic.graphic.attributes.id }));
@@ -100,6 +112,59 @@ const getExploreMapHtml = (apiKey: string, treks: any[]) => `
             }
           });
         });
+
+        window.toggle3D = function() {
+          if (!view || !view.camera) return;
+          const currentTilt = view.camera.tilt;
+          view.goTo({ tilt: currentTilt > 10 ? 0 : 60 }, { duration: 800 }).catch(function(e){});
+        };
+        
+        window.setBasemap = function(type) {
+          if (map) map.basemap = type;
+        };
+
+        let gpxGraphic = null;
+        window.drawGPX = function(pathCoordinates) {
+          if (gpxGraphic) {
+            trackingLayer.remove(gpxGraphic);
+          }
+          const polyline = new Polyline({
+            paths: [pathCoordinates]
+          });
+          const lineSymbol = new SimpleLineSymbol({
+            color: [16, 185, 129, 0.8],
+            width: 4
+          });
+          gpxGraphic = new Graphic({
+            geometry: polyline,
+            symbol: lineSymbol
+          });
+          trackingLayer.add(gpxGraphic);
+          view.goTo({ target: polyline, zoom: 13 }, { duration: 1500 }).catch(function(e){});
+        };
+
+        window.clearGPX = function() {
+          if (gpxGraphic) {
+            trackingLayer.remove(gpxGraphic);
+            gpxGraphic = null;
+          }
+        };
+
+        window.resetNorth = function() {
+          view.goTo({ heading: 0 }, { duration: 500 }).catch(function(e){});
+        };
+
+        // Watch camera heading to sync compass
+        view.watch("camera.heading", function(newHeading) {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'HEADING_CHANGE', heading: newHeading }));
+        });
+
+        window.centerOn = function(lat, lng) {
+          view.goTo({
+            target: new Point({ longitude: lng, latitude: lat }),
+            zoom: 16
+          }, { duration: 800 });
+        };
       });
     </script>
   </body>
@@ -110,8 +175,12 @@ export default function ExploreTab() {
   const [treks, setTreks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isVerified, setIsVerified] = useState(true);
+  const [isLayerOpen, setIsLayerOpen] = useState(false);
+  const [locating, setLocating] = useState(false);
+  const [heading, setHeading] = useState(0);
+  const [hasImportedRoute, setHasImportedRoute] = useState(false);
   const router = useRouter();
+  const webViewRef = useRef<WebView>(null);
 
   useEffect(() => {
     fetchTreks();
@@ -134,9 +203,95 @@ export default function ExploreTab() {
       const data = JSON.parse(event.nativeEvent.data);
       if (data.type === 'MARKER_CLICK') {
         router.push(`/trek/${data.id}`);
+      } else if (data.type === 'HEADING_CHANGE') {
+        setHeading(data.heading);
       }
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handleLocateMe = async () => {
+    if (locating) return;
+    setLocating(true);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') { setLocating(false); return; }
+      
+      let loc = await Location.getLastKnownPositionAsync();
+      if (!loc) {
+        loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Low });
+      }
+      
+      if (webViewRef.current && loc) {
+        webViewRef.current.injectJavaScript(`if(window.centerOn) window.centerOn(${loc.coords.latitude}, ${loc.coords.longitude}); true;`);
+      }
+    } catch (e) {
+      console.log('Location error:', e);
+    }
+    setLocating(false);
+  };
+
+  const handleToggle3D = () => {
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript('if(window.toggle3D) window.toggle3D(); true;');
+    }
+  };
+
+  const handleSetBasemap = (type: string) => {
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript(`if(window.setBasemap) window.setBasemap('${type}'); true;`);
+    }
+    setIsLayerOpen(false);
+  };
+
+  const handleResetNorth = () => {
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript('if(window.resetNorth) window.resetNorth(); true;');
+    }
+  };
+
+  const handleImportGPX = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({ type: '*/*' });
+      if (result.canceled || !result.assets || result.assets.length === 0) return;
+      
+      const fileUri = result.assets[0].uri;
+      const fileStr = await FileSystem.readAsStringAsync(fileUri, { encoding: FileSystem.EncodingType.UTF8 });
+      
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(fileStr, 'text/xml');
+      const trkpts = doc.getElementsByTagName('trkpt');
+      
+      if (!trkpts || trkpts.length === 0) {
+        alert("No route points found in the GPX file.");
+        return;
+      }
+      
+      const path: number[][] = [];
+      for (let i = 0; i < trkpts.length; i++) {
+        const pt = trkpts[i];
+        const lat = parseFloat(pt.getAttribute('lat') || '0');
+        const lon = parseFloat(pt.getAttribute('lon') || '0');
+        if (lat && lon) {
+          path.push([lon, lat]);
+        }
+      }
+      
+      if (path.length > 0 && webViewRef.current) {
+        webViewRef.current.injectJavaScript(`if(window.drawGPX) window.drawGPX(${JSON.stringify(path)}); true;`);
+        setHasImportedRoute(true);
+      }
+    } catch (e: any) {
+      console.log('Error importing GPX:', e);
+      alert("Error: " + (e.message || "Could not read file"));
+    }
+  };
+
+  const handleClearGPX = () => {
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript('if(window.clearGPX) window.clearGPX(); true;');
+      setHasImportedRoute(false);
     }
   };
 
@@ -151,6 +306,7 @@ export default function ExploreTab() {
         </View>
       ) : (
         <WebView
+          ref={webViewRef}
           source={{ html: getExploreMapHtml(ARCGIS_API_KEY, treks) }}
           style={styles.map}
           scrollEnabled={false}
@@ -161,10 +317,8 @@ export default function ExploreTab() {
 
       {/* ── TOP HEADER PANEL ── */}
       <View style={styles.topHeader}>
-        <Text style={styles.backText}>Back to Map</Text>
-        
         <View style={styles.searchBar}>
-          <Ionicons name="search" size={20} color="#9ca3af" style={{marginLeft: 4}} />
+          <Ionicons name="search" size={18} color="#9ca3af" style={{marginLeft: 4}} />
           <TextInput 
             style={styles.searchInput}
             placeholder="Search treks, places..."
@@ -184,21 +338,21 @@ export default function ExploreTab() {
 
       {/* ── RIGHT ACTION BUTTONS ── */}
       <View style={styles.rightActions}>
-        <View style={styles.compassBtn}>
-          <View style={styles.compassInner}>
+        <TouchableOpacity style={styles.compassBtn} onPress={handleResetNorth}>
+          <View style={[styles.compassInner, { transform: [{ rotate: `${-heading}deg` }] }]}>
             <View style={styles.compassNeedleRed} />
             <View style={styles.compassNeedleWhite} />
           </View>
-        </View>
+        </TouchableOpacity>
         
         <View style={styles.actionStack}>
-          <TouchableOpacity style={styles.actionBtn}>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => setIsLayerOpen(!isLayerOpen)}>
             <Ionicons name="layers" size={22} color="#3b82f6" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtn}>
+          <TouchableOpacity style={styles.actionBtn} onPress={handleToggle3D}>
             <Text style={styles.text3d}>3D</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtn}>
+          <TouchableOpacity style={styles.actionBtn} onPress={handleLocateMe}>
             <MaterialCommunityIcons name="crosshairs-gps" size={24} color="#3b82f6" />
           </TouchableOpacity>
           <TouchableOpacity style={[styles.actionBtn, { borderBottomWidth: 0 }]}>
@@ -207,27 +361,44 @@ export default function ExploreTab() {
         </View>
       </View>
 
-      {/* ── BOTTOM LEFT: IMPORT GPX ── */}
-      <TouchableOpacity style={styles.importCard}>
-        <View style={styles.importIconBox}>
-          <MaterialCommunityIcons name="sign-direction" size={24} color="#10b981" />
+      {/* ── LAYER MODAL ── */}
+      {isLayerOpen && (
+        <View style={styles.layerModal}>
+          <Text style={styles.layerTitle}>MAP TYPE</Text>
+          <TouchableOpacity style={styles.layerOption} onPress={() => handleSetBasemap('satellite')}>
+            <Text style={styles.layerOptionText}>Satellite</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.layerOption} onPress={() => handleSetBasemap('topo-vector')}>
+            <Text style={styles.layerOptionText}>Topographic</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.layerOption} onPress={() => handleSetBasemap('osm')}>
+            <Text style={styles.layerOptionText}>Street</Text>
+          </TouchableOpacity>
         </View>
-        <View>
-          <Text style={styles.importTitle}>Import GPX Route</Text>
-          <Text style={styles.importSub}>Navigate your own path</Text>
-        </View>
-      </TouchableOpacity>
+      )}
 
-      {/* ── BOTTOM RIGHT: VERIFIED TOGGLE ── */}
-      <View style={styles.verifiedToggle}>
-        <Switch 
-          value={isVerified} 
-          onValueChange={setIsVerified}
-          trackColor={{ false: '#374151', true: '#3b82f6' }}
-          thumbColor="#fff"
-        />
-        <Text style={styles.verifiedText}>Verified</Text>
-      </View>
+      {/* ── BOTTOM LEFT: IMPORT GPX ── */}
+      {hasImportedRoute ? (
+        <TouchableOpacity style={[styles.importCard, {backgroundColor: 'rgba(239, 68, 68, 0.9)'}]} onPress={handleClearGPX}>
+          <View style={[styles.importIconBox, {backgroundColor: 'rgba(255,255,255,0.2)'}]}>
+            <Ionicons name="close-circle" size={24} color="#fff" />
+          </View>
+          <View>
+            <Text style={styles.importTitle}>Clear Route</Text>
+            <Text style={[styles.importSub, {color: '#fca5a5'}]}>Remove imported GPX from map</Text>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.importCard} onPress={handleImportGPX}>
+          <View style={styles.importIconBox}>
+            <MaterialCommunityIcons name="sign-direction" size={24} color="#10b981" />
+          </View>
+          <View>
+            <Text style={styles.importTitle}>Import GPX Route</Text>
+            <Text style={styles.importSub}>Navigate your own path</Text>
+          </View>
+        </TouchableOpacity>
+      )}
 
       {/* ── FILTER MODAL ── */}
       {isFilterOpen && (
@@ -310,35 +481,31 @@ const styles = StyleSheet.create({
     position: 'absolute', top: 0, left: 0, right: 0,
     backgroundColor: '#0a0d14',
     borderBottomLeftRadius: 32, borderBottomRightRadius: 32,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight! + 10 : 50,
-    paddingHorizontal: 20, paddingBottom: 20,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight! + 5 : 40,
+    paddingHorizontal: 20, paddingBottom: 12,
     zIndex: 10,
     alignItems: 'center',
-  },
-  backText: {
-    color: '#1e3a8a', fontSize: 13, fontWeight: '600',
-    marginBottom: 16,
   },
   searchBar: {
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: '#161922',
     borderRadius: 24,
-    paddingHorizontal: 16, paddingVertical: 12,
+    paddingHorizontal: 16, paddingVertical: 8,
     width: '100%',
   },
   searchInput: {
     flex: 1, color: '#fff', fontSize: 16, marginLeft: 10,
   },
   divider: {
-    width: 1, height: 24, backgroundColor: '#2d3748',
+    width: 1, height: 20, backgroundColor: '#2d3748',
     marginHorizontal: 12,
   },
   filterIconBtn: { padding: 4 },
   discoverBtn: {
-    marginTop: 16, alignItems: 'center',
+    marginTop: 8, alignItems: 'center',
   },
   discoverText: {
-    color: '#60a5fa', fontSize: 12, fontWeight: '700', letterSpacing: 0.5,
+    color: '#60a5fa', fontSize: 11, fontWeight: '700', letterSpacing: 0.5,
   },
 
   // ── Right Actions
@@ -355,7 +522,6 @@ const styles = StyleSheet.create({
   },
   compassInner: {
     width: 24, height: 24,
-    transform: [{ rotate: '-45deg' }]
   },
   compassNeedleRed: {
     position: 'absolute', top: 0, left: 10, width: 4, height: 12,
@@ -377,32 +543,34 @@ const styles = StyleSheet.create({
   },
   text3d: { color: '#3b82f6', fontWeight: '800', fontSize: 16 },
 
+  // ── Layer Modal
+  layerModal: {
+    position: 'absolute', right: 70, top: 220,
+    backgroundColor: '#1b202d',
+    borderRadius: 16, padding: 16,
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
+    zIndex: 20,
+  },
+  layerTitle: { color: '#9ca3af', fontSize: 11, fontWeight: '700', letterSpacing: 1, marginBottom: 12 },
+  layerOption: { paddingVertical: 8 },
+  layerOptionText: { color: '#fff', fontSize: 14, fontWeight: '600' },
+
   // ── Bottom Cards
   importCard: {
     position: 'absolute', left: 16, bottom: Platform.OS === 'android' ? 85 : 100,
     backgroundColor: 'rgba(22, 25, 34, 0.9)',
-    borderRadius: 16, padding: 12,
-    flexDirection: 'row', alignItems: 'center', gap: 12,
+    borderRadius: 12, padding: 8,
+    flexDirection: 'row', alignItems: 'center', gap: 8,
     borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)',
     zIndex: 5,
   },
   importIconBox: {
     backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    width: 40, height: 40, borderRadius: 8,
+    width: 32, height: 32, borderRadius: 6,
     alignItems: 'center', justifyContent: 'center',
   },
-  importTitle: { color: '#fff', fontSize: 15, fontWeight: '700' },
-  importSub: { color: '#6b7280', fontSize: 12, marginTop: 2 },
-
-  verifiedToggle: {
-    position: 'absolute', right: 16, bottom: Platform.OS === 'android' ? 85 : 100,
-    backgroundColor: 'rgba(22, 25, 34, 0.9)',
-    borderRadius: 24, paddingVertical: 8, paddingHorizontal: 12,
-    flexDirection: 'row', alignItems: 'center', gap: 8,
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)',
-    zIndex: 5,
-  },
-  verifiedText: { color: '#fff', fontSize: 14, fontWeight: '600' },
+  importTitle: { color: '#fff', fontSize: 13, fontWeight: '700' },
+  importSub: { color: '#6b7280', fontSize: 10, marginTop: 1 },
 
   // ── Modal
   modalOverlay: {

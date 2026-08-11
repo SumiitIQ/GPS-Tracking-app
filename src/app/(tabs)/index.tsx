@@ -10,7 +10,6 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Header Greeting */}
         <View style={styles.header}>
           <View>
             <Typography variant="headlineLgMobile" color={Theme.colors.primary}>Good morning, Alex</Typography>

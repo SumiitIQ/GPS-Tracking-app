@@ -44,12 +44,13 @@ const getArcGISHtml = (apiKey: string) => `
         "esri/config",
         "esri/Map",
         "esri/views/SceneView",
+        "esri/layers/GraphicsLayer",
         "esri/Graphic",
         "esri/geometry/Point",
         "esri/geometry/Polyline",
         "esri/symbols/SimpleMarkerSymbol",
         "esri/symbols/SimpleLineSymbol"
-      ], function(esriConfig, Map, SceneView, Graphic, Point, Polyline, SimpleMarkerSymbol, SimpleLineSymbol) {
+      ], function(esriConfig, Map, SceneView, GraphicsLayer, Graphic, Point, Polyline, SimpleMarkerSymbol, SimpleLineSymbol) {
         esriConfig.apiKey = "${apiKey}";
         
         const map = new Map({ basemap: "satellite", ground: "world-elevation" });
@@ -60,6 +61,11 @@ const getArcGISHtml = (apiKey: string) => `
           environment: { starsEnabled: true, atmosphereEnabled: true },
           ui: { components: [] }
         });
+
+        const trackingLayer = new GraphicsLayer({
+          elevationInfo: { mode: "on-the-ground" }
+        });
+        map.add(trackingLayer);
 
         let markerGraphic = null;
         let routeGraphicOuter = null;
@@ -101,8 +107,8 @@ const getArcGISHtml = (apiKey: string) => `
 
         window.clearTrack = function() {
           routePaths = [];
-          if (routeGraphicOuter) { view.graphics.remove(routeGraphicOuter); routeGraphicOuter = null; }
-          if (routeGraphicInner) { view.graphics.remove(routeGraphicInner); routeGraphicInner = null; }
+          if (routeGraphicOuter) { trackingLayer.remove(routeGraphicOuter); routeGraphicOuter = null; }
+          if (routeGraphicInner) { trackingLayer.remove(routeGraphicInner); routeGraphicInner = null; }
         };
 
         // Global function callable from React Native
@@ -117,7 +123,7 @@ const getArcGISHtml = (apiKey: string) => `
                 outline: { color: [255, 255, 255, 1], width: 3 }
               })
             });
-            view.graphics.add(markerGraphic);
+            trackingLayer.add(markerGraphic);
             currentPos = { lat, lng };
             targetPos = { lat, lng };
           } else {
@@ -137,7 +143,7 @@ const getArcGISHtml = (apiKey: string) => `
               const innerSymbol = new SimpleLineSymbol({ color: [59, 130, 246, 1], width: 4, join: "round", cap: "round" });
               routeGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
               
-              view.graphics.addMany([routeGraphicOuter, routeGraphicInner], 0); 
+              trackingLayer.addMany([routeGraphicOuter, routeGraphicInner]); 
             } else {
               const geom = routeGraphicInner.geometry.clone();
               geom.paths[0] = routePaths;
@@ -204,11 +210,6 @@ export default function MapScreen() {
     let bgListener: any;
 
     (async () => {
-      if (Platform.OS === 'android' && Platform.Version >= 33) {
-        try {
-          await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-        } catch (err) {}
-      }
       const { status: fgStatus } = await Location.requestForegroundPermissionsAsync();
       const { status: bgStatus } = await Location.requestBackgroundPermissionsAsync();
       
@@ -335,6 +336,15 @@ export default function MapScreen() {
       webViewRef.current.injectJavaScript('if(window.clearTrack) window.clearTrack(); true;');
     }
 
+    if (Platform.OS === 'android' && Platform.Version >= 33) {
+      try {
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+          Alert.alert("Notifications Disabled", "You won't see the background tracking notification because permission was denied.");
+        }
+      } catch (err) {}
+    }
+
     try {
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
         accuracy: Location.Accuracy.High,
@@ -347,8 +357,9 @@ export default function MapScreen() {
           notificationColor: "#fc4c02",
         }
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error('Failed to start bg location', e);
+      Alert.alert('Tracking Error', 'Could not start background tracking: ' + (e.message || String(e)));
     }
   };
 

@@ -4,7 +4,7 @@ export type TrackPoint = {
   lat: number;
   lng: number;
   elevation?: number;
-  timestamp: Date;
+  timestamp: Date | number | string;
 };
 
 export async function generateGPX(
@@ -28,7 +28,8 @@ export async function generateGPX(
     if (pt.elevation !== undefined) {
       gpx += `        <ele>${pt.elevation}</ele>\n`;
     }
-    gpx += `        <time>${pt.timestamp.toISOString()}</time>\n`;
+    const timeStr = pt.timestamp ? new Date(pt.timestamp).toISOString() : new Date().toISOString();
+    gpx += `        <time>${timeStr}</time>\n`;
     gpx += `      </trkpt>\n`;
   }
 
