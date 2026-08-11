@@ -10,6 +10,7 @@ import {
   Alert,
   Share,
   DeviceEventEmitter,
+  PermissionsAndroid,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import * as Location from 'expo-location';
@@ -203,6 +204,11 @@ export default function MapScreen() {
     let bgListener: any;
 
     (async () => {
+      if (Platform.OS === 'android' && Platform.Version >= 33) {
+        try {
+          await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+        } catch (err) {}
+      }
       const { status: fgStatus } = await Location.requestForegroundPermissionsAsync();
       const { status: bgStatus } = await Location.requestBackgroundPermissionsAsync();
       
