@@ -37,12 +37,13 @@ const getArcGISHtml = (apiKey: string, routeLineJSON: string) => `
         "esri/config",
         "esri/Map",
         "esri/views/SceneView",
+        "esri/layers/GraphicsLayer",
         "esri/Graphic",
         "esri/geometry/Point",
         "esri/geometry/Polyline",
         "esri/symbols/SimpleMarkerSymbol",
         "esri/symbols/SimpleLineSymbol"
-      ], function(esriConfig, Map, SceneView, Graphic, Point, Polyline, SimpleMarkerSymbol, SimpleLineSymbol) {
+      ], function(esriConfig, Map, SceneView, GraphicsLayer, Graphic, Point, Polyline, SimpleMarkerSymbol, SimpleLineSymbol) {
         esriConfig.apiKey = "${apiKey}";
         
         const map = new Map({ basemap: "satellite", ground: "world-elevation" });
@@ -53,6 +54,11 @@ const getArcGISHtml = (apiKey: string, routeLineJSON: string) => `
           environment: { starsEnabled: true, atmosphereEnabled: true },
           ui: { components: [] }
         });
+
+        const trackingLayer = new GraphicsLayer({
+          elevationInfo: { mode: "on-the-ground" }
+        });
+        map.add(trackingLayer);
 
         const routeCoords = ${routeLineJSON};
         
@@ -65,7 +71,7 @@ const getArcGISHtml = (apiKey: string, routeLineJSON: string) => `
             const innerSymbol = new SimpleLineSymbol({ color: [59, 130, 246, 1], width: 4, join: "round", cap: "round" });
             const routeGraphicOuter = new Graphic({ geometry: polyline, symbol: outerSymbol });
             const routeGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
-            view.graphics.addMany([routeGraphicOuter, routeGraphicInner]);
+            trackingLayer.addMany([routeGraphicOuter, routeGraphicInner]);
             view.goTo(polyline.extent.expand(1.2));
           }
         });
@@ -109,7 +115,7 @@ const getArcGISHtml = (apiKey: string, routeLineJSON: string) => `
                 outline: { color: [255, 255, 255, 1], width: 3 }
               })
             });
-            view.graphics.add(markerGraphic);
+            trackingLayer.add(markerGraphic);
             currentPos = { lat, lng };
             targetPos = { lat, lng };
           } else {

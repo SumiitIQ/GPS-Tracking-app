@@ -189,7 +189,7 @@ export default function MapScreen() {
   const [accuracy, setAccuracy] = useState<number | null>(null);
   const [speed, setSpeed] = useState(0);
   const locationSubscription = useRef<Location.LocationSubscription | null>(null);
-  const lastRecordedPos = useRef<{ lat: number; lng: number } | null>(null);
+  const lastRecordedPos = useRef<{lat: number, lng: number, ts?: number} | null>(null);
   const currentPos = useRef<{ lat: number; lng: number, heading: number } | null>(null);
   const trackPoints = useRef<TrackPoint[]>([]);
 
@@ -245,7 +245,7 @@ export default function MapScreen() {
           setTotalDistance(dist);
           
           if (pts.length > 0) {
-            lastRecordedPos.current = { lat: pts[pts.length-1].lat, lng: pts[pts.length-1].lng };
+            lastRecordedPos.current = { lat: pts[pts.length-1].lat, lng: pts[pts.length-1].lng, ts: pts[pts.length-1].timestamp };
           }
         }
       }
@@ -260,11 +260,11 @@ export default function MapScreen() {
              const dist = getDistanceMeters(lastRecordedPos.current.lat, lastRecordedPos.current.lng, pt.lat, pt.lng);
              if (dist >= MIN_DISTANCE_TO_RECORD_M) {
                distAccum += dist;
-               lastRecordedPos.current = { lat: pt.lat, lng: pt.lng };
+               lastRecordedPos.current = { lat: pt.lat, lng: pt.lng, ts: pt.timestamp };
                trackPoints.current.push(pt);
              }
            } else {
-             lastRecordedPos.current = { lat: pt.lat, lng: pt.lng };
+             lastRecordedPos.current = { lat: pt.lat, lng: pt.lng, ts: pt.timestamp };
              trackPoints.current.push(pt);
            }
         });
@@ -312,8 +312,22 @@ export default function MapScreen() {
       `);
     }
 
-    // Distance is now handled by the background event emitter, 
-    // so we don't duplicate it here. We only use handleLocationUpdate for UI live location!
+    // ── Save High-Frequency Points to GPX Track ─────────────────────────────
+    if (isTrackingRef.current && isValidForTracking) {
+      const now = loc.timestamp || Date.now();
+      if (lastRecordedPos.current) {
+        const dist = getDistanceMeters(lastRecordedPos.current.lat, lastRecordedPos.current.lng, latitude, longitude);
+        // Only record if moved at least 1 meter (avoids extreme bloat, keeps curves smooth)
+        if (dist >= 1) {
+          setTotalDistance(prev => prev + dist);
+          lastRecordedPos.current = { lat: latitude, lng: longitude, ts: now };
+          trackPoints.current.push({ lat: latitude, lng: longitude, timestamp: now, elevation: loc.coords.altitude || 0 });
+        }
+      } else {
+        lastRecordedPos.current = { lat: latitude, lng: longitude, ts: now };
+        trackPoints.current.push({ lat: latitude, lng: longitude, timestamp: now, elevation: loc.coords.altitude || 0 });
+      }
+    }
   }, [isTracking]);
 
   // ─── Controls ────────────────────────────────────────────────────────────

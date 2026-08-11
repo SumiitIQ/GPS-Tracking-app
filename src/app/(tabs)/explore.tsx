@@ -123,31 +123,31 @@ const getExploreMapHtml = (apiKey: string, treks: any[]) => `
           if (map) map.basemap = type;
         };
 
-        let gpxGraphic = null;
+        let gpxGraphicOuter = null;
+        let gpxGraphicInner = null;
         window.drawGPX = function(pathCoordinates) {
-          if (gpxGraphic) {
-            trackingLayer.remove(gpxGraphic);
-          }
+          if (gpxGraphicOuter) trackingLayer.remove(gpxGraphicOuter);
+          if (gpxGraphicInner) trackingLayer.remove(gpxGraphicInner);
+          
           const polyline = new Polyline({
             paths: [pathCoordinates]
           });
-          const lineSymbol = new SimpleLineSymbol({
-            color: [16, 185, 129, 0.8],
-            width: 4
-          });
-          gpxGraphic = new Graphic({
-            geometry: polyline,
-            symbol: lineSymbol
-          });
-          trackingLayer.add(gpxGraphic);
+          
+          const outerSymbol = new SimpleLineSymbol({ color: [0, 85, 170, 0.9], width: 8, join: "round", cap: "round" });
+          const innerSymbol = new SimpleLineSymbol({ color: [59, 130, 246, 1], width: 4, join: "round", cap: "round" });
+          
+          gpxGraphicOuter = new Graphic({ geometry: polyline, symbol: outerSymbol });
+          gpxGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
+          
+          trackingLayer.addMany([gpxGraphicOuter, gpxGraphicInner]);
           view.goTo({ target: polyline, zoom: 13 }, { duration: 1500 }).catch(function(e){});
         };
 
         window.clearGPX = function() {
-          if (gpxGraphic) {
-            trackingLayer.remove(gpxGraphic);
-            gpxGraphic = null;
-          }
+          if (gpxGraphicOuter) trackingLayer.remove(gpxGraphicOuter);
+          if (gpxGraphicInner) trackingLayer.remove(gpxGraphicInner);
+          gpxGraphicOuter = null;
+          gpxGraphicInner = null;
         };
 
         window.resetNorth = function() {
