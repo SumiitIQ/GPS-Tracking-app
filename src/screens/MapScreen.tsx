@@ -19,6 +19,8 @@ import { WebView } from 'react-native-webview';
 import * as Location from 'expo-location';
 import NetInfo from '@react-native-community/netinfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DOMParser } from '@xmldom/xmldom';
+import { Buffer } from 'buffer';
 import { ARCGIS_API_KEY } from '../constants/supabase';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -269,11 +271,10 @@ export default function MapScreen() {
         newPoints.forEach(pt => {
            if (lastRecordedPos.current) {
              const dist = getDistanceMeters(lastRecordedPos.current.lat, lastRecordedPos.current.lng, pt.lat, pt.lng);
-             if (dist >= MIN_DISTANCE_TO_RECORD_M) {
-               distAccum += dist;
-               lastRecordedPos.current = { lat: pt.lat, lng: pt.lng, ts: pt.timestamp };
-               trackPoints.current.push(pt);
-             }
+             // Always record every point to ensure 100% GPX smoothness
+             distAccum += dist;
+             lastRecordedPos.current = { lat: pt.lat, lng: pt.lng, ts: pt.timestamp };
+             trackPoints.current.push(pt);
            } else {
              lastRecordedPos.current = { lat: pt.lat, lng: pt.lng, ts: pt.timestamp };
              trackPoints.current.push(pt);
@@ -328,12 +329,10 @@ export default function MapScreen() {
       const now = loc.timestamp || Date.now();
       if (lastRecordedPos.current) {
         const dist = getDistanceMeters(lastRecordedPos.current.lat, lastRecordedPos.current.lng, latitude, longitude);
-        // Only record if moved at least 1 meter (avoids extreme bloat, keeps curves smooth)
-        if (dist >= 1) {
-          setTotalDistance(prev => prev + dist);
-          lastRecordedPos.current = { lat: latitude, lng: longitude, ts: now };
-          trackPoints.current.push({ lat: latitude, lng: longitude, timestamp: now, elevation: loc.coords.altitude || 0 });
-        }
+        // Always record every point to ensure 100% GPX smoothness
+        setTotalDistance(prev => prev + dist);
+        lastRecordedPos.current = { lat: latitude, lng: longitude, ts: now };
+        trackPoints.current.push({ lat: latitude, lng: longitude, timestamp: now, elevation: loc.coords.altitude || 0 });
       } else {
         lastRecordedPos.current = { lat: latitude, lng: longitude, ts: now };
         trackPoints.current.push({ lat: latitude, lng: longitude, timestamp: now, elevation: loc.coords.altitude || 0 });
@@ -494,9 +493,10 @@ export default function MapScreen() {
 
       if (user) {
         // 1. Upload to Supabase Storage (gpx-routes bucket)
+        const arrayBuffer = Buffer.from(gpxData.content, 'utf-8').buffer;
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('gpx-routes')
-          .upload(`${user.id}/${gpxData.fileName}`, gpxData.content, {
+          .upload(`${user.id}/${gpxData.fileName}`, arrayBuffer, {
             contentType: 'application/gpx+xml',
             upsert: true
           });
@@ -521,7 +521,7 @@ export default function MapScreen() {
         });
         if (error) {
           console.error('DB Insert Error:', error);
-          Alert.alert('Database Error', `Could not save to cloud. Error: ${error.message || 'Unknown error'}. Please make sure you ran the SQL command!`);
+          Alert.alert('Database Error', `Insert failed: ${error.message || JSON.stringify(error)}`);
         } else {
           Alert.alert('Track Saved', 'Your track has been successfully saved to the cloud!');
         }
