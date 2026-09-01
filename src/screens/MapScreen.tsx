@@ -682,6 +682,94 @@ export default function MapScreen() {
           )}
         </View>
       </View>
+
+      {/* ── POST-TRACK METADATA MODAL ─────────────────────────────────────── */}
+      <Modal
+        visible={isPostTrackModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsPostTrackModalVisible(false)}
+      >
+        <View style={modalStyles.overlay}>
+          <View style={modalStyles.container}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text style={modalStyles.title}>🏔️ Save Your Trek</Text>
+              <Text style={modalStyles.subtitle}>
+                Distance: {formatDist(totalDistance)} · Time: {formatTime(elapsedSeconds)}
+              </Text>
+
+              <Text style={modalStyles.label}>Trail Name</Text>
+              <TextInput
+                style={modalStyles.input}
+                value={trailName}
+                onChangeText={setTrailName}
+                placeholder="e.g. Morning Hill Trek"
+                placeholderTextColor="#6b7280"
+              />
+
+              <Text style={modalStyles.label}>Activity Type</Text>
+              <View style={modalStyles.chipRow}>
+                {['Trekking', 'Hiking', 'Running', 'Cycling', 'Other'].map(t => (
+                  <TouchableOpacity
+                    key={t}
+                    style={[modalStyles.chip, activityType === t && modalStyles.chipActive]}
+                    onPress={() => setActivityType(t)}
+                  >
+                    <Text style={[modalStyles.chipText, activityType === t && modalStyles.chipTextActive]}>{t}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <Text style={modalStyles.label}>Difficulty</Text>
+              <View style={modalStyles.chipRow}>
+                {['Easy', 'Moderate', 'Hard', 'Expert'].map(d => (
+                  <TouchableOpacity
+                    key={d}
+                    style={[modalStyles.chip, difficulty === d && modalStyles.chipActive]}
+                    onPress={() => setDifficulty(d)}
+                  >
+                    <Text style={[modalStyles.chipText, difficulty === d && modalStyles.chipTextActive]}>{d}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <Text style={modalStyles.label}>Weather</Text>
+              <View style={modalStyles.chipRow}>
+                {['Sunny', 'Cloudy', 'Rainy', 'Foggy', 'Snowy', 'Windy'].map(w => (
+                  <TouchableOpacity
+                    key={w}
+                    style={[modalStyles.chip, weather === w && modalStyles.chipActive]}
+                    onPress={() => setWeather(w)}
+                  >
+                    <Text style={[modalStyles.chipText, weather === w && modalStyles.chipTextActive]}>{w}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <Text style={modalStyles.label}>Notes / Gear</Text>
+              <TextInput
+                style={[modalStyles.input, { height: 70, textAlignVertical: 'top' }]}
+                value={gearNotes}
+                onChangeText={setGearNotes}
+                placeholder="Any notes about this trek..."
+                placeholderTextColor="#6b7280"
+                multiline
+              />
+
+              <TouchableOpacity style={modalStyles.saveBtn} onPress={saveAndUploadTrack}>
+                <Text style={modalStyles.saveBtnText}>💾  Save Track to Profile</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={modalStyles.cancelBtn}
+                onPress={() => setIsPostTrackModalVisible(false)}
+              >
+                <Text style={modalStyles.cancelBtnText}>Cancel</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -798,4 +886,105 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff', borderRadius: 3,
   },
   finishBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+});
+
+const modalStyles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.85)',
+    justifyContent: 'flex-end',
+  },
+  container: {
+    backgroundColor: '#111',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 24,
+    maxHeight: '85%',
+    borderTopWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  title: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: '900',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  subtitle: {
+    color: '#9ca3af',
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  label: {
+    color: '#d1d5db',
+    fontSize: 13,
+    fontWeight: '700',
+    marginBottom: 8,
+    marginTop: 12,
+    letterSpacing: 0.5,
+  },
+  input: {
+    backgroundColor: '#1a1a2e',
+    color: '#fff',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  chip: {
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  chipActive: {
+    backgroundColor: 'rgba(59,130,246,0.3)',
+    borderColor: '#3b82f6',
+  },
+  chipText: {
+    color: '#9ca3af',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  chipTextActive: {
+    color: '#60a5fa',
+  },
+  saveBtn: {
+    backgroundColor: '#22c55e',
+    borderRadius: 50,
+    paddingVertical: 18,
+    alignItems: 'center',
+    marginTop: 24,
+    shadowColor: '#22c55e',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  saveBtnText: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: '800',
+  },
+  cancelBtn: {
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 8,
+    marginBottom: 20,
+  },
+  cancelBtnText: {
+    color: '#6b7280',
+    fontSize: 15,
+    fontWeight: '600',
+  },
 });
