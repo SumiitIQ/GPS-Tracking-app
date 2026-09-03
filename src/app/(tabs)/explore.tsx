@@ -182,6 +182,28 @@ export default function ExploreTab() {
   const router = useRouter();
   const webViewRef = useRef<WebView>(null);
 
+// ── USER LOCATION TRACKING ──
+const [locationSubscription, setLocationSubscription] = useState<Location.LocationSubscription | null>(null);
+
+useEffect(() => {
+  (async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') return;
+    const sub = await Location.watchPositionAsync(
+      { accuracy: Location.Accuracy.High, timeInterval: 5000, distanceInterval: 5 },
+      (loc) => {
+        if (webViewRef.current) {
+          webViewRef.current.injectJavaScript(`if(window.drawUserLocation) window.drawUserLocation(${loc.coords.latitude}, ${loc.coords.longitude}); true;`);
+        }
+      }
+    );
+    setLocationSubscription(sub);
+  })();
+  return () => {
+    locationSubscription?.remove();
+  };
+}, []);
+
   useEffect(() => {
     fetchTreks();
   }, []);
@@ -212,25 +234,25 @@ export default function ExploreTab() {
   };
 
   const handleLocateMe = async () => {
-    if (locating) return;
-    setLocating(true);
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') { setLocating(false); return; }
-      
-      let loc = await Location.getLastKnownPositionAsync();
-      if (!loc) {
-        loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Low });
-      }
-      
-      if (webViewRef.current && loc) {
-        webViewRef.current.injectJavaScript(`if(window.centerOn) window.centerOn(${loc.coords.latitude}, ${loc.coords.longitude}); true;`);
-      }
-    } catch (e) {
-      console.log('Location error:', e);
+  if (locating) return;
+  setLocating(true);
+  try {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') { setLocating(false); return; }
+
+    let loc = await Location.getLastKnownPositionAsync();
+    if (!loc) {
+      loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Low });
     }
-    setLocating(false);
-  };
+
+    if (webViewRef.current && loc) {
+      webViewRef.current.injectJavaScript(`if(window.centerOn) window.centerOn(${loc.coords.latitude}, ${loc.coords.longitude}); if(window.drawUserLocation) window.drawUserLocation(${loc.coords.latitude}, ${loc.coords.longitude}); true;`);
+    }
+  } catch (e) {
+    console.log('Location error:', e);
+  }
+  setLocating(false);
+};
 
   const handleToggle3D = () => {
     if (webViewRef.current) {
