@@ -20,6 +20,26 @@ export default function TrekDetailScreen() {
 
   const fetchTrekAndRoutes = async () => {
     setLoading(true);
+    if (id === 'pandavleni') {
+      setTrek({
+        id: 'pandavleni',
+        name: 'Pandavleni Caves Mountain',
+        region: 'Nashik, Maharashtra',
+        description: 'Pandavleni Caves are a group of 24 caves carved between the 1st century BCE and the 3rd century CE, located on the Trivashmi Hills in Nashik, Maharashtra. It is a short, steep hike with stone steps leading to ancient Buddhist caves and a beautiful view of the city.'
+      });
+      setRoutes([{
+        id: 'route-pandavleni-1',
+        title: 'Pandavleni Ascent Route',
+        description: 'Main route up the steps to the caves and top of the mountain.',
+        distance: 2500,
+        elevation_gain: 150,
+        gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx',
+        difficulty_self_rating: 'Easy'
+      }]);
+      setLoading(false);
+      return;
+    }
+
     try {
       const [trekRes, routesRes] = await Promise.all([
         supabase.from('treks').select('*').eq('id', id).single(),

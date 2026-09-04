@@ -94,9 +94,9 @@ export default function HomeScreen() {
         {/* Hero: Recommended Route */}
         <View style={styles.section}>
           <Typography variant="labelCaps" color={Theme.colors.outline} style={styles.sectionHeader}>Recommended for you</Typography>
-          <TouchableOpacity activeOpacity={0.9} style={styles.heroCard}>
+          <TouchableOpacity activeOpacity={0.9} style={styles.heroCard} onPress={() => router.push('/trek/pandavleni')}>
             <ImageBackground 
-              source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuACoVRplcSJGPeJRT4fVqRQhHI1xaDOTocZwO5FXackRN7iJf8s5YjBN5sbD58_te85wqrjf8oOrJ7qnFkUq6PAEAeJ6_85O9PnsOtdJ1lqMBYtZnWObppKfrDOClIrzAiw-LxDB-SIZReWzOYvC2UwnLL_1_FIPVT98z6MOjbjfekoKnpcSZl9VGRKJxqIzoybecis-8Y2P-uLsKiZ5gkjvbivideI9WVS_XOZkKvsBs1OXS_4ogu5cA' }} 
+              source={{ uri: 'https://images.unsplash.com/photo-1623821738734-d021c272bc97?q=80&w=2938&auto=format&fit=crop' }} 
               style={styles.heroImage}
             >
               {/* Gradient Overlay */}
@@ -104,24 +104,24 @@ export default function HomeScreen() {
               <View style={styles.heroContent}>
                 <View style={styles.heroHeaderRow}>
                   <View>
-                    <Typography variant="headlineMd" color={Theme.colors.onPrimary} style={{ marginBottom: 4 }}>Kalsubai Peak</Typography>
+                    <Typography variant="headlineMd" color={Theme.colors.onPrimary} style={{ marginBottom: 4 }}>Pandavleni Caves</Typography>
                     <View style={styles.difficultyBadge}>
-                      <Typography variant="labelCaps" color={Theme.colors.secondaryContainer}>Difficulty: Medium</Typography>
+                      <Typography variant="labelCaps" color={Theme.colors.secondaryContainer}>Difficulty: Easy</Typography>
                     </View>
                   </View>
                   <View style={styles.startBtn}>
-                    <Typography variant="labelCaps" color={Theme.colors.onSecondary}>START ROUTE</Typography>
+                    <Typography variant="labelCaps" color={Theme.colors.onSecondary}>VIEW ROUTE</Typography>
                   </View>
                 </View>
                 {/* Metric Tiles for Route */}
                 <View style={styles.heroMetrics}>
                   <View style={styles.heroMetricItem}>
                     <Typography variant="labelCaps" color={Theme.colors.outlineVariant}>DISTANCE</Typography>
-                    <Typography variant="metricSm" color={Theme.colors.onPrimary}>8.6 km</Typography>
+                    <Typography variant="metricSm" color={Theme.colors.onPrimary}>2.5 km</Typography>
                   </View>
                   <View style={styles.heroMetricItem}>
                     <Typography variant="labelCaps" color={Theme.colors.outlineVariant}>ELEVATION</Typography>
-                    <Typography variant="metricSm" color={Theme.colors.onPrimary}>620 m</Typography>
+                    <Typography variant="metricSm" color={Theme.colors.onPrimary}>150 m</Typography>
                   </View>
                 </View>
               </View>
