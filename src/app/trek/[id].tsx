@@ -25,7 +25,7 @@ export default function TrekDetailScreen() {
       setTrek({
         id: 'pandavleni', name: 'Pandavleni Caves Mountain', region: 'Nashik, Maharashtra',
         description: 'Pandavleni Caves are a group of 24 caves carved between the 1st century BCE and the 3rd century CE, located on the Trivashmi Hills in Nashik, Maharashtra. It is a short, steep hike with stone steps leading to ancient Buddhist caves and a beautiful view of the city.',
-        image: require('../../../assets/images/pandavleni.jpg')
+        image_url: 'https://s7ap1.scene7.com/is/image/incredibleindia/2-pandavleni-caves-nashik-maharashtra-attr-hero?qlt=82'
       });
       setRoutes([{ id: 'route-pandavleni-1', title: 'Pandavleni Ascent Route', description: 'Main route up the steps to the caves and top of the mountain.', distance: 2500, elevation_gain: 150, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Easy' }]);
       setLoading(false); return;
@@ -35,7 +35,7 @@ export default function TrekDetailScreen() {
       setTrek({
         id: 'kalsubai', name: 'Kalsubai Peak', region: 'Igatpuri, Maharashtra',
         description: 'Kalsubai is the highest peak in Maharashtra at 1,646 meters. The trek offers a mix of easy hiking and thrilling iron ladder climbs, culminating in breathtaking panoramic views of the Sahyadri mountain ranges.',
-        image: require('../../../assets/images/kalsubai.jpg')
+        image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Kalasubai_from_base.jpg/800px-Kalasubai_from_base.jpg'
       });
       setRoutes([{ id: 'route-kalsubai-1', title: 'Bari Village Route', description: 'The most popular route to the highest peak in Maharashtra.', distance: 6600, elevation_gain: 800, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Hard' }]); // using same dummy gpx for now
       setLoading(false); return;
@@ -45,7 +45,7 @@ export default function TrekDetailScreen() {
       setTrek({
         id: 'rajmachi', name: 'Rajmachi Fort', region: 'Lonavala, Maharashtra',
         description: 'Rajmachi is a historic fort consisting of two twin fortresses: Shrivardhan and Manaranjan. It offers a scenic trail through dense forests, making it one of the most popular trekking destinations during the monsoon.',
-        image: require('../../../assets/images/rajmachi.jpg')
+        image_url: 'https://vl-prod-static.b-cdn.net/system/images/000/763/347/088b1b3c346e32db0f2ed781af304e2e/original/Rajmachi-Trek-22.jpeg'
       });
       setRoutes([{ id: 'route-rajmachi-1', title: 'Lonavala Route', description: 'Long scenic walk to the base village of Udhewadi.', distance: 16000, elevation_gain: 450, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Medium' }]); // using same dummy gpx
       setLoading(false); return;
