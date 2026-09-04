@@ -1,27 +1,95 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView, ImageBackground, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, TextInput, ActivityIndicator, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { supabase } from '../../lib/supabase';
 import { Theme } from '../../theme/Theme';
 import { Typography } from '../../components/ui/Typography';
 import { MetricTile } from '../../components/ui/MetricTile';
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    if (searchQuery.trim().length > 2) {
+      const delayDebounce = setTimeout(() => {
+        searchTreks();
+      }, 500);
+      return () => clearTimeout(delayDebounce);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
+
+  const searchTreks = async () => {
+    setIsSearching(true);
+    const { data, error } = await supabase
+      .from('treks')
+      .select('id, name, region')
+      .ilike('name', `%${searchQuery}%`)
+      .limit(5);
+    
+    if (data && !error) {
+      setSearchResults(data);
+    }
+    setIsSearching(false);
+  };
+
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <View>
-            <Typography variant="headlineLgMobile" color={Theme.colors.primary}>Good morning, Alex</Typography>
+            <Typography variant="headlineLgMobile" color={Theme.colors.primary}>Good morning</Typography>
             <View style={styles.locationRow}>
               <MaterialIcons name="location-on" size={16} color={Theme.colors.onSurfaceVariant} />
-              <Typography variant="bodyMd" color={Theme.colors.onSurfaceVariant}>Kedarkantha, Uttarakhand</Typography>
+              <Typography variant="bodyMd" color={Theme.colors.onSurfaceVariant}>Ready to explore?</Typography>
             </View>
           </View>
           <TouchableOpacity style={styles.notificationBtn}>
             <MaterialIcons name="notifications" size={24} color={Theme.colors.primary} />
           </TouchableOpacity>
         </View>
+
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <Ionicons name="search" size={20} color={Theme.colors.outline} style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search for treks..."
+            placeholderTextColor={Theme.colors.outline}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {isSearching && <ActivityIndicator size="small" color={Theme.colors.primary} style={{ marginRight: 10 }} />}
+        </View>
+
+        {/* Search Results */}
+        {searchResults.length > 0 && (
+          <View style={styles.searchResultsContainer}>
+            {searchResults.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                style={styles.searchResultItem}
+                onPress={() => {
+                  setSearchQuery('');
+                  setSearchResults([]);
+                  router.push(`/trek/${item.id}`);
+                }}
+              >
+                <MaterialIcons name="terrain" size={20} color={Theme.colors.primary} />
+                <View style={{ marginLeft: 12 }}>
+                  <Typography variant="bodyMd" color={Theme.colors.primary}>{item.name}</Typography>
+                  {item.region && <Typography variant="metricSm" color={Theme.colors.onSurfaceVariant}>{item.region}</Typography>}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
 
         {/* Hero: Recommended Route */}
         <View style={styles.section}>
@@ -161,6 +229,42 @@ const styles = StyleSheet.create({
     borderRadius: Theme.radius.full,
     borderWidth: 1,
     borderColor: 'rgba(197, 198, 202, 0.3)',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Theme.colors.surfaceContainerLow,
+    borderRadius: Theme.radius.full,
+    borderWidth: 1,
+    borderColor: 'rgba(197, 198, 202, 0.3)',
+    marginTop: Theme.spacing.md,
+    paddingHorizontal: Theme.spacing.sm,
+    height: 48,
+  },
+  searchIcon: {
+    marginRight: Theme.spacing.xs,
+  },
+  searchInput: {
+    flex: 1,
+    color: Theme.colors.primary,
+    fontSize: 16,
+    fontFamily: 'Inter_400Regular',
+  },
+  searchResultsContainer: {
+    marginTop: Theme.spacing.xs,
+    backgroundColor: Theme.colors.surfaceContainerLow,
+    borderRadius: Theme.radius.lg,
+    padding: Theme.spacing.xs,
+    borderWidth: 1,
+    borderColor: 'rgba(197, 198, 202, 0.3)',
+  },
+  searchResultItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: Theme.spacing.sm,
+    paddingHorizontal: Theme.spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(197, 198, 202, 0.1)',
   },
   section: {
     marginTop: Theme.spacing.lg,
