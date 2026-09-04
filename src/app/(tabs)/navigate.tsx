@@ -164,8 +164,8 @@ export default function NavigateTab() {
 
   const [routePoints, setRoutePoints] = useState<{lat: number, lng: number}[]>([]);
   const [gpsReady, setGpsReady] = useState(false);
-  const [followMode, setFollowMode] = useState(true);
-  const followModeRef = useRef(true);
+  const [followMode, setFollowMode] = useState(false);
+  const followModeRef = useRef(false);
   const [offRoute, setOffRoute] = useState(false);
   const [heading, setHeading] = useState(0);
   const [isLayerOpen, setIsLayerOpen] = useState(false);
