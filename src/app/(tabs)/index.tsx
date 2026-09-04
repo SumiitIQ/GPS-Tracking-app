@@ -104,9 +104,9 @@ export default function HomeScreen() {
               <View style={styles.heroContent}>
                 <View style={styles.heroHeaderRow}>
                   <View>
-                    <Typography variant="headlineMd" color={Theme.colors.onPrimary} style={{ marginBottom: 4 }}>Pandavleni Caves</Typography>
+                    <Typography variant="headlineMd" color={Theme.colors.onSurface} style={{ marginBottom: 4 }}>Pandavleni Caves</Typography>
                     <View style={styles.difficultyBadge}>
-                      <Typography variant="labelCaps" color={Theme.colors.secondaryContainer}>Difficulty: Easy</Typography>
+                      <Typography variant="labelCaps" color={Theme.colors.onSecondaryContainer}>Difficulty: Easy</Typography>
                     </View>
                   </View>
                   <View style={styles.startBtn}>
@@ -116,12 +116,12 @@ export default function HomeScreen() {
                 {/* Metric Tiles for Route */}
                 <View style={styles.heroMetrics}>
                   <View style={styles.heroMetricItem}>
-                    <Typography variant="labelCaps" color={Theme.colors.outlineVariant}>DISTANCE</Typography>
-                    <Typography variant="metricSm" color={Theme.colors.onPrimary}>2.5 km</Typography>
+                    <Typography variant="labelCaps" color={Theme.colors.onSurfaceVariant}>DISTANCE</Typography>
+                    <Typography variant="metricSm" color={Theme.colors.onSurface}>2.5 km</Typography>
                   </View>
                   <View style={styles.heroMetricItem}>
-                    <Typography variant="labelCaps" color={Theme.colors.outlineVariant}>ELEVATION</Typography>
-                    <Typography variant="metricSm" color={Theme.colors.onPrimary}>150 m</Typography>
+                    <Typography variant="labelCaps" color={Theme.colors.onSurfaceVariant}>ELEVATION</Typography>
+                    <Typography variant="metricSm" color={Theme.colors.onSurface}>150 m</Typography>
                   </View>
                 </View>
               </View>
