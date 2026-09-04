@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, StatusBar, Platform, Alert, Share } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, StatusBar, Platform, Alert, Share, ImageBackground } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { supabase } from '../../lib/supabase';
@@ -20,24 +20,35 @@ export default function TrekDetailScreen() {
 
   const fetchTrekAndRoutes = async () => {
     setLoading(true);
+    
     if (id === 'pandavleni') {
       setTrek({
-        id: 'pandavleni',
-        name: 'Pandavleni Caves Mountain',
-        region: 'Nashik, Maharashtra',
-        description: 'Pandavleni Caves are a group of 24 caves carved between the 1st century BCE and the 3rd century CE, located on the Trivashmi Hills in Nashik, Maharashtra. It is a short, steep hike with stone steps leading to ancient Buddhist caves and a beautiful view of the city.'
+        id: 'pandavleni', name: 'Pandavleni Caves Mountain', region: 'Nashik, Maharashtra',
+        description: 'Pandavleni Caves are a group of 24 caves carved between the 1st century BCE and the 3rd century CE, located on the Trivashmi Hills in Nashik, Maharashtra. It is a short, steep hike with stone steps leading to ancient Buddhist caves and a beautiful view of the city.',
+        image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Pandavleni_Caves%2C_Nashik.jpg/1200px-Pandavleni_Caves%2C_Nashik.jpg'
       });
-      setRoutes([{
-        id: 'route-pandavleni-1',
-        title: 'Pandavleni Ascent Route',
-        description: 'Main route up the steps to the caves and top of the mountain.',
-        distance: 2500,
-        elevation_gain: 150,
-        gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx',
-        difficulty_self_rating: 'Easy'
-      }]);
-      setLoading(false);
-      return;
+      setRoutes([{ id: 'route-pandavleni-1', title: 'Pandavleni Ascent Route', description: 'Main route up the steps to the caves and top of the mountain.', distance: 2500, elevation_gain: 150, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Easy' }]);
+      setLoading(false); return;
+    }
+    
+    if (id === 'kalsubai') {
+      setTrek({
+        id: 'kalsubai', name: 'Kalsubai Peak', region: 'Igatpuri, Maharashtra',
+        description: 'Kalsubai is the highest peak in Maharashtra at 1,646 meters. The trek offers a mix of easy hiking and thrilling iron ladder climbs, culminating in breathtaking panoramic views of the Sahyadri mountain ranges.',
+        image_url: 'https://images.unsplash.com/photo-1622308644420-b20141f17cb6?auto=format&fit=crop&w=800'
+      });
+      setRoutes([{ id: 'route-kalsubai-1', title: 'Bari Village Route', description: 'The most popular route to the highest peak in Maharashtra.', distance: 6600, elevation_gain: 800, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Hard' }]); // using same dummy gpx for now
+      setLoading(false); return;
+    }
+
+    if (id === 'rajmachi') {
+      setTrek({
+        id: 'rajmachi', name: 'Rajmachi Fort', region: 'Lonavala, Maharashtra',
+        description: 'Rajmachi is a historic fort consisting of two twin fortresses: Shrivardhan and Manaranjan. It offers a scenic trail through dense forests, making it one of the most popular trekking destinations during the monsoon.',
+        image_url: 'https://images.unsplash.com/photo-1605389658252-0947702f254e?auto=format&fit=crop&w=800'
+      });
+      setRoutes([{ id: 'route-rajmachi-1', title: 'Lonavala Route', description: 'Long scenic walk to the base village of Udhewadi.', distance: 16000, elevation_gain: 450, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Medium' }]); // using same dummy gpx
+      setLoading(false); return;
     }
 
     try {
@@ -88,16 +99,27 @@ export default function TrekDetailScreen() {
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <Text style={styles.backBtnText}>←</Text>
-        </TouchableOpacity>
+      {trek.image_url ? (
+        <ImageBackground source={{ uri: trek.image_url }} style={styles.heroImage}>
+          <View style={styles.heroOverlay}>
+            <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+              <Text style={styles.backBtnText}>←</Text>
+            </TouchableOpacity>
+          </View>
+        </ImageBackground>
+      ) : (
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+            <Text style={styles.backBtnText}>←</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
         <Text style={styles.title}>{trek.name}</Text>
         <Text style={styles.region}>{trek.region || 'Unknown Region'}</Text>
+        <Text style={styles.desc}>{trek.description || 'No description available for this trek.'}</Text>
       </View>
-
-      <Text style={styles.desc}>{trek.description || 'No description available for this trek.'}</Text>
       
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Community Routes</Text>
@@ -168,12 +190,20 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#060912' },
   center: { flex: 1, backgroundColor: '#060912', justifyContent: 'center', alignItems: 'center' },
   header: {
-    paddingTop: Platform.OS === 'android' ? 50 : 70,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight! + 10 : 50,
     paddingHorizontal: 20,
-    paddingBottom: 20,
-    backgroundColor: '#0a1020',
-    borderBottomWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    paddingBottom: 10,
+    backgroundColor: '#0a0d14',
+  },
+  heroImage: {
+    width: '100%',
+    height: 250,
+  },
+  heroOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight! + 10 : 50,
+    paddingHorizontal: 20,
   },
   backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.1)', justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
   backBtnText: { color: '#fff', fontSize: 20 },

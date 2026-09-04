@@ -96,7 +96,7 @@ export default function HomeScreen() {
           <Typography variant="labelCaps" color={Theme.colors.outline} style={styles.sectionHeader}>Recommended for you</Typography>
           <TouchableOpacity activeOpacity={0.9} style={styles.heroCard} onPress={() => router.push('/trek/pandavleni')}>
             <ImageBackground 
-              source={{ uri: 'https://images.unsplash.com/photo-1623821738734-d021c272bc97?q=80&w=2938&auto=format&fit=crop' }} 
+              source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Pandavleni_Caves%2C_Nashik.jpg/1200px-Pandavleni_Caves%2C_Nashik.jpg' }} 
               style={styles.heroImage}
             >
               {/* Gradient Overlay */}
@@ -144,30 +144,30 @@ export default function HomeScreen() {
         {/* Nearby Treks */}
         <View style={styles.section}>
           <View style={styles.sectionTitleRow}>
-            <Typography variant="labelCaps" color={Theme.colors.outline}>NEARBY TREKS</Typography>
+            <Typography variant="labelCaps" color={Theme.colors.outline}>MAHARASHTRA TREKS</Typography>
             <MaterialIcons name="more-horiz" size={16} color={Theme.colors.primary} />
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hScroll}>
-            <View style={styles.trekCard}>
-              <ImageBackground source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuALSNLs85Ll8qkLhX-4LwPhjdhKJc29A4L2fUqPK1hMYpOJTUvD9A2ofnzWauZZyOxLPp9FE5ZmwpRTjHV4a_qs7Gu1HUlaC86kUXXMq-92hb8rrRcZuAhHSdmEB4K5IjnNNd-XvBxOGxTzaD0nCrO3rjoU3b736EVcv6bx4PCvHPMkk4aozXPQ2SgdeQtz0Z5cqBllOujHiR_vjR8XNbYupUrYSvghECKngyNxi4hTb5EdjJK6UlqlrQ' }} style={styles.trekImg} />
+            <TouchableOpacity activeOpacity={0.9} style={styles.trekCard} onPress={() => router.push('/trek/kalsubai')}>
+              <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1622308644420-b20141f17cb6?auto=format&fit=crop&w=800' }} style={styles.trekImg} />
               <View style={styles.trekCardContent}>
-                <Typography variant="bodyMd" style={{ fontWeight: 'bold' }}>Har Ki Dun</Typography>
+                <Typography variant="bodyMd" style={{ fontWeight: 'bold' }}>Kalsubai Peak</Typography>
                 <View style={styles.trekCardRow}>
-                  <Typography variant="metricSm" color={Theme.colors.onSurfaceVariant}>47 km</Typography>
+                  <Typography variant="metricSm" color={Theme.colors.onSurfaceVariant}>6.6 km</Typography>
                   <View style={styles.trekBadge}><Typography variant="labelCaps" color={Theme.colors.onSurface}>HARD</Typography></View>
                 </View>
               </View>
-            </View>
-            <View style={styles.trekCard}>
-              <ImageBackground source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDPnOkIbz2U_tQipGSmMWcK5vIsd8U267KfanlQlK3NuzvLNiAXfwhJadCUkAUeUJh2NUFyCHdwD_vNN18xhCnXetMtqKJQnrN4_9hH19xAylGNTkt5LJCeuFZyObTt0kg-dhLXm6dT-bztQSqjiPnjhZfBHW5e_nevVXFLuJRhEXT8TMaB80LAYPwKetbGNuHs_ZCFG5M_PcUWZznmUWmbKqlcjiXLST6dfacNDfZ98J5aQu6M91SOuQ' }} style={styles.trekImg} />
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.9} style={styles.trekCard} onPress={() => router.push('/trek/rajmachi')}>
+              <ImageBackground source={{ uri: 'https://images.unsplash.com/photo-1605389658252-0947702f254e?auto=format&fit=crop&w=800' }} style={styles.trekImg} />
               <View style={styles.trekCardContent}>
-                <Typography variant="bodyMd" style={{ fontWeight: 'bold' }}>Roopkund</Typography>
+                <Typography variant="bodyMd" style={{ fontWeight: 'bold' }}>Rajmachi Fort</Typography>
                 <View style={styles.trekCardRow}>
-                  <Typography variant="metricSm" color={Theme.colors.onSurfaceVariant}>53 km</Typography>
-                  <View style={styles.trekBadge}><Typography variant="labelCaps" color={Theme.colors.onSurface}>HARD</Typography></View>
+                  <Typography variant="metricSm" color={Theme.colors.onSurfaceVariant}>16 km</Typography>
+                  <View style={styles.trekBadge}><Typography variant="labelCaps" color={Theme.colors.onSurface}>MEDIUM</Typography></View>
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
           </ScrollView>
         </View>
 
