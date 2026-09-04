@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Alert, Platform } from 'react-native';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
 import * as Location from 'expo-location';
 import * as FileSystem from 'expo-file-system/legacy';
@@ -132,6 +133,24 @@ const getArcGISHtml = (apiKey: string, routeLineJSON: string) => `
           const point = new Point({ longitude: lng, latitude: lat });
           view.goTo({ target: point, zoom: 19, tilt: 45, heading: heading || 0 }, { duration: 500 });
         };
+        
+        window.toggle3D = function() {
+          if (!view || !view.camera) return;
+          const currentTilt = view.camera.tilt;
+          view.goTo({ tilt: currentTilt > 10 ? 0 : 60 }, { duration: 800 }).catch(function(e){});
+        };
+        
+        window.setBasemap = function(type) {
+          if (map) map.basemap = type;
+        };
+
+        window.resetNorth = function() {
+          view.goTo({ heading: 0 }, { duration: 500 }).catch(function(e){});
+        };
+
+        view.watch("camera.heading", function(newHeading) {
+          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'HEADING_CHANGE', heading: newHeading }));
+        });
       });
     </script>
   </body>
@@ -148,6 +167,8 @@ export default function NavigateTab() {
   const [followMode, setFollowMode] = useState(true);
   const followModeRef = useRef(true);
   const [offRoute, setOffRoute] = useState(false);
+  const [heading, setHeading] = useState(0);
+  const [isLayerOpen, setIsLayerOpen] = useState(false);
   
   const locationSubscription = useRef<Location.LocationSubscription | null>(null);
   const routePointsRef = useRef(routePoints);
@@ -239,6 +260,36 @@ export default function NavigateTab() {
     followModeRef.current = v;
   };
 
+  const handleMessage = (event: any) => {
+    try {
+      const data = JSON.parse(event.nativeEvent.data);
+      if (data.type === 'HEADING_CHANGE') {
+        setHeading(data.heading);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleToggle3D = () => {
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript('if(window.toggle3D) window.toggle3D(); true;');
+    }
+  };
+
+  const handleSetBasemap = (type: string) => {
+    if (webViewRef.current) {
+    webViewRef.current.injectJavaScript(`if(window.setBasemap) window.setBasemap('${type}'); true;`);
+    }
+    setIsLayerOpen(false);
+  };
+
+  const handleResetNorth = () => {
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript('if(window.resetNorth) window.resetNorth(); true;');
+    }
+  };
+
   if (!routeUrl) {
     return (
       <View style={styles.emptyContainer}>
@@ -258,6 +309,7 @@ export default function NavigateTab() {
         style={{ flex: 1, backgroundColor: '#000' }}
         scrollEnabled={false}
         bounces={false}
+        onMessage={handleMessage}
         onTouchStart={() => {
           if (followMode) {
             setFollowMode(false);
@@ -275,14 +327,49 @@ export default function NavigateTab() {
         </View>
       </View>
 
+      {/* ── RIGHT ACTION BUTTONS ── */}
+      <View style={styles.rightActions}>
+        <TouchableOpacity style={styles.compassBtn} onPress={handleResetNorth}>
+          <View style={[styles.compassInner, { transform: [{ rotate: `${-heading}deg` }] }]}>
+            <View style={styles.compassNeedleRed} />
+            <View style={styles.compassNeedleWhite} />
+          </View>
+        </TouchableOpacity>
+        
+        <View style={styles.actionStack}>
+          <TouchableOpacity style={styles.actionBtn} onPress={() => setIsLayerOpen(!isLayerOpen)}>
+            <Ionicons name="layers" size={22} color="#3b82f6" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionBtn} onPress={handleToggle3D}>
+            <Text style={styles.text3d}>3D</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.actionBtn, { borderBottomWidth: 0 }]} onPress={toggleFollow}>
+            <MaterialCommunityIcons name={followMode ? "crosshairs-gps" : "crosshairs"} size={24} color={followMode ? "#10b981" : "#3b82f6"} />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* ── LAYER MODAL ── */}
+      {isLayerOpen && (
+        <View style={styles.layerModal}>
+          <Text style={styles.layerTitle}>MAP TYPE</Text>
+          <TouchableOpacity style={styles.layerOption} onPress={() => handleSetBasemap('satellite')}>
+            <Text style={styles.layerOptionText}>Satellite</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.layerOption} onPress={() => handleSetBasemap('topo-vector')}>
+            <Text style={styles.layerOptionText}>Topographic</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.layerOption} onPress={() => handleSetBasemap('osm')}>
+            <Text style={styles.layerOptionText}>Street</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <View style={styles.bottomHud}>
         <View style={styles.titleCard}>
           <Text style={styles.titleText}>{title || 'Navigating Route'}</Text>
           <Text style={styles.titleSub}>Following GPS track...</Text>
         </View>
-        <TouchableOpacity style={[styles.hudBtn, followMode && styles.hudBtnActive]} onPress={toggleFollow}>
-          <Text style={styles.hudBtnIcon}>{followMode ? '🎯' : '🗺️'}</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -306,6 +393,51 @@ const styles = StyleSheet.create({
   titleSub: { color: '#9ca3af', fontSize: 12, marginTop: 4, fontWeight: '600' },
 
   hudBtn: { width: 56, height: 56, borderRadius: 28, backgroundColor: 'rgba(0,0,0,0.8)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.5, shadowRadius: 10 },
-  hudBtnActive: { backgroundColor: 'rgba(59,130,246,0.6)', borderColor: '#3b82f6' },
+  // ── Right Actions
+  rightActions: {
+    position: 'absolute', right: 12, top: 220,
+    alignItems: 'center', zIndex: 5,
+  },
+  compassBtn: {
+    width: 52, height: 52, borderRadius: 26,
+    backgroundColor: '#1e1e1e', borderWidth: 2, borderColor: '#000',
+    alignItems: 'center', justifyContent: 'center',
+    marginBottom: 12,
+    shadowColor: '#000', shadowOpacity: 0.5, shadowRadius: 8, elevation: 5,
+  },
+  compassInner: {
+    width: 24, height: 24,
+  },
+  compassNeedleRed: {
+    position: 'absolute', top: 0, left: 10, width: 4, height: 12,
+    backgroundColor: '#ef4444', borderTopLeftRadius: 4, borderTopRightRadius: 4,
+  },
+  compassNeedleWhite: {
+    position: 'absolute', bottom: 0, left: 10, width: 4, height: 12,
+    backgroundColor: '#fff', borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
+  },
+  actionStack: {
+    backgroundColor: 'rgba(22, 25, 34, 0.85)',
+    borderRadius: 16, paddingVertical: 8,
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)',
+  },
+  actionBtn: {
+    width: 48, height: 48,
+    alignItems: 'center', justifyContent: 'center',
+    borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)',
+  },
+  text3d: { color: '#3b82f6', fontWeight: '800', fontSize: 16 },
+
+  // ── Layer Modal
+  layerModal: {
+    position: 'absolute', right: 70, top: 220,
+    backgroundColor: '#1b202d',
+    borderRadius: 16, padding: 16,
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
+    zIndex: 20,
+  },
+  layerTitle: { color: '#9ca3af', fontSize: 11, fontWeight: '700', letterSpacing: 1, marginBottom: 12 },
+  layerOption: { paddingVertical: 8 },
+  layerOptionText: { color: '#fff', fontSize: 14, fontWeight: '600' },
   hudBtnIcon: { fontSize: 24 },
 });
