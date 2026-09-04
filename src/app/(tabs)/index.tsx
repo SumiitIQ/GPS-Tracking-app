@@ -96,7 +96,7 @@ export default function HomeScreen() {
           <Typography variant="labelCaps" color={Theme.colors.outline} style={styles.sectionHeader}>Recommended for you</Typography>
           <TouchableOpacity activeOpacity={0.9} style={styles.heroCard} onPress={() => router.push('/trek/pandavleni')}>
             <ImageBackground 
-              source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Pandavleni_Caves%2C_Nashik.jpg/1200px-Pandavleni_Caves%2C_Nashik.jpg' }} 
+              source={{ uri: 'https://images.unsplash.com/photo-1590766940554-638bc52023d5?auto=format&fit=crop&w=800' }} 
               style={styles.heroImage}
             >
               {/* Gradient Overlay */}

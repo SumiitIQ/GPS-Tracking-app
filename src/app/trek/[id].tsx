@@ -25,7 +25,7 @@ export default function TrekDetailScreen() {
       setTrek({
         id: 'pandavleni', name: 'Pandavleni Caves Mountain', region: 'Nashik, Maharashtra',
         description: 'Pandavleni Caves are a group of 24 caves carved between the 1st century BCE and the 3rd century CE, located on the Trivashmi Hills in Nashik, Maharashtra. It is a short, steep hike with stone steps leading to ancient Buddhist caves and a beautiful view of the city.',
-        image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Pandavleni_Caves%2C_Nashik.jpg/1200px-Pandavleni_Caves%2C_Nashik.jpg'
+        image_url: 'https://images.unsplash.com/photo-1590766940554-638bc52023d5?auto=format&fit=crop&w=800'
       });
       setRoutes([{ id: 'route-pandavleni-1', title: 'Pandavleni Ascent Route', description: 'Main route up the steps to the caves and top of the mountain.', distance: 2500, elevation_gain: 150, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Easy' }]);
       setLoading(false); return;
