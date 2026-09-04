@@ -96,7 +96,7 @@ export default function HomeScreen() {
           <Typography variant="labelCaps" color={Theme.colors.outline} style={styles.sectionHeader}>Recommended for you</Typography>
           <TouchableOpacity activeOpacity={0.9} style={styles.heroCard} onPress={() => router.push('/trek/pandavleni')}>
             <ImageBackground 
-              source={require('../../assets/images/pandavleni.jpg')} 
+              source={require('../../../assets/images/pandavleni.jpg')} 
               style={styles.heroImage}
             >
               {/* Gradient Overlay */}
@@ -149,7 +149,7 @@ export default function HomeScreen() {
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hScroll}>
             <TouchableOpacity activeOpacity={0.9} style={styles.trekCard} onPress={() => router.push('/trek/kalsubai')}>
-              <ImageBackground source={require('../../assets/images/kalsubai.jpg')} style={styles.trekImg} />
+              <ImageBackground source={require('../../../assets/images/kalsubai.jpg')} style={styles.trekImg} />
               <View style={styles.trekCardContent}>
                 <Typography variant="bodyMd" style={{ fontWeight: 'bold' }}>Kalsubai Peak</Typography>
                 <View style={styles.trekCardRow}>
@@ -159,7 +159,7 @@ export default function HomeScreen() {
               </View>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.9} style={styles.trekCard} onPress={() => router.push('/trek/rajmachi')}>
-              <ImageBackground source={require('../../assets/images/rajmachi.jpg')} style={styles.trekImg} />
+              <ImageBackground source={require('../../../assets/images/rajmachi.jpg')} style={styles.trekImg} />
               <View style={styles.trekCardContent}>
                 <Typography variant="bodyMd" style={{ fontWeight: 'bold' }}>Rajmachi Fort</Typography>
                 <View style={styles.trekCardRow}>
