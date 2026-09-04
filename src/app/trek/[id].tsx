@@ -25,7 +25,7 @@ export default function TrekDetailScreen() {
       setTrek({
         id: 'pandavleni', name: 'Pandavleni Caves Mountain', region: 'Nashik, Maharashtra',
         description: 'Pandavleni Caves are a group of 24 caves carved between the 1st century BCE and the 3rd century CE, located on the Trivashmi Hills in Nashik, Maharashtra. It is a short, steep hike with stone steps leading to ancient Buddhist caves and a beautiful view of the city.',
-        image_url: 'https://images.unsplash.com/photo-1590766940554-638bc52023d5?auto=format&fit=crop&w=800'
+        image: require('../../../assets/images/pandavleni.jpg')
       });
       setRoutes([{ id: 'route-pandavleni-1', title: 'Pandavleni Ascent Route', description: 'Main route up the steps to the caves and top of the mountain.', distance: 2500, elevation_gain: 150, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Easy' }]);
       setLoading(false); return;
@@ -35,7 +35,7 @@ export default function TrekDetailScreen() {
       setTrek({
         id: 'kalsubai', name: 'Kalsubai Peak', region: 'Igatpuri, Maharashtra',
         description: 'Kalsubai is the highest peak in Maharashtra at 1,646 meters. The trek offers a mix of easy hiking and thrilling iron ladder climbs, culminating in breathtaking panoramic views of the Sahyadri mountain ranges.',
-        image_url: 'https://images.unsplash.com/photo-1622308644420-b20141f17cb6?auto=format&fit=crop&w=800'
+        image: require('../../../assets/images/kalsubai.jpg')
       });
       setRoutes([{ id: 'route-kalsubai-1', title: 'Bari Village Route', description: 'The most popular route to the highest peak in Maharashtra.', distance: 6600, elevation_gain: 800, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Hard' }]); // using same dummy gpx for now
       setLoading(false); return;
@@ -45,7 +45,7 @@ export default function TrekDetailScreen() {
       setTrek({
         id: 'rajmachi', name: 'Rajmachi Fort', region: 'Lonavala, Maharashtra',
         description: 'Rajmachi is a historic fort consisting of two twin fortresses: Shrivardhan and Manaranjan. It offers a scenic trail through dense forests, making it one of the most popular trekking destinations during the monsoon.',
-        image_url: 'https://images.unsplash.com/photo-1605389658252-0947702f254e?auto=format&fit=crop&w=800'
+        image: require('../../../assets/images/rajmachi.jpg')
       });
       setRoutes([{ id: 'route-rajmachi-1', title: 'Lonavala Route', description: 'Long scenic walk to the base village of Udhewadi.', distance: 16000, elevation_gain: 450, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Medium' }]); // using same dummy gpx
       setLoading(false); return;
@@ -99,8 +99,8 @@ export default function TrekDetailScreen() {
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       
-      {trek.image_url ? (
-        <ImageBackground source={{ uri: trek.image_url }} style={styles.heroImage}>
+      {(trek.image || trek.image_url) ? (
+        <ImageBackground source={trek.image ? trek.image : { uri: trek.image_url }} style={styles.heroImage}>
           <View style={styles.heroOverlay}>
             <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
               <Text style={styles.backBtnText}>←</Text>
