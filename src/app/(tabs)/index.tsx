@@ -117,11 +117,11 @@ export default function HomeScreen() {
                 <View style={styles.heroMetrics}>
                   <View style={styles.heroMetricItem}>
                     <Typography variant="labelCaps" color={Theme.colors.onSurfaceVariant}>DISTANCE</Typography>
-                    <Typography variant="metricSm" color={Theme.colors.onSurface}>2.5 km</Typography>
+                    <Typography variant="metricSm" color={Theme.colors.onSurface}>0.6 km</Typography>
                   </View>
                   <View style={styles.heroMetricItem}>
                     <Typography variant="labelCaps" color={Theme.colors.onSurfaceVariant}>ELEVATION</Typography>
-                    <Typography variant="metricSm" color={Theme.colors.onSurface}>150 m</Typography>
+                    <Typography variant="metricSm" color={Theme.colors.onSurface}>90 m</Typography>
                   </View>
                 </View>
               </View>
