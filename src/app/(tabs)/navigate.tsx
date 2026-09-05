@@ -172,6 +172,7 @@ export default function NavigateTab() {
   
   const locationSubscription = useRef<Location.LocationSubscription | null>(null);
   const routePointsRef = useRef(routePoints);
+  const latestLocRef = useRef<{lat: number, lng: number, heading: number} | null>(null);
 
   useEffect(() => {
     if (routeUrl) {
@@ -233,6 +234,7 @@ export default function NavigateTab() {
   const handleLocationUpdate = useCallback((loc: Location.LocationObject) => {
     const { latitude, longitude, heading } = loc.coords;
     setGpsReady(true);
+    latestLocRef.current = { lat: latitude, lng: longitude, heading: heading || 0 };
     
     if (webViewRef.current) {
       webViewRef.current.injectJavaScript(`
@@ -258,6 +260,14 @@ export default function NavigateTab() {
     const v = !followMode;
     setFollowMode(v);
     followModeRef.current = v;
+    
+    if (v && latestLocRef.current && webViewRef.current) {
+      const { lat, lng, heading } = latestLocRef.current;
+      webViewRef.current.injectJavaScript(`
+        if (window.centerMap) window.centerMap(${lat}, ${lng}, ${heading});
+        true;
+      `);
+    }
   };
 
   const handleMessage = (event: any) => {

@@ -5,7 +5,7 @@ import { supabase } from '../../lib/supabase';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { useCallback } from 'react';
 
-export default function ProfileTab() {
+export default function ActivityTab() {
   const { user, signOut } = useAuth();
   const [routes, setRoutes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,7 +49,7 @@ export default function ProfileTab() {
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       
       <View style={styles.header}>
-        <Text style={styles.title}>My Profile</Text>
+        <Text style={styles.title}>My Activity</Text>
         <TouchableOpacity style={styles.signOutBtn} onPress={signOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
