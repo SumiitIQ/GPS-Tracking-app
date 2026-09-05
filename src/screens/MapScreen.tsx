@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
 import {
   View,
   Text,
@@ -602,18 +603,14 @@ export default function MapScreen() {
             {!gpsReady ? 'ArcGIS · Acquiring GPS…' : `ArcGIS 3D · ±${accuracy}m`}
           </Text>
         </View>
-        {/* Follow toggle */}
-        <TouchableOpacity
-          style={[styles.hudBtn, followMode && styles.hudBtnActive]}
-          onPress={toggleFollow}
-        >
-          <Text style={styles.hudBtnIcon}>{followMode ? '🎯' : '🗺️'}</Text>
-        </TouchableOpacity>
-        {/* Sign out */}
-        <TouchableOpacity style={styles.hudBtn} onPress={signOut}>
-          <Text style={styles.hudBtnIcon}>⎋</Text>
-        </TouchableOpacity>
-      </View>
+          {/* Follow toggle */}
+          <TouchableOpacity
+            style={[styles.hudBtn, followMode && styles.hudBtnActive]}
+            onPress={toggleFollow}
+          >
+            <MaterialIcons name={followMode ? "my-location" : "location-searching"} size={22} color={followMode ? "#fff" : "#9ca3af"} />
+          </TouchableOpacity>
+        </View>
 
       {/* ── BOTTOM PANEL (Strava style) ───────────────────────────────────── */}
       <View style={styles.bottomPanel}>
