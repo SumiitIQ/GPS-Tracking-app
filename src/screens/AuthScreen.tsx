@@ -104,7 +104,7 @@ export default function AuthScreen() {
           <Animated.View style={[{ transform: [{ scale: pulseAnim }], marginBottom: 16 }]}>
             <AppLogo width={100} height={100} />
           </Animated.View>
-          <Text style={styles.appName}>Nakshta</Text>
+          <Text style={styles.appName}>Nakshtra</Text>
           <Text style={styles.tagline}>NAVIGATE • CLIMB • CONQUER</Text>
           <View style={styles.taglineLine} />
         </View>

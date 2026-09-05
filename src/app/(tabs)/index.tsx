@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, TextInput, ActivityIndicator, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { useAuth } from '../../context/AuthContext';
+import { useFocusEffect } from 'expo-router';
+import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../lib/supabase';
 import { Theme } from '../../theme/Theme';
@@ -10,6 +13,36 @@ import { MetricTile } from '../../components/ui/MetricTile';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { user } = useAuth();
+  const [totalDistance, setTotalDistance] = useState(0);
+  const [totalElevation, setTotalElevation] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (user?.id) {
+        fetchUserStats();
+      }
+    }, [user?.id])
+  );
+
+  const fetchUserStats = async () => {
+    const { data, error } = await supabase
+      .from('routes')
+      .select('distance, elevation_gain')
+      .eq('submitter_id', user?.id);
+    
+    if (data && !error) {
+      let dist = 0;
+      let elev = 0;
+      data.forEach(route => {
+        dist += (route.distance || 0);
+        elev += (route.elevation_gain || 0);
+      });
+      // convert m to km for distance
+      setTotalDistance(dist / 1000);
+      setTotalElevation(elev);
+    }
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -136,8 +169,8 @@ export default function HomeScreen() {
             <MaterialIcons name="arrow-forward" size={16} color={Theme.colors.primary} />
           </View>
           <View style={styles.progressGrid}>
-            <MetricTile label="TOTAL DIST" value="120" unit="km" style={styles.flexHalf} />
-            <MetricTile label="ELEVATION GAIN" value="4,500" unit="m" style={styles.flexHalf} />
+            <MetricTile label="TOTAL DIST" value={totalDistance.toFixed(1)} unit="km" style={styles.flexHalf} />
+              <MetricTile label="ELEVATION GAIN" value={Math.round(totalElevation).toString()} unit="m" style={styles.flexHalf} />
           </View>
         </View>
 

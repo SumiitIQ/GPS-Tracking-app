@@ -6,13 +6,13 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/neon-app-icon.png",
-    "scheme": "precisiontrackmobile",
+    "scheme": "nakshtra",
     "userInterfaceStyle": "dark",
     "ios": {
       "icon": "./assets/images/neon-app-icon.png",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "PrecisionTrack uses GPS to show your exact location on the map.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "PrecisionTrack uses GPS in the background to track your route even when the app is minimized."
+        "NSLocationWhenInUseUsageDescription": "Nakshtra uses GPS to show your exact location on the map.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Nakshtra uses GPS in the background to track your route even when the app is minimized."
       }
     },
     "android": {
@@ -51,9 +51,9 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "PrecisionTrack uses GPS to track your route.",
-          "locationAlwaysPermission": "PrecisionTrack uses GPS in the background.",
-          "locationWhenInUsePermission": "PrecisionTrack uses GPS to show your location.",
+          "locationAlwaysAndWhenInUsePermission": "Nakshtra uses GPS to track your route.",
+          "locationAlwaysPermission": "Nakshtra uses GPS in the background.",
+          "locationWhenInUsePermission": "Nakshtra uses GPS to show your location.",
           "isAndroidBackgroundLocationEnabled": true,
           "isIosBackgroundLocationEnabled": true
         }

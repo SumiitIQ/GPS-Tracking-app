@@ -46,7 +46,7 @@ export default function TrekDetailScreen() {
         description: 'Kalsubai is the highest peak in Maharashtra at 1,646 meters. The trek offers a mix of easy hiking and thrilling iron ladder climbs, culminating in breathtaking panoramic views of the Sahyadri mountain ranges.',
         image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Kalasubai_from_base.jpg/800px-Kalasubai_from_base.jpg'
       });
-      setRoutes([{ id: 'route-kalsubai-1', title: 'Bari Village Route', description: 'The most popular route to the highest peak in Maharashtra.', distance: 6600, elevation_gain: 800, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Hard' }]); // using same dummy gpx for now
+      setRoutes([{ id: 'route-kalsubai-1', title: 'Bari Village Route', description: 'The most popular route to the highest peak in Maharashtra.', distance: 6600, elevation_gain: 800, gpx_url: '', difficulty_self_rating: 'Hard' }]); // Removed fake route
       setLoading(false); return;
     }
 
@@ -56,7 +56,7 @@ export default function TrekDetailScreen() {
         description: 'Rajmachi is a historic fort consisting of two twin fortresses: Shrivardhan and Manaranjan. It offers a scenic trail through dense forests, making it one of the most popular trekking destinations during the monsoon.',
         image_url: 'https://vl-prod-static.b-cdn.net/system/images/000/763/347/088b1b3c346e32db0f2ed781af304e2e/original/Rajmachi-Trek-22.jpeg'
       });
-      setRoutes([{ id: 'route-rajmachi-1', title: 'Lonavala Route', description: 'Long scenic walk to the base village of Udhewadi.', distance: 16000, elevation_gain: 450, gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', difficulty_self_rating: 'Medium' }]); // using same dummy gpx
+      setRoutes([{ id: 'route-rajmachi-1', title: 'Lonavala Route', description: 'Long scenic walk to the base village of Udhewadi.', distance: 16000, elevation_gain: 450, gpx_url: '', difficulty_self_rating: 'Medium' }]); // Removed fake route
       setLoading(false); return;
     }
 
