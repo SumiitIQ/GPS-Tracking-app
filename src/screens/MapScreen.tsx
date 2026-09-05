@@ -228,7 +228,7 @@ export default function MapScreen() {
       const { status: bgStatus } = await Location.requestBackgroundPermissionsAsync();
       
       if (fgStatus !== 'granted') {
-        Alert.alert('GPS Required', 'PrecisionTrack needs GPS access to track you.', [{ text: 'OK' }]);
+        Alert.alert('GPS Required', 'Nakshta needs GPS access to track you.', [{ text: 'OK' }]);
         return;
       }
 

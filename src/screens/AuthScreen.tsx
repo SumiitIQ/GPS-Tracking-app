@@ -15,6 +15,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import AppLogo from '../components/AppLogo';
 
 const { width, height } = Dimensions.get('window');
 
@@ -100,11 +101,11 @@ export default function AuthScreen() {
       >
         {/* Logo Section */}
         <View style={styles.logoSection}>
-          <Animated.View style={[styles.logoOrb, { transform: [{ scale: pulseAnim }] }]}>
-            <Text style={styles.logoIcon}>⛰️</Text>
+          <Animated.View style={[{ transform: [{ scale: pulseAnim }], marginBottom: 16 }]}>
+            <AppLogo width={100} height={100} />
           </Animated.View>
-          <Text style={styles.appName}>PrecisionTrack</Text>
-          <Text style={styles.tagline}>NAVIGATE · CLIMB · CONQUER</Text>
+          <Text style={styles.appName}>Nakshta</Text>
+          <Text style={styles.tagline}>NAVIGATE • CLIMB • CONQUER</Text>
           <View style={styles.taglineLine} />
         </View>
 

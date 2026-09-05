@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "PrecisionTrack",
+    "name": "Nakshta",
     "slug": "precision_track_mobile",
     "owner": "mrcoder.420",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/summit-logo.jpg",
+    "icon": "./assets/images/neon-app-icon.png",
     "scheme": "precisiontrackmobile",
     "userInterfaceStyle": "dark",
     "ios": {
-      "icon": "./assets/images/summit-logo.jpg",
+      "icon": "./assets/images/neon-app-icon.png",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "PrecisionTrack uses GPS to show your exact location on the map.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "PrecisionTrack uses GPS in the background to track your route even when the app is minimized."
@@ -34,13 +34,12 @@
       ],
       "adaptiveIcon": {
         "backgroundColor": "#0a0a1a",
-        "foregroundImage": "./assets/images/summit-logo.jpg"
+        "foregroundImage": "./assets/images/neon-app-icon.png"
       },
       "notification": {
-        "icon": "./assets/images/summit-logo.jpg",
+        "icon": "./assets/images/neon-app-icon.png",
         "color": "#fc4c02"
       },
-
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -63,7 +62,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#000000",
-          "image": "./assets/images/summit-logo.jpg",
+          "image": "./assets/images/neon-app-icon.png",
           "imageWidth": 300
         }
       ]

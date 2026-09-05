@@ -1,0 +1,59 @@
+const sharp = require("sharp");
+const fs = require("fs");
+
+const svg = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1024" height="1024">
+  <defs>
+    <!-- Background: Deep Midnight Forest -->
+    <linearGradient id="bgDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#08140c" />
+      <stop offset="100%" stop-color="#020603" />
+    </linearGradient>
+
+    <!-- Neon Glow Gradient -->
+    <linearGradient id="neonGreen" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00E676" />
+      <stop offset="50%" stop-color="#39FF14" />
+      <stop offset="100%" stop-color="#76FF03" />
+    </linearGradient>
+
+    <!-- Soft Glow Filter -->
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- App Icon Base -->
+  <rect width="512" height="512" fill="url(#bgDark)" />
+
+  <!-- Pure Organic Mountain Contour -->
+  <path d="M 95 375 
+           C 68 375 58 345 82 315 
+           L 190 170 
+           C 205 148 225 158 235 178 
+           L 260 222 
+           C 270 238 285 238 295 218 
+           L 360 135 
+           C 375 115 400 120 415 145 
+           L 445 285 
+           C 460 325 440 375 395 375 
+           C 340 375 310 325 256 325 
+           C 200 325 150 375 95 375 
+           Z" 
+        fill="none" 
+        stroke="url(#neonGreen)" 
+        stroke-width="44" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        filter="url(#glow)" />
+</svg>;
+
+sharp(Buffer.from(svg))
+  .resize(1024, 1024)
+  .png()
+  .toFile("assets/images/neon-app-icon.png")
+  .then(() => console.log("Successfully created neon-app-icon.png!"))
+  .catch(err => console.error(err));
