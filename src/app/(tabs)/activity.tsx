@@ -33,15 +33,16 @@ export default function ActivityTab() {
     // Use description to track pending state to avoid schema errors
     const pendingText = '[PENDING_APPROVAL] ' + trekName + ' - ' + difficulty;
     
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('routes')
       .update({ description: pendingText, difficulty_self_rating: difficulty })
-      .eq('id', selectedRouteId);
+      .eq('id', selectedRouteId)
+      .select();
       
     setIsSubmitting(false);
     
-    if (error) {
-      Alert.alert('Error', 'Failed to submit route.');
+    if (error || !data || data.length === 0) {
+      Alert.alert('Database Error', 'Failed to submit! Supabase RLS policy is blocking the UPDATE. Please add an UPDATE policy for routes table in your Supabase dashboard.');
     } else {
       Alert.alert('Success', 'Route submitted for Admin review!');
       setSubmitModalVisible(false);
