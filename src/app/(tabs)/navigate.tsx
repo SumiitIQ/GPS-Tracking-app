@@ -43,8 +43,9 @@ const getArcGISHtml = (apiKey: string, routeLineJSON: string) => `
         "esri/geometry/Point",
         "esri/geometry/Polyline",
         "esri/symbols/SimpleMarkerSymbol",
-        "esri/symbols/SimpleLineSymbol"
-      ], function(esriConfig, Map, SceneView, GraphicsLayer, Graphic, Point, Polyline, SimpleMarkerSymbol, SimpleLineSymbol) {
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/TextSymbol"
+      ], function(esriConfig, Map, SceneView, GraphicsLayer, Graphic, Point, Polyline, SimpleMarkerSymbol, SimpleLineSymbol, TextSymbol) {
         esriConfig.apiKey = "${apiKey}";
         
         const map = new Map({ basemap: "satellite", ground: "world-elevation" });
@@ -65,17 +66,64 @@ const getArcGISHtml = (apiKey: string, routeLineJSON: string) => `
         
         let markerGraphic = null;
         
-        view.when(() => {
-          if (routeCoords && routeCoords.length > 0) {
-            const polyline = new Polyline({ paths: [routeCoords] });
-            const outerSymbol = new SimpleLineSymbol({ color: [0, 85, 170, 0.9], width: 8, join: "round", cap: "round" });
-            const innerSymbol = new SimpleLineSymbol({ color: [59, 130, 246, 1], width: 4, join: "round", cap: "round" });
-            const routeGraphicOuter = new Graphic({ geometry: polyline, symbol: outerSymbol });
-            const routeGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
-            trackingLayer.addMany([routeGraphicOuter, routeGraphicInner]);
-            view.goTo(polyline.extent.expand(1.2));
-          }
-        });
+                            view.when(() => {
+            if (routeCoords && routeCoords.length > 0) {
+              const polyline = new Polyline({ paths: [routeCoords] });
+              const outerSymbol = new SimpleLineSymbol({ color: [0, 85, 170, 0.9], width: 8, join: "round", cap: "round" });
+              const innerSymbol = new SimpleLineSymbol({ color: [59, 130, 246, 1], width: 4, join: "round", cap: "round" });
+              const routeGraphicOuter = new Graphic({ geometry: polyline, symbol: outerSymbol });
+              const routeGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
+              
+              // Start Marker
+              const startCoord = routeCoords[0];
+              const startPoint = new Point({ longitude: startCoord[0], latitude: startCoord[1] });
+              const startMarker = new Graphic({
+                geometry: startPoint,
+                symbol: {
+                  type: "simple-marker", style: "circle",
+                  color: [22, 163, 74], outline: { color: [255, 255, 255], width: 2 }, size: 12
+                }
+              });
+              const startText = new Graphic({
+                geometry: startPoint,
+                symbol: {
+                  type: "text", text: " START ", color: "white",
+                  haloColor: "black", haloSize: "2px",
+                  backgroundColor: "black",
+                  font: { size: 10, weight: "bold", family: "sans-serif" },
+                  xoffset: 35, yoffset: -4
+                }
+              });
+
+              // End Marker
+              const endCoord = routeCoords[routeCoords.length - 1];
+              const endPoint = new Point({ longitude: endCoord[0], latitude: endCoord[1] });
+              const endMarker = new Graphic({
+                geometry: endPoint,
+                symbol: {
+                  type: "simple-marker", style: "circle",
+                  color: [220, 38, 38], outline: { color: [255, 255, 255], width: 2 }, size: 12
+                }
+              });
+              const endFlag = new Graphic({
+                geometry: endPoint,
+                symbol: { type: "text", text: "??", font: { size: 12 }, yoffset: 4 }
+              });
+              const endText = new Graphic({
+                geometry: endPoint,
+                symbol: {
+                  type: "text", text: " END ", color: "white",
+                  haloColor: "black", haloSize: "2px",
+                  backgroundColor: "black",
+                  font: { size: 10, weight: "bold", family: "sans-serif" },
+                  xoffset: 30, yoffset: -4
+                }
+              });
+
+              trackingLayer.addMany([routeGraphicOuter, routeGraphicInner, startMarker, startText, endMarker, endFlag, endText]);
+              view.goTo(polyline.extent.expand(1.2));
+            }
+          });
 
         let currentPos = null;
         let targetPos = null;
