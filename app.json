@@ -1,18 +1,18 @@
 {
   "expo": {
-    "name": "Nakshta",
+    "name": "Nirdesh",
     "slug": "precision_track_mobile",
     "owner": "mrcoder.420",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/neon-app-icon.png",
-    "scheme": "nakshtra",
+    "scheme": "nirdesh",
     "userInterfaceStyle": "dark",
     "ios": {
       "icon": "./assets/images/neon-app-icon.png",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Nakshtra uses GPS to show your exact location on the map.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Nakshtra uses GPS in the background to track your route even when the app is minimized."
+        "NSLocationWhenInUseUsageDescription": "Nirdesh uses GPS to show your exact location on the map.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Nirdesh uses GPS in the background to track your route even when the app is minimized."
       }
     },
     "android": {
@@ -36,10 +36,6 @@
         "backgroundColor": "#0a0a1a",
         "foregroundImage": "./assets/images/neon-app-icon.png"
       },
-      "notification": {
-        "icon": "./assets/images/neon-app-icon.png",
-        "color": "#fc4c02"
-      },
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -51,9 +47,9 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Nakshtra uses GPS to track your route.",
-          "locationAlwaysPermission": "Nakshtra uses GPS in the background.",
-          "locationWhenInUsePermission": "Nakshtra uses GPS to show your location.",
+          "locationAlwaysAndWhenInUsePermission": "Nirdesh uses GPS to track your route.",
+          "locationAlwaysPermission": "Nirdesh uses GPS in the background.",
+          "locationWhenInUsePermission": "Nirdesh uses GPS to show your location.",
           "isAndroidBackgroundLocationEnabled": true,
           "isIosBackgroundLocationEnabled": true
         }
