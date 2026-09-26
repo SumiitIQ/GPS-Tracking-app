@@ -32,7 +32,7 @@ export default function Home() {
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
       
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 160 }}>
         
         {/* HERO SECTION */}
         <View style={styles.heroContainer}>
@@ -251,10 +251,10 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfdfc' },
-  heroContainer: { width: '100%', height: 440 },
+  heroContainer: { width: '100%', minHeight: 480, height: 'auto' },
   heroBg: { width: '100%', height: '100%' },
   heroGradient: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 150 },
-  headerArea: { paddingHorizontal: 20 },
+  headerArea: { paddingHorizontal: 20, paddingBottom: 40 },
   topNav: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
   profileRow: { flexDirection: 'row', alignItems: 'center' },
   profilePic: { width: 44, height: 44, borderRadius: 22, marginRight: 12, borderWidth: 2, borderColor: 'rgba(255,255,255,0.3)' },
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
   exploreIconBg: { backgroundColor: '#90EE90', width: 28, height: 28, borderRadius: 14, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
   exploreBtnText: { color: '#fff', fontSize: 14, fontWeight: 'bold' },
   
-  catScroll: { paddingHorizontal: 20, marginTop: -20, paddingBottom: 20 },
+  catScroll: { paddingHorizontal: 20, marginTop: 5, paddingBottom: 20 },
   catBox: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 12, paddingHorizontal: 16, borderRadius: 16, marginRight: 12, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 10, elevation: 2, minWidth: 70 },
   catBoxActive: { backgroundColor: '#f0fdf4' },
   catIconCont: { marginBottom: 8 },
