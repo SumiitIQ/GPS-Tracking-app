@@ -19,9 +19,9 @@ const CATEGORIES = [
 ];
 
 const RECOMMENDED = [
-  { id: 1, title: 'Pandavleni Caves', location: 'Nashik, Maharashtra', image: require('../../assets/images/home_assets/card_pandavleni.jpg'), difficulty: 'Easy', duration: '2-3 hrs', distance: '0.6 km', elevation: '90 m' },
-  { id: 2, title: 'Anjaneri Fort', location: 'Nashik, Maharashtra', image: require('../../assets/images/home_assets/card_anjaneri.jpg'), difficulty: 'Moderate', duration: '3-5 hrs', distance: '3.2 km', elevation: '350 m' }, 
-  { id: 3, title: 'Dugarwadi Waterfall', location: 'Nashik, Maharashtra', image: require('../../assets/images/home_assets/card_dugarwadi.jpg'), difficulty: 'Easy', duration: '1-2 hrs', distance: '2.8 km', elevation: '220 m' }
+  { id: 1, title: 'Pandavleni Caves', location: 'Nashik, Maharashtra', image: require('../../../assets/images/home_assets/card_pandavleni.jpg'), difficulty: 'Easy', duration: '2-3 hrs', distance: '0.6 km', elevation: '90 m' },
+  { id: 2, title: 'Anjaneri Fort', location: 'Nashik, Maharashtra', image: require('../../../assets/images/home_assets/card_anjaneri.jpg'), difficulty: 'Moderate', duration: '3-5 hrs', distance: '3.2 km', elevation: '350 m' }, 
+  { id: 3, title: 'Dugarwadi Waterfall', location: 'Nashik, Maharashtra', image: require('../../../assets/images/home_assets/card_dugarwadi.jpg'), difficulty: 'Easy', duration: '1-2 hrs', distance: '2.8 km', elevation: '220 m' }
 ];
 
 export default function Home() {
@@ -37,7 +37,7 @@ export default function Home() {
         {/* HERO SECTION */}
         <View style={styles.heroContainer}>
           <ImageBackground 
-            source={require('../../assets/images/hero_bg.jpg')} 
+            source={require('../../../assets/images/hero_bg.jpg')} 
             style={styles.heroBg}
             imageStyle={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
           >
@@ -51,7 +51,7 @@ export default function Home() {
               {/* TOP NAV */}
               <View style={styles.topNav}>
                 <View style={styles.profileRow}>
-                  <Image source={require('../../assets/images/home_assets/profile.jpg')} style={styles.profilePic} />
+                  <Image source={require('../../../assets/images/home_assets/profile.jpg')} style={styles.profilePic} />
                   <View style={styles.profileText}>
                     <Text style={styles.greeting}>Good Morning ☀️</Text>
                     <Text style={styles.name}>Nikhil!</Text>
@@ -183,10 +183,10 @@ export default function Home() {
         </View>
         
         <View style={styles.continueCardWrapper}>
-          <ImageBackground source={require('../../assets/images/home_assets/continue_bg.jpg')} style={styles.continueCardBg} imageStyle={{borderRadius: 20}}>
+          <ImageBackground source={require('../../../assets/images/home_assets/continue_bg.jpg')} style={styles.continueCardBg} imageStyle={{borderRadius: 20}}>
             <BlurView intensity={70} tint="dark" style={styles.continueBlur}>
               <View style={styles.continueLeft}>
-                <Image source={require('../../assets/images/home_assets/continue_thumb.jpg')} style={styles.continueThumb} />
+                <Image source={require('../../../assets/images/home_assets/continue_thumb.jpg')} style={styles.continueThumb} />
                 <View style={styles.continueInfo}>
                   <Text style={styles.continueTitle}>Pandavleni Caves</Text>
                   <Text style={styles.continueSub}>0.2 km completed</Text>
