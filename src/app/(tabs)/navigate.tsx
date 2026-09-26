@@ -1,501 +1,582 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Alert, Platform } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { WebView } from 'react-native-webview';
-import * as Location from 'expo-location';
-import * as FileSystem from 'expo-file-system/legacy';
-import { DOMParser } from '@xmldom/xmldom';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ARCGIS_API_KEY } from '../../constants/supabase';
+import React from 'react';
+import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity, Dimensions, StatusBar } from 'react-native';
+import { Tabs } from 'expo-router';
+import { BlurView } from 'expo-blur';
+import { Ionicons, MaterialCommunityIcons, Feather, FontAwesome5 } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-function getDistanceMeters(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const toRad = (v: number) => (v * Math.PI) / 180;
-  const R = 6372800;
-  const cosPhi =
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(toRad(lon2) - toRad(lon1)) +
-    Math.sin(toRad(lat1)) * Math.sin(toRad(lat2));
-  return R * Math.acos(Math.max(-1, Math.min(1, cosPhi)));
-}
+const { width, height } = Dimensions.get('window');
+// Using fixed reference width/height to scale positions if needed. 
+// However, using percentage or flex where possible is safer. 
+// For absolute markers over a static map, we scale vertically.
+const scaleY = (val: number) => (val / 1024) * height;
+const scaleX = (val: number) => (val / 456) * width;
 
-const getArcGISHtml = (apiKey: string, routeLineJSON: string) => `
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>ArcGIS Navigate</title>
-    <style>
-      html, body, #viewDiv { padding: 0; margin: 0; height: 100%; width: 100%; background: #000; overflow: hidden; }
-      .esri-ui { display: none !important; }
-    </style>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/dark/main.css" />
-    <script src="https://js.arcgis.com/4.30/"></script>
-  </head>
-  <body>
-    <div id="viewDiv"></div>
-    <script>
-      require([
-        "esri/config",
-        "esri/Map",
-        "esri/views/SceneView",
-        "esri/layers/GraphicsLayer",
-        "esri/Graphic",
-        "esri/geometry/Point",
-        "esri/geometry/Polyline",
-        "esri/symbols/SimpleMarkerSymbol",
-        "esri/symbols/SimpleLineSymbol",
-        "esri/symbols/TextSymbol"
-      ], function(esriConfig, Map, SceneView, GraphicsLayer, Graphic, Point, Polyline, SimpleMarkerSymbol, SimpleLineSymbol, TextSymbol) {
-        esriConfig.apiKey = "${apiKey}";
-        
-        const map = new Map({ basemap: "satellite", ground: "world-elevation" });
-        const view = new SceneView({
-          container: "viewDiv",
-          map: map,
-          camera: { position: { x: 78.9629, y: 20.5937, z: 15000000 }, tilt: 0 },
-          environment: { starsEnabled: true, atmosphereEnabled: true },
-          ui: { components: [] }
-        });
-
-        const trackingLayer = new GraphicsLayer({
-          elevationInfo: { mode: "on-the-ground" }
-        });
-        map.add(trackingLayer);
-
-        const routeCoords = ${routeLineJSON};
-        
-        let markerGraphic = null;
-        
-                            view.when(() => {
-            if (routeCoords && routeCoords.length > 0) {
-              const polyline = new Polyline({ paths: [routeCoords] });
-              const outerSymbol = new SimpleLineSymbol({ color: [0, 85, 170, 0.9], width: 8, join: "round", cap: "round" });
-              const innerSymbol = new SimpleLineSymbol({ color: [59, 130, 246, 1], width: 4, join: "round", cap: "round" });
-              const routeGraphicOuter = new Graphic({ geometry: polyline, symbol: outerSymbol });
-              const routeGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
-              
-              // Start Marker
-              const startCoord = routeCoords[0];
-              const startPoint = new Point({ longitude: startCoord[0], latitude: startCoord[1] });
-              const startMarker = new Graphic({
-                geometry: startPoint,
-                symbol: {
-                  type: "simple-marker", style: "circle",
-                  color: [22, 163, 74], outline: { color: [255, 255, 255], width: 2 }, size: 12
-                }
-              });
-              const startText = new Graphic({
-                geometry: startPoint,
-                symbol: {
-                  type: "text", text: " START ", color: "white",
-                  haloColor: "black", haloSize: "2px",
-                  backgroundColor: "black",
-                  font: { size: 10, weight: "bold", family: "sans-serif" },
-                  xoffset: 35, yoffset: -4
-                }
-              });
-
-              // End Marker
-              const endCoord = routeCoords[routeCoords.length - 1];
-              const endPoint = new Point({ longitude: endCoord[0], latitude: endCoord[1] });
-              const endMarker = new Graphic({
-                geometry: endPoint,
-                symbol: {
-                  type: "simple-marker", style: "circle",
-                  color: [220, 38, 38], outline: { color: [255, 255, 255], width: 2 }, size: 12
-                }
-              });
-              const endFlag = new Graphic({
-                geometry: endPoint,
-                symbol: { type: "text", text: "??", font: { size: 12 }, yoffset: 4 }
-              });
-              const endText = new Graphic({
-                geometry: endPoint,
-                symbol: {
-                  type: "text", text: " END ", color: "white",
-                  haloColor: "black", haloSize: "2px",
-                  backgroundColor: "black",
-                  font: { size: 10, weight: "bold", family: "sans-serif" },
-                  xoffset: 30, yoffset: -4
-                }
-              });
-
-              trackingLayer.addMany([routeGraphicOuter, routeGraphicInner, startMarker, startText, endMarker, endFlag, endText]);
-              view.goTo(polyline.extent.expand(1.2));
-            }
-          });
-
-        let currentPos = null;
-        let targetPos = null;
-        let animStartTime = 0;
-        let animDuration = 1000;
-
-        function animateMarker(timestamp) {
-          if (!currentPos || !targetPos || !markerGraphic) {
-            requestAnimationFrame(animateMarker);
-            return;
-          }
-          if (animStartTime === 0) animStartTime = timestamp;
-          const elapsed = timestamp - animStartTime;
-          let progress = Math.min(elapsed / animDuration, 1);
-          
-          const lat = currentPos.lat + (targetPos.lat - currentPos.lat) * progress;
-          const lng = currentPos.lng + (targetPos.lng - currentPos.lng) * progress;
-          
-          markerGraphic.geometry = new Point({ longitude: lng, latitude: lat });
-          
-          if (progress < 1) {
-            requestAnimationFrame(animateMarker);
-          } else {
-            currentPos = targetPos;
-            animStartTime = 0;
-            requestAnimationFrame(animateMarker);
-          }
-        }
-        requestAnimationFrame(animateMarker);
-
-        window.updateLocation = function(lat, lng, heading, follow) {
-          const point = new Point({ longitude: lng, latitude: lat });
-          if (!markerGraphic) {
-            markerGraphic = new Graphic({
-              geometry: point,
-              symbol: new SimpleMarkerSymbol({
-                style: "circle", color: [59, 130, 246, 1], size: "18px",
-                outline: { color: [255, 255, 255, 1], width: 3 }
-              })
-            });
-            trackingLayer.add(markerGraphic);
-            currentPos = { lat, lng };
-            targetPos = { lat, lng };
-          } else {
-            currentPos = { lat: markerGraphic.geometry.latitude, lng: markerGraphic.geometry.longitude };
-            targetPos = { lat, lng };
-            animStartTime = 0;
-          }
-          if (follow) {
-            view.goTo({ target: point, zoom: 19, tilt: 45, heading: heading || 0 }, { duration: 1000 });
-          }
-        };
-        
-        window.centerMap = function(lat, lng, heading) {
-          const point = new Point({ longitude: lng, latitude: lat });
-          view.goTo({ target: point, zoom: 19, tilt: 45, heading: heading || 0 }, { duration: 500 });
-        };
-        
-        window.toggle3D = function() {
-          if (!view || !view.camera) return;
-          const currentTilt = view.camera.tilt;
-          view.goTo({ tilt: currentTilt > 10 ? 0 : 60 }, { duration: 800 }).catch(function(e){});
-        };
-        
-        window.setBasemap = function(type) {
-          if (map) map.basemap = type;
-        };
-
-        window.resetNorth = function() {
-          view.goTo({ heading: 0 }, { duration: 500 }).catch(function(e){});
-        };
-
-        view.watch("camera.heading", function(newHeading) {
-          window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'HEADING_CHANGE', heading: newHeading }));
-        });
-      });
-    </script>
-  </body>
-</html>
-`;
-
-export default function NavigateTab() {
-  const { routeUrl, title } = useLocalSearchParams();
-  const router = useRouter();
-  const webViewRef = useRef<WebView>(null);
-
-  const [routePoints, setRoutePoints] = useState<{lat: number, lng: number}[]>([]);
-  const [gpsReady, setGpsReady] = useState(false);
-  const [followMode, setFollowMode] = useState(false);
-  const followModeRef = useRef(false);
-  const [offRoute, setOffRoute] = useState(false);
-  const [heading, setHeading] = useState(0);
-  const [isLayerOpen, setIsLayerOpen] = useState(false);
-  
-  const locationSubscription = useRef<Location.LocationSubscription | null>(null);
-  const routePointsRef = useRef(routePoints);
-  const latestLocRef = useRef<{lat: number, lng: number, heading: number} | null>(null);
-
-  useEffect(() => {
-    if (routeUrl) {
-      loadRoute(routeUrl as string);
-    }
-  }, [routeUrl]);
-
-  useEffect(() => { 
-    routePointsRef.current = routePoints; 
-  }, [routePoints]);
-
-  const loadRoute = async (url: string) => {
-    try {
-      let localUri = url;
-      if (url.startsWith('http')) {
-        const dest = `${FileSystem.cacheDirectory}nav_temp.gpx`;
-        const { uri } = await FileSystem.downloadAsync(url, dest);
-        localUri = uri;
-      }
-      
-      const xmlStr = await FileSystem.readAsStringAsync(localUri);
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(xmlStr, 'text/xml');
-      const trkptNodes = doc.getElementsByTagName('trkpt');
-      
-      const points = [];
-      for (let i = 0; i < trkptNodes.length; i++) {
-        const latStr = trkptNodes[i].getAttribute('lat');
-        const lonStr = trkptNodes[i].getAttribute('lon');
-        if (!latStr || !lonStr) continue;
-
-        const lat = parseFloat(latStr);
-        const lon = parseFloat(lonStr);
-        // Filter out corrupted points at 0,0
-        if (lat === 0 || lon === 0 || isNaN(lat) || isNaN(lon)) continue;
-        
-        points.push({ lat, lng: lon });
-      }
-      setRoutePoints(points);
-    } catch (e) {
-      console.error(e);
-      Alert.alert('Error', 'Could not parse GPX file for navigation.');
-    }
-  };
-
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') return;
-      
-      locationSubscription.current = await Location.watchPositionAsync(
-        { accuracy: Location.Accuracy.High, timeInterval: 1000, distanceInterval: 0 },
-        handleLocationUpdate
-      );
-    })();
-    return () => locationSubscription.current?.remove();
-  }, []);
-
-  const handleLocationUpdate = useCallback((loc: Location.LocationObject) => {
-    const { latitude, longitude, heading } = loc.coords;
-    setGpsReady(true);
-    latestLocRef.current = { lat: latitude, lng: longitude, heading: heading || 0 };
-    
-    if (webViewRef.current) {
-      webViewRef.current.injectJavaScript(`
-        if (window.updateLocation) window.updateLocation(${latitude}, ${longitude}, ${heading || 0}, ${followModeRef.current});
-        true;
-      `);
-    }
-
-    const pts = routePointsRef.current;
-    if (pts.length > 0) {
-      let minDistance = Infinity;
-      for (let i = 0; i < pts.length; i++) {
-        const d = getDistanceMeters(latitude, longitude, pts[i].lat, pts[i].lng);
-        if (d < minDistance) minDistance = d;
-      }
-      setOffRoute(minDistance > 30); // 30 meters deviation tolerance
-    }
-  }, []);
-
-  const routeLineJSON = JSON.stringify(routePoints.map(p => [p.lng, p.lat]));
-
-  const toggleFollow = () => {
-    const v = !followMode;
-    setFollowMode(v);
-    followModeRef.current = v;
-    
-    if (v && latestLocRef.current && webViewRef.current) {
-      const { lat, lng, heading } = latestLocRef.current;
-      webViewRef.current.injectJavaScript(`
-        if (window.centerMap) window.centerMap(${lat}, ${lng}, ${heading});
-        true;
-      `);
-    }
-  };
-
-  const handleMessage = (event: any) => {
-    try {
-      const data = JSON.parse(event.nativeEvent.data);
-      if (data.type === 'HEADING_CHANGE') {
-        setHeading(data.heading);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const handleToggle3D = () => {
-    if (webViewRef.current) {
-      webViewRef.current.injectJavaScript('if(window.toggle3D) window.toggle3D(); true;');
-    }
-  };
-
-  const handleSetBasemap = (type: string) => {
-    if (webViewRef.current) {
-    webViewRef.current.injectJavaScript(`if(window.setBasemap) window.setBasemap('${type}'); true;`);
-    }
-    setIsLayerOpen(false);
-  };
-
-  const handleResetNorth = () => {
-    if (webViewRef.current) {
-      webViewRef.current.injectJavaScript('if(window.resetNorth) window.resetNorth(); true;');
-    }
-  };
-
-  if (!routeUrl) {
-    return (
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>No Route Selected</Text>
-        <Text style={styles.emptySub}>Go to the Explore tab to find a route to navigate.</Text>
-      </View>
-    );
-  }
+export default function Navigate() {
+  const insets = useSafeAreaInsets();
 
   return (
     <View style={styles.container}>
+      <Tabs.Screen options={{ headerShown: false, tabBarStyle: { display: 'none' } }} />
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
-      
-      <WebView
-        ref={webViewRef}
-        source={{ html: getArcGISHtml(ARCGIS_API_KEY, routeLineJSON) }}
-        style={{ flex: 1, backgroundColor: '#000' }}
-        scrollEnabled={false}
-        bounces={false}
-        onMessage={handleMessage}
-        onTouchStart={() => {
-          if (followMode) {
-            setFollowMode(false);
-            followModeRef.current = false;
-          }
-        }}
-      />
 
-      {/* Top HUD */}
-      <View style={styles.topHud}>
-        <View style={[styles.statusPill, offRoute ? styles.statusOff : styles.statusOn]}>
-          <Text style={styles.statusText}>
-            {offRoute ? '⚠️ OFF ROUTE' : '✅ ON ROUTE'}
-          </Text>
-        </View>
-      </View>
-
-      {/* ── RIGHT ACTION BUTTONS ── */}
-      <View style={styles.rightActions}>
-        <TouchableOpacity style={styles.compassBtn} onPress={handleResetNorth}>
-          <View style={[styles.compassInner, { transform: [{ rotate: `${-heading}deg` }] }]}>
-            <View style={styles.compassNeedleRed} />
-            <View style={styles.compassNeedleWhite} />
-          </View>
-        </TouchableOpacity>
+      {/* MAP BACKGROUND */}
+      <ImageBackground 
+        source={require('../../../assets/images/navigate_assets/navigate_bg.jpg')}
+        style={styles.backgroundImg}
+        resizeMode="cover"
+      >
         
-        <View style={styles.actionStack}>
-          <TouchableOpacity style={styles.actionBtn} onPress={() => setIsLayerOpen(!isLayerOpen)}>
-            <Ionicons name="layers" size={22} color="#3b82f6" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionBtn} onPress={handleToggle3D}>
-            <Text style={styles.text3d}>3D</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionBtn, { borderBottomWidth: 0 }]} onPress={toggleFollow}>
-            <MaterialCommunityIcons name={followMode ? "crosshairs-gps" : "crosshairs"} size={24} color={followMode ? "#10b981" : "#3b82f6"} />
-          </TouchableOpacity>
-        </View>
-      </View>
+        {/* TOP STATUS ROW */}
+        <View style={[styles.topRow, { top: Math.max(insets.top + 10, 40) }]}>
+          {/* Compass */}
+          <BlurView intensity={80} tint="dark" style={styles.compass}>
+            <Text style={styles.compassN}>N</Text>
+            <View style={styles.compassNeedleContainer}>
+              <Ionicons name="navigate" size={20} color="#fff" style={{ transform: [{ rotate: '-45deg' }] }} />
+            </View>
+          </BlurView>
 
-      {/* ── LAYER MODAL ── */}
-      {isLayerOpen && (
-        <View style={styles.layerModal}>
-          <Text style={styles.layerTitle}>MAP TYPE</Text>
-          <TouchableOpacity style={styles.layerOption} onPress={() => handleSetBasemap('satellite')}>
-            <Text style={styles.layerOptionText}>Satellite</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.layerOption} onPress={() => handleSetBasemap('topo-vector')}>
-            <Text style={styles.layerOptionText}>Topographic</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.layerOption} onPress={() => handleSetBasemap('osm')}>
-            <Text style={styles.layerOptionText}>Street</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+          {/* ON ROUTE Pill */}
+          <View style={styles.onRouteContainer}>
+            <View style={styles.onRouteGlow} />
+            <BlurView intensity={80} tint="dark" style={styles.onRoutePill}>
+              <View style={styles.onRouteDot} />
+              <Text style={styles.onRouteText}>ON ROUTE</Text>
+            </BlurView>
+          </View>
 
-      <View style={styles.bottomHud}>
-        <View style={styles.titleCard}>
-          <Text style={styles.titleText}>{title || 'Navigating Route'}</Text>
-          <Text style={styles.titleSub}>Following GPS track...</Text>
+          {/* GPS Status */}
+          <BlurView intensity={80} tint="dark" style={styles.gpsStatus}>
+            <MaterialCommunityIcons name="satellite-variant" size={16} color="#fff" />
+            <Text style={styles.gpsText}>GPS</Text>
+            <View style={styles.signalBars}>
+              <View style={[styles.bar, { height: 4 }]} />
+              <View style={[styles.bar, { height: 6 }]} />
+              <View style={[styles.bar, { height: 9 }]} />
+              <View style={[styles.bar, { height: 12 }]} />
+            </View>
+          </BlurView>
         </View>
-      </View>
+
+        {/* ROUTE INFO CARD */}
+        <BlurView intensity={80} tint="dark" style={styles.routeInfoCard}>
+          <View style={styles.routeInfoHeader}>
+            <View style={styles.routeInfoIconWrap}>
+              <MaterialCommunityIcons name="image-filter-hdr" size={20} color="#79d773" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.routeInfoTitle}>Pandavleni</Text>
+              <Text style={styles.routeInfoSubTitle}>Ascent Route</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#fff" />
+          </View>
+
+          <View style={styles.routeInfoStats}>
+            <View style={styles.infoRow}>
+              <Ionicons name="location-sharp" size={16} color="#79d773" />
+              <View style={styles.infoTextWrap}>
+                <Text style={styles.infoVal}>600 m</Text>
+                <Text style={styles.infoLabel}>Remaining</Text>
+              </View>
+            </View>
+            <View style={styles.infoRow}>
+              <Ionicons name="flag" size={16} color="#a0aec0" />
+              <View style={styles.infoTextWrap}>
+                <Text style={styles.infoVal}>90 m</Text>
+                <Text style={styles.infoLabel}>Elevation Gain</Text>
+              </View>
+            </View>
+            <View style={styles.infoRow}>
+              <Ionicons name="time-outline" size={16} color="#fff" />
+              <View style={styles.infoTextWrap}>
+                <Text style={styles.infoVal}>12 min</Text>
+                <Text style={styles.infoLabel}>Est. Time</Text>
+              </View>
+            </View>
+          </View>
+        </BlurView>
+
+        {/* RIGHT CONTROLS RAIL */}
+        <BlurView intensity={80} tint="dark" style={styles.rightRail}>
+          <TouchableOpacity style={styles.railItem}>
+            <Ionicons name="layers" size={22} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.railItem}>
+            <Text style={styles.rail3DText}>3D</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.railItem}>
+            <MaterialCommunityIcons name="image-filter-hdr" size={24} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.railItem}>
+            <MaterialCommunityIcons name="crosshairs-gps" size={22} color="#fff" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.railItem}>
+            <Ionicons name="navigate" size={22} color="#fff" style={{ transform: [{ rotate: '45deg' }] }} />
+          </TouchableOpacity>
+        </BlurView>
+
+        {/* PHOTO MARKERS (OVERLAYS) */}
+        {/* We place these absolutely. To ensure they cover the baked-in pixels fully, we use BlurView behind the image. */}
+        
+        {/* Top Photo Marker */}
+        <View style={[styles.photoMarker, { top: scaleY(270), left: scaleX(210) }]}>
+          <BlurView intensity={10} tint="light" style={styles.photoMarkerWrapper}>
+            <Image source={require('../../../assets/images/navigate_assets/thumb_mountain.jpg')} style={styles.photoMarkerImg} />
+          </BlurView>
+          <View style={styles.photoMarkerPointer} />
+        </View>
+
+        {/* Middle Photo Marker */}
+        <View style={[styles.photoMarker, { top: scaleY(380), right: scaleX(80) }]}>
+          <BlurView intensity={10} tint="light" style={styles.photoMarkerWrapper}>
+            <Image source={require('../../../assets/images/navigate_assets/thumb_cave.jpg')} style={styles.photoMarkerImg} />
+          </BlurView>
+          <View style={styles.photoMarkerPointer} />
+        </View>
+
+        {/* Bottom Photo Marker */}
+        <View style={[styles.photoMarker, { top: scaleY(515), left: scaleX(115) }]}>
+          <BlurView intensity={10} tint="light" style={styles.photoMarkerWrapper}>
+            <Image source={require('../../../assets/images/navigate_assets/thumb_sunset.jpg')} style={styles.photoMarkerImg} />
+          </BlurView>
+          <View style={styles.photoMarkerPointer} />
+        </View>
+
+
+        {/* BOTTOM SHEET */}
+        <View style={styles.bottomSheetWrapper}>
+          <BlurView intensity={90} tint="dark" style={[styles.bottomSheet, { paddingBottom: Math.max(insets.bottom, 20) }]}>
+            <View style={styles.dragHandle} />
+            
+            {/* Header */}
+            <View style={styles.sheetHeader}>
+              <View>
+                <Text style={styles.sheetTitle}>Pandavleni Ascent Route</Text>
+                <Text style={styles.sheetSub}>Following GPS track...</Text>
+              </View>
+              <TouchableOpacity style={styles.upBtn}>
+                <Ionicons name="chevron-up" size={20} color="#fff" />
+              </TouchableOpacity>
+            </View>
+
+            {/* 4 Stats Cards Row */}
+            <View style={styles.statsRow}>
+              {/* Card 1 */}
+              <View style={styles.statCard}>
+                <Ionicons name="location-sharp" size={16} color="#79d773" />
+                <Text style={styles.statVal}>0.6 km</Text>
+                <Text style={styles.statLabel}>Distance Left</Text>
+                <View style={styles.progressTrack}>
+                  <View style={[styles.progressFill, { width: '40%', backgroundColor: '#79d773' }]} />
+                </View>
+              </View>
+              
+              {/* Card 2 */}
+              <View style={styles.statCard}>
+                <MaterialCommunityIcons name="image-filter-hdr" size={16} color="#4299e1" />
+                <Text style={styles.statVal}>90 m</Text>
+                <Text style={styles.statLabel}>Elevation Gain</Text>
+                <View style={styles.progressTrack}>
+                  <View style={[styles.progressFill, { width: '60%', backgroundColor: '#4299e1' }]} />
+                </View>
+              </View>
+
+              {/* Card 3 */}
+              <View style={styles.statCard}>
+                <Ionicons name="time-outline" size={16} color="#9f7aea" />
+                <Text style={styles.statVal}>12 min</Text>
+                <Text style={styles.statLabel}>Est. Time</Text>
+                <View style={styles.progressTrack}>
+                  <View style={[styles.progressFill, { width: '50%', backgroundColor: '#9f7aea' }]} />
+                </View>
+              </View>
+
+              {/* Card 4 */}
+              <View style={styles.statCard}>
+                <Ionicons name="footsteps" size={16} color="#ecc94b" />
+                <Text style={styles.statVal}>3.2 km/h</Text>
+                <Text style={styles.statLabel}>Current Speed</Text>
+                <View style={styles.progressTrack}>
+                  <View style={[styles.progressFill, { width: '70%', backgroundColor: '#ecc94b' }]} />
+                </View>
+              </View>
+            </View>
+
+            {/* Action Buttons Row */}
+            <View style={styles.actionsRow}>
+              <TouchableOpacity style={styles.sideBtn}>
+                <View style={styles.sideBtnIconWrapper}>
+                  <Ionicons name="close" size={24} color="#a0aec0" />
+                </View>
+                <Text style={styles.sideBtnText}>End</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.pauseBtn}>
+                <Ionicons name="pause" size={24} color="#fff" />
+                <Text style={styles.pauseBtnText}>Pause</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.sideBtn}>
+                <View style={styles.sideBtnIconWrapper}>
+                  <Ionicons name="camera" size={22} color="#a0aec0" />
+                </View>
+                <Text style={styles.sideBtnText}>Add Point</Text>
+              </TouchableOpacity>
+            </View>
+
+          </BlurView>
+        </View>
+
+      </ImageBackground>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000' },
-  emptyContainer: { flex: 1, backgroundColor: '#000', justifyContent: 'center', alignItems: 'center', padding: 30 },
-  emptyText: { color: '#fff', fontSize: 22, fontWeight: '800' },
-  emptySub: { color: '#9ca3af', textAlign: 'center', marginTop: 10 },
-  
-  topHud: { position: 'absolute', top: Platform.OS === 'android' ? 40 : 60, left: 0, right: 0, alignItems: 'center' },
-  statusPill: { paddingHorizontal: 20, paddingVertical: 10, borderRadius: 30, borderWidth: 2, backgroundColor: 'rgba(0,0,0,0.8)' },
-  statusOn: { borderColor: '#10b981' },
-  statusOff: { borderColor: '#ef4444' },
-  statusText: { color: '#fff', fontWeight: '900', letterSpacing: 1 },
-  
-  bottomHud: { position: 'absolute', bottom: Platform.OS === 'android' ? 85 : 125, left: 20, right: 20, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between' },
-  titleCard: { flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', padding: 16, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', marginRight: 10 },
-  titleText: { color: '#fff', fontSize: 18, fontWeight: '800' },
-  titleSub: { color: '#9ca3af', fontSize: 12, marginTop: 4, fontWeight: '600' },
-
-  hudBtn: { width: 56, height: 56, borderRadius: 28, backgroundColor: 'rgba(0,0,0,0.8)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.5, shadowRadius: 10 },
-  // ── Right Actions
-  rightActions: {
-    position: 'absolute', right: 12, top: 220,
-    alignItems: 'center', zIndex: 5,
+  container: {
+    flex: 1,
+    backgroundColor: '#000',
   },
-  compassBtn: {
-    width: 52, height: 52, borderRadius: 26,
-    backgroundColor: '#1e1e1e', borderWidth: 2, borderColor: '#000',
-    alignItems: 'center', justifyContent: 'center',
-    marginBottom: 12,
-    shadowColor: '#000', shadowOpacity: 0.5, shadowRadius: 8, elevation: 5,
+  backgroundImg: {
+    width: '100%',
+    height: '100%',
   },
-  compassInner: {
-    width: 24, height: 24,
+  topRow: {
+    position: 'absolute',
+    left: 15,
+    right: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    zIndex: 10,
   },
-  compassNeedleRed: {
-    position: 'absolute', top: 0, left: 10, width: 4, height: 12,
-    backgroundColor: '#ef4444', borderTopLeftRadius: 4, borderTopRightRadius: 4,
+  compass: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    overflow: 'hidden',
   },
-  compassNeedleWhite: {
-    position: 'absolute', bottom: 0, left: 10, width: 4, height: 12,
-    backgroundColor: '#fff', borderBottomLeftRadius: 4, borderBottomRightRadius: 4,
+  compassN: {
+    color: '#e53e3e',
+    fontSize: 10,
+    fontWeight: 'bold',
+    position: 'absolute',
+    top: 6,
   },
-  actionStack: {
-    backgroundColor: 'rgba(22, 25, 34, 0.85)',
-    borderRadius: 16, paddingVertical: 8,
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)',
+  compassNeedleContainer: {
+    marginTop: 6,
   },
-  actionBtn: {
-    width: 48, height: 48,
-    alignItems: 'center', justifyContent: 'center',
-    borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.05)',
+  onRouteContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  text3d: { color: '#3b82f6', fontWeight: '800', fontSize: 16 },
-
-  // ── Layer Modal
-  layerModal: {
-    position: 'absolute', right: 70, top: 220,
-    backgroundColor: '#1b202d',
-    borderRadius: 16, padding: 16,
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)',
-    zIndex: 20,
+  onRouteGlow: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+    backgroundColor: '#38a169',
+    opacity: 0.3,
+    shadowColor: '#38a169',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 15,
+    elevation: 10,
   },
-  layerTitle: { color: '#9ca3af', fontSize: 11, fontWeight: '700', letterSpacing: 1, marginBottom: 12 },
-  layerOption: { paddingVertical: 8 },
-  layerOptionText: { color: '#fff', fontSize: 14, fontWeight: '600' },
-  hudBtnIcon: { fontSize: 24 },
+  onRoutePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: '#48bb78',
+    overflow: 'hidden',
+  },
+  onRouteDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#48bb78',
+    marginRight: 8,
+  },
+  onRouteText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  gpsStatus: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(99, 179, 237, 0.3)',
+    overflow: 'hidden',
+  },
+  gpsText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: 'bold',
+    marginHorizontal: 6,
+  },
+  signalBars: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    height: 12,
+  },
+  bar: {
+    width: 3,
+    backgroundColor: '#48bb78',
+    marginLeft: 2,
+    borderRadius: 1,
+  },
+  routeInfoCard: {
+    position: 'absolute',
+    top: scaleY(120),
+    left: 15,
+    width: 170,
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(99, 179, 237, 0.3)',
+    overflow: 'hidden',
+  },
+  routeInfoHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  routeInfoIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  routeInfoTitle: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  routeInfoSubTitle: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  routeInfoStats: {
+    gap: 12,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  infoTextWrap: {
+    marginLeft: 10,
+  },
+  infoVal: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: 'bold',
+    marginBottom: 2,
+  },
+  infoLabel: {
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: 10,
+  },
+  rightRail: {
+    position: 'absolute',
+    top: scaleY(200),
+    right: 15,
+    width: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    paddingVertical: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    overflow: 'hidden',
+  },
+  railItem: {
+    marginVertical: 12,
+    alignItems: 'center',
+  },
+  rail3DText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  photoMarker: {
+    position: 'absolute',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  photoMarkerWrapper: {
+    padding: 3,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  photoMarkerImg: {
+    width: 76,
+    height: 52,
+    borderRadius: 8,
+  },
+  photoMarkerPointer: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderTopWidth: 8,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#fff',
+    marginTop: -1,
+  },
+  bottomSheetWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderTopLeftRadius: 36,
+    borderTopRightRadius: 36,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -10 },
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    elevation: 20,
+  },
+  bottomSheet: {
+    width: '100%',
+    paddingTop: 12,
+    paddingHorizontal: 20,
+    backgroundColor: 'rgba(5, 15, 30, 0.65)',
+    borderTopWidth: 1,
+    borderColor: 'rgba(99, 179, 237, 0.25)',
+  },
+  dragHandle: {
+    width: 40,
+    height: 4,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  sheetHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  sheetTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  sheetSub: {
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: 12,
+  },
+  upBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  statCard: {
+    width: '23.5%',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 14,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
+  },
+  statVal: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: 'bold',
+    marginTop: 8,
+    marginBottom: 2,
+  },
+  statLabel: {
+    color: 'rgba(255,255,255,0.5)',
+    fontSize: 9,
+    marginBottom: 10,
+  },
+  progressTrack: {
+    width: '100%',
+    height: 4,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 2,
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 2,
+  },
+  actionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  sideBtn: {
+    alignItems: 'center',
+  },
+  sideBtnIconWrapper: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  sideBtnText: {
+    color: '#a0aec0',
+    fontSize: 11,
+  },
+  pauseBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#38a169',
+    height: 60,
+    paddingHorizontal: 48,
+    borderRadius: 30,
+    shadowColor: '#38a169',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+  pauseBtnText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  }
 });
