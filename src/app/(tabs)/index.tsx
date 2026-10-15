@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, ImageBackground, Image, TouchableOpacity, Dimensions, TextInput } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { Ionicons, FontAwesome5, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as DocumentPicker from 'expo-document-picker';
 
 const { width } = Dimensions.get('window');
 
-const CATEGORIES = [
+const CATEGORIES: any[] = [
   { id: 1, name: 'All', iconFamily: 'MaterialCommunityIcons', iconName: 'image-filter-hdr' },
   { id: 2, name: 'Trekking', iconFamily: 'FontAwesome5', iconName: 'walking' },
   { id: 3, name: 'Waterfalls', iconFamily: 'Ionicons', iconName: 'water' },
@@ -19,20 +20,32 @@ const CATEGORIES = [
 ];
 
 const RECOMMENDED = [
-  { id: 1, title: 'Pandavleni Caves', location: 'Nashik, Maharashtra', image: require('../../../assets/images/home_assets/card_pandavleni.jpg'), difficulty: 'Easy', duration: '2-3 hrs', distance: '0.6 km', elevation: '90 m' },
-  { id: 2, title: 'Anjaneri Fort', location: 'Nashik, Maharashtra', image: require('../../../assets/images/home_assets/card_anjaneri.jpg'), difficulty: 'Moderate', duration: '3-5 hrs', distance: '3.2 km', elevation: '350 m' }, 
-  { id: 3, title: 'Dugarwadi Waterfall', location: 'Nashik, Maharashtra', image: require('../../../assets/images/home_assets/card_dugarwadi.jpg'), difficulty: 'Easy', duration: '1-2 hrs', distance: '2.8 km', elevation: '220 m' }
+  { id: 'pandavleni', title: 'Pandavleni Caves', location: 'Nashik, Maharashtra', image: require('../../../assets/images/home_assets/card_pandavleni.jpg'), difficulty: 'Easy', duration: '2-3 hrs', distance: '0.6 km', elevation: '90 m' },
+  { id: 'rajmachi', title: 'Anjaneri Fort', location: 'Nashik, Maharashtra', image: require('../../../assets/images/home_assets/card_anjaneri.jpg'), difficulty: 'Moderate', duration: '3-5 hrs', distance: '3.2 km', elevation: '350 m' }, 
+  { id: 'kalsubai', title: 'Dugarwadi Waterfall', location: 'Nashik, Maharashtra', image: require('../../../assets/images/home_assets/card_dugarwadi.jpg'), difficulty: 'Easy', duration: '1-2 hrs', distance: '2.8 km', elevation: '220 m' }
 ];
 
 export default function Home() {
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState(1);
+  const router = useRouter();
   
+  const handlePickAndNavigate = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({ type: '*/*' });
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        router.push({ pathname: '/(tabs)/explore', params: { importGpxUri: result.assets[0].uri } });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
       
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 160 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
         
         {/* HERO SECTION */}
         <View style={styles.heroContainer}>
@@ -100,12 +113,21 @@ export default function Home() {
                 <Text style={styles.heroDesc}>
                   Discover hidden trails, breathtaking views and unforgettable experiences around you.
                 </Text>
-                <TouchableOpacity style={styles.exploreBtn}>
-                  <View style={styles.exploreIconBg}>
-                    <FontAwesome5 name="location-arrow" size={14} color="#000" />
-                  </View>
-                  <Text style={styles.exploreBtnText}>Explore Treks  <Ionicons name="chevron-forward" size={16} color="#fff" /></Text>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', gap: 12 }}>
+                  <TouchableOpacity style={styles.exploreBtn}>
+                    <View style={styles.exploreIconBg}>
+                      <FontAwesome5 name="location-arrow" size={14} color="#000" />
+                    </View>
+                    <Text style={styles.exploreBtnText}>Explore Treks</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity style={styles.importBtn} onPress={handlePickAndNavigate}>
+                    <View style={styles.importIconBg}>
+                      <MaterialCommunityIcons name="file-upload" size={16} color="#fff" />
+                    </View>
+                    <Text style={styles.importBtnText}>Import GPX</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
 
             </View>
@@ -119,9 +141,9 @@ export default function Home() {
             return (
               <TouchableOpacity key={cat.id} onPress={() => setActiveTab(cat.id)} style={[styles.catBox, isActive && styles.catBoxActive]}>
                 <View style={styles.catIconCont}>
-                  {cat.iconFamily === 'Ionicons' ? <Ionicons name={cat.iconName as any} size={24} color={isActive ? "#4CAF50" : "#666"} /> :
-                   cat.iconFamily === 'FontAwesome5' ? <FontAwesome5 name={cat.iconName as any} size={24} color={isActive ? "#4CAF50" : "#666"} /> :
-                   <MaterialCommunityIcons name={cat.iconName as any} size={24} color={isActive ? "#4CAF50" : "#666"} />}
+                  {cat.iconFamily === 'Ionicons' ? <Ionicons name={cat.iconName} size={24} color={isActive ? "#4CAF50" : "#666"} /> :
+                   cat.iconFamily === 'FontAwesome5' ? <FontAwesome5 name={cat.iconName} size={24} color={isActive ? "#4CAF50" : "#666"} /> :
+                   <MaterialCommunityIcons name={cat.iconName} size={24} color={isActive ? "#4CAF50" : "#666"} />}
                 </View>
                 <Text style={[styles.catText, isActive && styles.catTextActive]}>{cat.name}</Text>
                 {isActive && <View style={styles.activeDot} />}
@@ -140,7 +162,12 @@ export default function Home() {
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.recScroll}>
           {RECOMMENDED.map(item => (
-            <View key={item.id} style={styles.recCard}>
+            <TouchableOpacity 
+              key={item.id} 
+              style={styles.recCard} 
+              activeOpacity={0.9} 
+              onPress={() => router.push(`/trek/${item.id}`)}
+            >
               <ImageBackground source={item.image} style={styles.recImage} imageStyle={{borderRadius: 16}}>
                 <TouchableOpacity style={styles.heartBtn}>
                   <Ionicons name="heart-outline" size={18} color="#fff" />
@@ -173,7 +200,7 @@ export default function Home() {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
 
@@ -182,7 +209,11 @@ export default function Home() {
           <Text style={styles.sectionTitle}><View style={styles.titleLine}/> Continue Your Trek <Ionicons name="chevron-forward" size={16} color="#333" /></Text>
         </View>
         
-        <View style={styles.continueCardWrapper}>
+        <TouchableOpacity 
+          style={styles.continueCardWrapper} 
+          activeOpacity={0.9} 
+          onPress={() => router.push('/trek/pandavleni')}
+        >
           <ImageBackground source={require('../../../assets/images/home_assets/continue_bg.jpg')} style={styles.continueCardBg} imageStyle={{borderRadius: 20}}>
             <BlurView intensity={70} tint="dark" style={styles.continueBlur}>
               <View style={styles.continueLeft}>
@@ -204,7 +235,7 @@ export default function Home() {
               </View>
             </BlurView>
           </ImageBackground>
-        </View>
+        </TouchableOpacity>
 
         {/* YOUR PROGRESS */}
         <View style={styles.sectionHeader}>
@@ -251,8 +282,8 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fcfdfc' },
-  heroContainer: { width: '100%', minHeight: 480, height: 'auto' },
-  heroBg: { width: '100%', height: '100%' },
+  heroContainer: { width: '100%' },
+  heroBg: { width: '100%' },
   heroGradient: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 150 },
   headerArea: { paddingHorizontal: 20, paddingBottom: 40 },
   topNav: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
@@ -283,7 +314,11 @@ const styles = StyleSheet.create({
   exploreIconBg: { backgroundColor: '#90EE90', width: 28, height: 28, borderRadius: 14, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
   exploreBtnText: { color: '#fff', fontSize: 14, fontWeight: 'bold' },
   
-  catScroll: { paddingHorizontal: 20, marginTop: 5, paddingBottom: 20 },
+  importBtn: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.2)', paddingVertical: 10, paddingHorizontal: 16, borderRadius: 25, alignSelf: 'flex-start', borderWidth: 1, borderColor: 'rgba(255,255,255,0.4)' },
+  importIconBg: { backgroundColor: 'rgba(0,0,0,0.5)', width: 28, height: 28, borderRadius: 14, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  importBtnText: { color: '#fff', fontSize: 14, fontWeight: 'bold' },
+  
+  catScroll: { paddingHorizontal: 20, marginTop: 15, paddingBottom: 20 },
   catBox: { alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', paddingVertical: 12, paddingHorizontal: 16, borderRadius: 16, marginRight: 12, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 10, elevation: 2, minWidth: 70 },
   catBoxActive: { backgroundColor: '#f0fdf4' },
   catIconCont: { marginBottom: 8 },
