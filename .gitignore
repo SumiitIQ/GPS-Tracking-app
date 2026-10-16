@@ -42,3 +42,5 @@ example
 /ios
 /android
 .gradle_fresh/
+screenshot_*.png
+assets/images/treks/
