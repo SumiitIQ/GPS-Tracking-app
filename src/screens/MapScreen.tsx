@@ -141,21 +141,23 @@ const getArcGISHtml = (apiKey: string) => `
 
           if (isTracking) {
             routePaths.push([lng, lat]);
-            if (!routeGraphicInner) {
-              const polyline = new Polyline({ paths: [routePaths] });
-              
-              const outerSymbol = new SimpleLineSymbol({ color: [0, 85, 170, 0.9], width: 8, join: "round", cap: "round" });
-              routeGraphicOuter = new Graphic({ geometry: polyline, symbol: outerSymbol });
-              
-              const innerSymbol = new SimpleLineSymbol({ color: [59, 130, 246, 1], width: 4, join: "round", cap: "round" });
-              routeGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
-              
-              trackingLayer.addMany([routeGraphicOuter, routeGraphicInner]); 
-            } else {
-              const geom = routeGraphicInner.geometry.clone();
-              geom.paths[0] = routePaths;
-              routeGraphicOuter.geometry = geom;
-              routeGraphicInner.geometry = geom;
+            if (routePaths.length >= 2) {
+              if (!routeGraphicInner) {
+                const polyline = new Polyline({ paths: [routePaths] });
+                
+                const outerSymbol = new SimpleLineSymbol({ color: [0, 85, 170, 0.9], width: 8, join: "round", cap: "round" });
+                routeGraphicOuter = new Graphic({ geometry: polyline, symbol: outerSymbol });
+                
+                const innerSymbol = new SimpleLineSymbol({ color: [45, 125, 120, 1], width: 4, join: "round", cap: "round" });
+                routeGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
+                
+                trackingLayer.addMany([routeGraphicOuter, routeGraphicInner]); 
+              } else {
+                const geom = routeGraphicInner.geometry.clone();
+                geom.paths[0] = routePaths;
+                routeGraphicOuter.geometry = geom;
+                routeGraphicInner.geometry = geom;
+              }
             }
           }
           
@@ -185,7 +187,7 @@ function getDistanceMeters(lat1: number, lon1: number, lat2: number, lon2: numbe
 }
 
 const MIN_DISTANCE_TO_RECORD_M = 2;
-const MAX_ACCURACY_M = 50;
+const MAX_ACCURACY_M = 150;
 
 export default function MapScreen() {
   const { user, signOut } = useAuth();
@@ -223,14 +225,34 @@ export default function MapScreen() {
   // ─── Request Permissions & Start Watching ──────────────────────────────────
   useEffect(() => {
     let bgListener: any;
+    let isMounted = true;
 
     (async () => {
-      const { status: fgStatus } = await Location.requestForegroundPermissionsAsync();
-      const { status: bgStatus } = await Location.requestBackgroundPermissionsAsync();
-      
-      if (fgStatus !== 'granted') {
-        Alert.alert('GPS Required', 'Nirdesh needs GPS access to track you.', [{ text: 'OK' }]);
-        return;
+      try {
+        const { status: fgStatus } = await Location.requestForegroundPermissionsAsync();
+        if (fgStatus !== 'granted') {
+          Alert.alert('GPS Required', 'Please enable Location permission in Settings so Nirdesh can record your trek route.', [{ text: 'OK' }]);
+          return;
+        }
+      } catch (err) {
+        console.warn('Foreground permission error:', err);
+      }
+
+      // Safe background permission request (never block foreground tracking if denied)
+      try {
+        await Location.requestBackgroundPermissionsAsync();
+      } catch (err) {
+        console.warn('Background permission notice:', err);
+      }
+
+      // Fetch immediate current location to make Start button ready without delay
+      try {
+        const quickLoc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+        if (quickLoc && isMounted) {
+          handleLocationUpdate(quickLoc);
+        }
+      } catch (e) {
+        console.warn('Quick position fetch notice:', e);
       }
 
       // ── RESTORE STATE IF KILLED ──
@@ -273,7 +295,6 @@ export default function MapScreen() {
         newPoints.forEach(pt => {
            if (lastRecordedPos.current) {
              const dist = getDistanceMeters(lastRecordedPos.current.lat, lastRecordedPos.current.lng, pt.lat, pt.lng);
-             // Always record every point to ensure 100% GPX smoothness
              distAccum += dist;
              lastRecordedPos.current = { lat: pt.lat, lng: pt.lng, ts: pt.timestamp };
              trackPoints.current.push(pt);
@@ -289,13 +310,18 @@ export default function MapScreen() {
       });
 
       // Always watch foreground for immediate blue dot & accuracy updates
-      locationSubscription.current = await Location.watchPositionAsync(
-        { accuracy: Location.Accuracy.High, timeInterval: 1000, distanceInterval: 0 },
-        handleLocationUpdate
-      );
+      try {
+        locationSubscription.current = await Location.watchPositionAsync(
+          { accuracy: Location.Accuracy.High, timeInterval: 1000, distanceInterval: 0 },
+          handleLocationUpdate
+        );
+      } catch (e) {
+        console.warn('watchPositionAsync notice:', e);
+      }
     })();
 
     return () => {
+      isMounted = false;
       locationSubscription.current?.remove();
       if (bgListener) bgListener.remove();
       if (timerRef.current) clearInterval(timerRef.current);
@@ -313,8 +339,8 @@ export default function MapScreen() {
 
     currentPos.current = { lat: latitude, lng: longitude, heading: heading || 0 };
 
-    // Only add to track if accuracy is good enough
-    const isValidForTracking = acc !== null && acc <= MAX_ACCURACY_M;
+    // Accept valid coordinates with reasonable accuracy (up to 150m or null)
+    const isValidForTracking = latitude !== 0 && longitude !== 0 && (acc === null || acc <= MAX_ACCURACY_M);
 
     // ── Inject Location into ArcGIS WebView ─────────────────────────────────
     if (webViewRef.current) {
@@ -331,7 +357,6 @@ export default function MapScreen() {
       const now = loc.timestamp || Date.now();
       if (lastRecordedPos.current) {
         const dist = getDistanceMeters(lastRecordedPos.current.lat, lastRecordedPos.current.lng, latitude, longitude);
-        // Always record every point to ensure 100% GPX smoothness
         setTotalDistance(prev => prev + dist);
         lastRecordedPos.current = { lat: latitude, lng: longitude, ts: now };
         trackPoints.current.push({ lat: latitude, lng: longitude, timestamp: now, elevation: loc.coords.altitude || 0 });
@@ -340,7 +365,7 @@ export default function MapScreen() {
         trackPoints.current.push({ lat: latitude, lng: longitude, timestamp: now, elevation: loc.coords.altitude || 0 });
       }
     }
-  }, [isTracking]);
+  }, []);
 
   // ─── Controls ────────────────────────────────────────────────────────────
   const startTracking = async () => {
@@ -351,8 +376,39 @@ export default function MapScreen() {
     setElapsedSeconds(0);
     lastRecordedPos.current = null;
     trackPoints.current = [];
+
+    // Seed the starting point immediately if we already have a position
+    if (currentPos.current) {
+      const now = Date.now();
+      trackPoints.current.push({
+        lat: currentPos.current.lat,
+        lng: currentPos.current.lng,
+        timestamp: now,
+        elevation: 0,
+      });
+      lastRecordedPos.current = { lat: currentPos.current.lat, lng: currentPos.current.lng, ts: now };
+    } else {
+      Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced }).then(loc => {
+        if (loc && loc.coords) {
+          const now = loc.timestamp || Date.now();
+          currentPos.current = { lat: loc.coords.latitude, lng: loc.coords.longitude, heading: loc.coords.heading || 0 };
+          setGpsReady(true);
+          setAccuracy(loc.coords.accuracy ? Math.round(loc.coords.accuracy) : null);
+          if (trackPoints.current.length === 0) {
+            trackPoints.current.push({
+              lat: loc.coords.latitude,
+              lng: loc.coords.longitude,
+              timestamp: now,
+              elevation: loc.coords.altitude || 0,
+            });
+            lastRecordedPos.current = { lat: loc.coords.latitude, lng: loc.coords.longitude, ts: now };
+          }
+        }
+      }).catch(err => console.warn(err));
+    }
     
     await AsyncStorage.setItem('is_tracking', 'true');
+    await AsyncStorage.setItem('tracking_start_time', Date.now().toString());
     await AsyncStorage.removeItem('bg_locations');
     
     if (timerRef.current) clearInterval(timerRef.current);
@@ -364,28 +420,27 @@ export default function MapScreen() {
 
     if (Platform.OS === 'android' && Platform.Version >= 33) {
       try {
-        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-          Alert.alert("Notifications Disabled", "You won't see the background tracking notification because permission was denied.");
-        }
+        await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
       } catch (err) {}
     }
 
     try {
-      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-        accuracy: Location.Accuracy.High,
-        timeInterval: 2000,
-        distanceInterval: MIN_DISTANCE_TO_RECORD_M,
-        showsBackgroundLocationIndicator: true,
-        foregroundService: {
-          notificationTitle: "SummitIQ",
-          notificationBody: "Tracking active. Tap to open app.",
-          notificationColor: "#fc4c02",
-        }
-      });
+      const bgPerm = await Location.getBackgroundPermissionsAsync();
+      if (bgPerm.status === 'granted') {
+        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 2000,
+          distanceInterval: MIN_DISTANCE_TO_RECORD_M,
+          showsBackgroundLocationIndicator: true,
+          foregroundService: {
+            notificationTitle: "Nirdesh Trek Tracker",
+            notificationBody: "Tracking your route actively.",
+            notificationColor: "#2D7D78",
+          }
+        });
+      }
     } catch (e: any) {
-      console.error('Failed to start bg location', e);
-      Alert.alert('Tracking Error', 'Could not start background tracking: ' + (e.message || String(e)));
+      console.warn('Background tracking notice (foreground GPS remains active):', e);
     }
   };
 
@@ -412,19 +467,22 @@ export default function MapScreen() {
     timerRef.current = setInterval(() => setElapsedSeconds(prev => prev + 1), 1000);
     
     try {
-      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-        accuracy: Location.Accuracy.High,
-        timeInterval: 2000,
-        distanceInterval: MIN_DISTANCE_TO_RECORD_M,
-        showsBackgroundLocationIndicator: true,
-        foregroundService: {
-          notificationTitle: "SummitIQ",
-          notificationBody: "Tracking active. Tap to open app.",
-          notificationColor: "#fc4c02",
-        }
-      });
+      const bgPerm = await Location.getBackgroundPermissionsAsync();
+      if (bgPerm.status === 'granted') {
+        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 2000,
+          distanceInterval: MIN_DISTANCE_TO_RECORD_M,
+          showsBackgroundLocationIndicator: true,
+          foregroundService: {
+            notificationTitle: "Nirdesh Trek Tracker",
+            notificationBody: "Tracking your route actively.",
+            notificationColor: "#2D7D78",
+          }
+        });
+      }
     } catch (e) {
-      console.error('Failed to resume bg location', e);
+      console.warn('Failed to resume bg location', e);
     }
   };
 
@@ -442,14 +500,41 @@ export default function MapScreen() {
         await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
       }
     } catch (e) {
-      console.error('Failed to stop bg location', e);
+      console.warn('Failed to stop bg location', e);
     }
   };
 
   const finishTracking = async () => {
-    stopTracking();
+    await stopTracking();
+    
+    // Ensure we have at least 2 points to generate a valid GPX path
+    if (trackPoints.current.length === 1) {
+      const p = trackPoints.current[0];
+      const pTime = typeof p.timestamp === 'number' ? p.timestamp : Date.now();
+      trackPoints.current.push({
+        lat: p.lat,
+        lng: p.lng,
+        timestamp: pTime + 1000,
+        elevation: p.elevation || 0,
+      });
+    } else if (trackPoints.current.length === 0 && currentPos.current) {
+      const now = Date.now();
+      trackPoints.current.push({
+        lat: currentPos.current.lat,
+        lng: currentPos.current.lng,
+        timestamp: now,
+        elevation: 0,
+      });
+      trackPoints.current.push({
+        lat: currentPos.current.lat,
+        lng: currentPos.current.lng,
+        timestamp: now + 1000,
+        elevation: 0,
+      });
+    }
+
     if (trackPoints.current.length < 2) {
-      Alert.alert('Not enough data', 'You need to move around to record a track.');
+      Alert.alert('No GPS Location', 'Please ensure GPS is enabled on your device to record a track.');
       return;
     }
     // Open the metadata form modal
@@ -686,12 +771,12 @@ export default function MapScreen() {
             </>
           ) : (
             <TouchableOpacity
-              style={[styles.startBtn, !gpsReady && styles.startBtnDisabled]}
+              style={styles.startBtn}
               onPress={startTracking}
-              disabled={!gpsReady}
+              activeOpacity={0.85}
             >
               <Text style={styles.startBtnText}>
-                ▶  {gpsReady ? 'Start' : 'Waiting for GPS…'}
+                ▶  Start Recording
               </Text>
             </TouchableOpacity>
           )}
