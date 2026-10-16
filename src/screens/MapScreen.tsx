@@ -27,6 +27,7 @@ import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { generateGPX, TrackPoint } from '../lib/gpx';
 import { LOCATION_TASK_NAME } from '../lib/backgroundTask';
+import { saveLocalTrack, UserRecordedTrack } from '../lib/userTracks';
 
 // ─── ArcGIS WebView Template ─────────────────────────────────────────────────
 const getArcGISHtml = (apiKey: string) => `
@@ -467,65 +468,82 @@ export default function MapScreen() {
       });
 
       const netState = await NetInfo.fetch();
-      
-      if (!netState.isConnected) {
-        // --- OFFLINE SAVE LOGIC ---
-        if (user) {
-          const pendingTrack = {
-            id: Date.now().toString(),
-            userId: user.id,
-            gpxData,
-            distance: totalDistance,
-            elapsedSeconds,
-            timestamp: new Date().toISOString()
-          };
-          const existing = await AsyncStorage.getItem('pending_tracks');
-          const tracks = existing ? JSON.parse(existing) : [];
-          tracks.push(pendingTrack);
-          await AsyncStorage.setItem('pending_tracks', JSON.stringify(tracks));
-          Alert.alert('Saved Offline 📡', 'Your track has been safely stored on your phone. It will automatically upload to your profile when you reconnect to the internet.');
-        } else {
-          Alert.alert('Error', 'You must be logged in to save tracks.');
-        }
-        return; // Stop here, don't share until uploaded
-      }
-
+      const trackId = Date.now().toString();
       let publicGpxUrl = gpxData.path; // fallback to local
 
-      if (user) {
-        // 1. Upload to Supabase Storage (gpx-routes bucket)
-        const arrayBuffer = Buffer.from(gpxData.content, 'utf-8').buffer;
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('gpx-routes')
-          .upload(`${user.id}/${gpxData.fileName}`, arrayBuffer, {
-            contentType: 'application/gpx+xml',
-            upsert: true
-          });
+      // ── Always save a local copy to device storage ──
+      const localTrack: UserRecordedTrack = {
+        id: trackId,
+        title: trailName || 'Recorded Trek',
+        distance: totalDistance,
+        elevationGain: 0,
+        durationSeconds: elapsedSeconds,
+        createdAt: new Date().toISOString(),
+        gpxUrl: gpxData.path,
+        localGpxUri: gpxData.path,
+        isPendingSync: !netState.isConnected || !user,
+        isPendingApproval: false,
+        difficulty,
+        source: !netState.isConnected || !user ? 'pending' : 'cloud',
+      };
+      await saveLocalTrack(localTrack);
 
-        if (!uploadError && uploadData) {
-          const { data: publicUrlData } = supabase.storage
-            .from('gpx-routes')
-            .getPublicUrl(`${user.id}/${gpxData.fileName}`);
-          
-          publicGpxUrl = publicUrlData.publicUrl;
-        } else {
-          console.error('GPX Upload Error:', uploadError);
-        }
-
-        // 2. Save to database
-        const { error } = await supabase.from('routes').insert({
-          title: trailName,
-          gpx_url: publicGpxUrl, // Real cloud URL
+      if (!netState.isConnected || !user) {
+        // --- OFFLINE / LOCAL SAVE LOGIC ---
+        const pendingTrack = {
+          id: trackId,
+          userId: user?.id || 'local_user',
+          title: trailName || 'Recorded Trek',
+          gpxData,
           distance: totalDistance,
-          elevation_gain: 0,
-          submitter_id: user.id,
+          elapsedSeconds,
+          timestamp: new Date().toISOString()
+        };
+        const existing = await AsyncStorage.getItem('pending_tracks');
+        const tracks = existing ? JSON.parse(existing) : [];
+        tracks.push(pendingTrack);
+        await AsyncStorage.setItem('pending_tracks', JSON.stringify(tracks));
+        Alert.alert('Saved Offline 📡', 'Your track has been safely stored on your phone! It will automatically sync when you reconnect.');
+        return;
+      }
+
+      // 1. Upload to Supabase Storage (gpx-routes bucket)
+      const arrayBuffer = Buffer.from(gpxData.content, 'utf-8').buffer;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('gpx-routes')
+        .upload(`${user.id}/${gpxData.fileName}`, arrayBuffer, {
+          contentType: 'application/gpx+xml',
+          upsert: true
         });
-        if (error) {
-          console.error('DB Insert Error:', error);
-          Alert.alert('Database Error', `Insert failed: ${error.message || JSON.stringify(error)}`);
-        } else {
-          Alert.alert('Track Saved', 'Your track has been successfully saved to the cloud!');
-        }
+
+      if (!uploadError && uploadData) {
+        const { data: publicUrlData } = supabase.storage
+          .from('gpx-routes')
+          .getPublicUrl(`${user.id}/${gpxData.fileName}`);
+        
+        publicGpxUrl = publicUrlData.publicUrl;
+      } else {
+        console.error('GPX Upload Error:', uploadError);
+      }
+
+      // 2. Save to database
+      const { error } = await supabase.from('routes').insert({
+        title: trailName,
+        gpx_url: publicGpxUrl, // Real cloud URL
+        distance: totalDistance,
+        elevation_gain: 0,
+        submitter_id: user.id,
+      });
+      if (error) {
+        console.error('DB Insert Error:', error);
+        Alert.alert('Database Notice', `Saved locally. Cloud sync notice: ${error.message || 'Queued'}`);
+      } else {
+        // Update local track with cloud URL
+        localTrack.gpxUrl = publicGpxUrl;
+        localTrack.isPendingSync = false;
+        localTrack.source = 'cloud';
+        await saveLocalTrack(localTrack);
+        Alert.alert('Track Saved 🎉', 'Your track has been successfully saved to your profile and cloud!');
       }
 
       // Show native share dialog with PUBLIC LINK

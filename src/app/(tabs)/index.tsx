@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity,
   TextInput, Dimensions, StatusBar, Image
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as DocumentPicker from 'expo-document-picker';
+import { useAuth } from '../../context/AuthContext';
+import { getAllUserTracks, UserRecordedTrack } from '../../lib/userTracks';
 
 import { MAHARASHTRA_TREKS } from '../../constants/maharashtraTreks';
 
@@ -32,7 +34,17 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 export default function HomeTab() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { user } = useAuth();
   const [search, setSearch] = useState('');
+  const [recentTracks, setRecentTracks] = useState<UserRecordedTrack[]>([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getAllUserTracks(user?.id).then(tracks => {
+        setRecentTracks(tracks.slice(0, 3));
+      }).catch(err => console.warn(err));
+    }, [user?.id])
+  );
 
   const handlePickAndNavigate = async () => {
     try {
@@ -50,6 +62,12 @@ export default function HomeTab() {
     { icon: 'cloud-upload-outline', label: 'Import GPX', onPress: handlePickAndNavigate },
     { icon: 'cloud-download-outline', label: 'Offline Maps', onPress: () => router.push('/offline-maps') },
   ];
+
+  const filteredTreks = POPULAR_TREKS.filter(trek => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    return trek.name.toLowerCase().includes(q) || trek.location.toLowerCase().includes(q);
+  });
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -80,49 +98,65 @@ export default function HomeTab() {
             placeholderTextColor="#9CA3AF"
             value={search}
             onChangeText={setSearch}
+            returnKeyType="search"
+            clearButtonMode="while-editing"
           />
+          {search.length > 0 && (
+            <TouchableOpacity onPress={() => setSearch('')} style={{ padding: 4 }}>
+              <Ionicons name="close-circle" size={18} color="#9CA3AF" />
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* POPULAR TREKS */}
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Explore Popular Treks</Text>
-          <TouchableOpacity onPress={() => router.push('/(tabs)/explore')}>
+          <Text style={styles.sectionTitle}>
+            {search.trim() ? `Search Results (${filteredTreks.length})` : 'Explore Popular Treks'}
+          </Text>
+          <TouchableOpacity onPress={() => router.push({ pathname: '/(tabs)/explore', params: search.trim() ? { searchQuery: search.trim() } : {} })}>
             <Text style={styles.seeAll}>See all</Text>
           </TouchableOpacity>
         </View>
 
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.trekScroll}>
-          {POPULAR_TREKS.map(trek => (
-            <TouchableOpacity
-              key={trek.id}
-              style={styles.trekCard}
-              activeOpacity={0.8}
-              onPress={() => router.push(`/trek/${trek.id}`)}
-            >
-              <Image
-                source={trek.imageUrl ? { uri: trek.imageUrl } : require('../../../assets/images/home_assets/card_pandavleni.jpg')}
-                style={styles.trekCardImage}
-              />
-              <View style={styles.trekCardBody}>
-                <View style={styles.trekDiffRow}>
-                  <View style={[styles.diffBadge, { backgroundColor: DIFFICULTY_COLORS[trek.difficulty] + '20' }]}>
-                    <Text style={[styles.diffText, { color: DIFFICULTY_COLORS[trek.difficulty] }]}>{trek.difficulty}</Text>
+        {filteredTreks.length === 0 ? (
+          <View style={styles.noSearchBox}>
+            <Ionicons name="search" size={28} color="#D1C9BD" />
+            <Text style={styles.noSearchText}>No treks found matching "{search}"</Text>
+          </View>
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.trekScroll}>
+            {filteredTreks.map(trek => (
+              <TouchableOpacity
+                key={trek.id}
+                style={styles.trekCard}
+                activeOpacity={0.8}
+                onPress={() => router.push(`/trek/${trek.id}`)}
+              >
+                <Image
+                  source={trek.imageUrl ? { uri: trek.imageUrl } : require('../../../assets/images/home_assets/card_pandavleni.jpg')}
+                  style={styles.trekCardImage}
+                />
+                <View style={styles.trekCardBody}>
+                  <View style={styles.trekDiffRow}>
+                    <View style={[styles.diffBadge, { backgroundColor: DIFFICULTY_COLORS[trek.difficulty] + '20' }]}>
+                      <Text style={[styles.diffText, { color: DIFFICULTY_COLORS[trek.difficulty] }]}>{trek.difficulty}</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.trekName} numberOfLines={2}>{trek.name}</Text>
+                  <View style={styles.trekMeta}>
+                    <Ionicons name="location-outline" size={12} color="#9CA3AF" />
+                    <Text style={styles.trekLocation} numberOfLines={1}>{trek.location}</Text>
+                  </View>
+                  <View style={styles.trekStats}>
+                    <Text style={styles.trekStat}>{trek.km}</Text>
+                    <View style={styles.dot} />
+                    <Text style={styles.trekStat}>{trek.days} day</Text>
                   </View>
                 </View>
-                <Text style={styles.trekName} numberOfLines={2}>{trek.name}</Text>
-                <View style={styles.trekMeta}>
-                  <Ionicons name="location-outline" size={12} color="#9CA3AF" />
-                  <Text style={styles.trekLocation} numberOfLines={1}>{trek.location}</Text>
-                </View>
-                <View style={styles.trekStats}>
-                  <Text style={styles.trekStat}>{trek.km}</Text>
-                  <View style={styles.dot} />
-                  <Text style={styles.trekStat}>{trek.days} day</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        )}
 
         {/* QUICK ACTIONS */}
         <Text style={[styles.sectionTitle, { paddingHorizontal: 20, marginTop: 28, marginBottom: 14 }]}>Quick Actions</Text>
@@ -137,17 +171,57 @@ export default function HomeTab() {
           ))}
         </View>
 
-        {/* RECENT ACTIVITY PLACEHOLDER */}
+        {/* RECENT ACTIVITY */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Recent Activity</Text>
+          {recentTracks.length > 0 && (
+            <TouchableOpacity onPress={() => router.push('/(tabs)/activity')}>
+              <Text style={styles.seeAll}>See all</Text>
+            </TouchableOpacity>
+          )}
         </View>
-        <View style={styles.emptyCard}>
-          <MaterialCommunityIcons name="map-marker-path" size={36} color="#D1C9BD" />
-          <Text style={styles.emptyText}>No saved routes yet</Text>
-          <TouchableOpacity style={styles.emptyBtn} onPress={() => router.push('/(tabs)/explore')}>
-            <Text style={styles.emptyBtnText}>Explore Treks</Text>
-          </TouchableOpacity>
-        </View>
+
+        {recentTracks.length > 0 ? (
+          <View style={{ paddingHorizontal: 20, gap: 10 }}>
+            {recentTracks.map(track => {
+              const km = track.distance > 0 ? (track.distance / 1000).toFixed(1) + ' km' : '0.0 km';
+              const date = track.createdAt ? new Date(track.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '';
+              const routeUrl = track.gpxUrl || track.localGpxUri;
+
+              return (
+                <TouchableOpacity
+                  key={track.id}
+                  style={styles.recentTrackCard}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    if (routeUrl) {
+                      router.push({ pathname: '/(tabs)/navigate', params: { routeUrl, title: track.title } });
+                    } else {
+                      router.push('/(tabs)/activity');
+                    }
+                  }}
+                >
+                  <View style={styles.trackCardIcon}>
+                    <MaterialCommunityIcons name="map-marker-path" size={20} color="#2D7D78" />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.trackCardTitle} numberOfLines={1}>{track.title}</Text>
+                    <Text style={styles.trackCardMeta}>{km} • {date}</Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={16} color="#9CA3AF" />
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        ) : (
+          <View style={styles.emptyCard}>
+            <MaterialCommunityIcons name="map-marker-path" size={36} color="#D1C9BD" />
+            <Text style={styles.emptyText}>No saved routes yet</Text>
+            <TouchableOpacity style={styles.emptyBtn} onPress={() => router.push('/(tabs)/explore')}>
+              <Text style={styles.emptyBtnText}>Explore Treks</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
       </ScrollView>
     </View>
@@ -191,6 +265,16 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   searchInput: { flex: 1, fontSize: 14, color: '#1C1C1E' },
+  noSearchBox: {
+    marginHorizontal: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  noSearchText: { fontSize: 13, color: '#9CA3AF' },
 
   sectionHeader: {
     flexDirection: 'row',
@@ -268,4 +352,27 @@ const styles = StyleSheet.create({
   emptyText: { fontSize: 14, color: '#9CA3AF', marginTop: 10, marginBottom: 16 },
   emptyBtn: { backgroundColor: '#2D7D78', borderRadius: 10, paddingVertical: 10, paddingHorizontal: 20 },
   emptyBtnText: { color: '#fff', fontSize: 14, fontWeight: '600' },
+  recentTrackCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 12,
+    gap: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  trackCardIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    backgroundColor: '#EDF6F5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  trackCardTitle: { fontSize: 14, fontWeight: '600', color: '#1C1C1E', marginBottom: 2 },
+  trackCardMeta: { fontSize: 12, color: '#9CA3AF' },
 });

@@ -222,8 +222,15 @@ export default function ExploreTab() {
   const [heading, setHeading] = useState(0);
   const [hasImportedRoute, setHasImportedRoute] = useState(false);
     const router = useRouter();
-  const { importGpxUri } = useLocalSearchParams();
+  const { importGpxUri, searchQuery } = useLocalSearchParams();
+  const [searchText, setSearchText] = useState(typeof searchQuery === 'string' ? searchQuery : '');
   const webViewRef = useRef<WebView>(null);
+
+  useEffect(() => {
+    if (typeof searchQuery === 'string') {
+      setSearchText(searchQuery);
+    }
+  }, [searchQuery]);
 
   useEffect(() => {
     if (importGpxUri) {
@@ -425,6 +432,12 @@ useEffect(() => {
     }
   };
 
+  const filteredTreksOnMap = treks.filter(t => {
+    if (!searchText.trim()) return true;
+    const q = searchText.toLowerCase();
+    return (t.name && t.name.toLowerCase().includes(q)) || (t.region && t.region.toLowerCase().includes(q));
+  });
+
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
@@ -437,7 +450,7 @@ useEffect(() => {
       ) : (
         <WebView
           ref={webViewRef}
-          source={{ html: getExploreMapHtml(ARCGIS_API_KEY, treks) }}
+          source={{ html: getExploreMapHtml(ARCGIS_API_KEY, filteredTreksOnMap) }}
           style={styles.map}
           scrollEnabled={false}
           bounces={false}
@@ -453,7 +466,15 @@ useEffect(() => {
             style={styles.searchInput}
             placeholder="Search treks, places..."
             placeholderTextColor="#6b7280"
+            value={searchText}
+            onChangeText={setSearchText}
+            clearButtonMode="while-editing"
           />
+          {searchText.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchText('')} style={{ paddingHorizontal: 4 }}>
+              <Ionicons name="close-circle" size={18} color="#9ca3af" />
+            </TouchableOpacity>
+          )}
           <View style={styles.divider} />
           <TouchableOpacity onPress={() => setIsFilterOpen(true)} style={styles.filterIconBtn}>
             <Ionicons name="options-outline" size={22} color="#3b82f6" />
@@ -461,7 +482,9 @@ useEffect(() => {
         </View>
         
         <TouchableOpacity style={styles.discoverBtn}>
-          <Text style={styles.discoverText}>DISCOVER EPIC ADVENTURES (244)</Text>
+          <Text style={styles.discoverText}>
+            {searchText.trim() ? `FOUND (${filteredTreksOnMap.length})` : `DISCOVER TREKS (${treks.length})`}
+          </Text>
           <Ionicons name="chevron-down" size={16} color="#3b82f6" />
         </TouchableOpacity>
       </View>
