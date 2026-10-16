@@ -13,6 +13,8 @@ import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabase';
 import { ARCGIS_API_KEY } from '../../constants/supabase';
 
+import { MAHARASHTRA_TREKS } from '../../constants/maharashtraTreks';
+
 // ─── ArcGIS WebView Template ─────────────────────────────────────────────────
 const getExploreMapHtml = (apiKey: string, treks: any[]) => `
 <!DOCTYPE html>
@@ -293,12 +295,35 @@ useEffect(() => {
 
   const fetchTreks = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('treks_with_coords')
-      .select('id, name, region, description, lat, lng');
-    
-    if (!error && data) {
-      setTreks(data);
+    try {
+      const { data, error } = await supabase
+        .from('treks_with_coords')
+        .select('id, name, region, description, lat, lng');
+      
+      if (!error && data && data.length > 0) {
+        setTreks(data);
+      } else {
+        // Fallback to verified authentic Maharashtra mountain coordinates
+        const authenticTreks = MAHARASHTRA_TREKS.map(t => ({
+          id: t.id,
+          name: t.name,
+          region: `${t.region} (${t.district})`,
+          description: t.description,
+          lat: t.lat,
+          lng: t.lng
+        }));
+        setTreks(authenticTreks);
+      }
+    } catch (e) {
+      const authenticTreks = MAHARASHTRA_TREKS.map(t => ({
+        id: t.id,
+        name: t.name,
+        region: `${t.region} (${t.district})`,
+        description: t.description,
+        lat: t.lat,
+        lng: t.lng
+      }));
+      setTreks(authenticTreks);
     }
     setLoading(false);
   };

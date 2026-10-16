@@ -8,37 +8,20 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as DocumentPicker from 'expo-document-picker';
 
+import { MAHARASHTRA_TREKS } from '../../constants/maharashtraTreks';
+
 const { width } = Dimensions.get('window');
 
-const POPULAR_TREKS = [
-  {
-    id: 'pandavleni',
-    name: 'Pandavleni Caves',
-    location: 'Nashik, Maharashtra',
-    difficulty: 'Easy',
-    days: 1,
-    km: '0.6 km',
-    image: require('../../../assets/images/home_assets/card_pandavleni.jpg'),
-  },
-  {
-    id: 'rajmachi',
-    name: 'Anjaneri Fort',
-    location: 'Nashik, Maharashtra',
-    difficulty: 'Moderate',
-    days: 1,
-    km: '3.2 km',
-    image: require('../../../assets/images/home_assets/card_anjaneri.jpg'),
-  },
-  {
-    id: 'kalsubai',
-    name: 'Dugarwadi Waterfall',
-    location: 'Nashik, Maharashtra',
-    difficulty: 'Easy',
-    days: 1,
-    km: '2.8 km',
-    image: require('../../../assets/images/home_assets/card_dugarwadi.jpg'),
-  },
-];
+const POPULAR_TREKS = MAHARASHTRA_TREKS.map(t => ({
+  id: t.id,
+  name: t.name,
+  location: `${t.region} (${t.district})`,
+  difficulty: t.difficulty,
+  days: 1,
+  km: t.distance,
+  elevation: t.elevation,
+  imageUrl: t.imageUrl,
+}));
 
 const DIFFICULTY_COLORS: Record<string, string> = {
   Easy: '#22C55E',
@@ -116,7 +99,10 @@ export default function HomeTab() {
               activeOpacity={0.8}
               onPress={() => router.push(`/trek/${trek.id}`)}
             >
-              <Image source={trek.image} style={styles.trekCardImage} />
+              <Image
+                source={trek.imageUrl ? { uri: trek.imageUrl } : require('../../../assets/images/home_assets/card_pandavleni.jpg')}
+                style={styles.trekCardImage}
+              />
               <View style={styles.trekCardBody}>
                 <View style={styles.trekDiffRow}>
                   <View style={[styles.diffBadge, { backgroundColor: DIFFICULTY_COLORS[trek.difficulty] + '20' }]}>
