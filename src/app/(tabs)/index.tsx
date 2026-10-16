@@ -10,35 +10,18 @@ import * as DocumentPicker from 'expo-document-picker';
 
 const { width } = Dimensions.get('window');
 
-const POPULAR_TREKS = [
-  {
-    id: 'pandavleni',
-    name: 'Pandavleni Caves',
-    location: 'Nashik, Maharashtra',
-    difficulty: 'Easy',
-    days: 1,
-    km: '0.6 km',
-    image: require('../../../assets/images/home_assets/card_pandavleni.jpg'),
-  },
-  {
-    id: 'rajmachi',
-    name: 'Anjaneri Fort',
-    location: 'Nashik, Maharashtra',
-    difficulty: 'Moderate',
-    days: 1,
-    km: '3.2 km',
-    image: require('../../../assets/images/home_assets/card_anjaneri.jpg'),
-  },
-  {
-    id: 'kalsubai',
-    name: 'Dugarwadi Waterfall',
-    location: 'Nashik, Maharashtra',
-    difficulty: 'Easy',
-    days: 1,
-    km: '2.8 km',
-    image: require('../../../assets/images/home_assets/card_dugarwadi.jpg'),
-  },
-];
+import { MAHARASHTRA_TREKS } from '../../constants/maharashtraTreks';
+
+const POPULAR_TREKS = MAHARASHTRA_TREKS.map(t => ({
+  id: t.id,
+  name: t.name,
+  location: `${t.region}`,
+  difficulty: t.difficulty,
+  days: t.duration.includes('hrs') ? '1' : '2',
+  km: t.distance.split(' ')[0] + ' km',
+  elevation: t.elevation,
+  imageUrl: t.imageUrl,
+}));
 
 const DIFFICULTY_COLORS: Record<string, string> = {
   Easy: '#22C55E',
@@ -63,9 +46,9 @@ export default function HomeTab() {
   };
 
   const quickActions = [
-    { icon: 'map-outline', label: 'Round Trek', onPress: () => router.push('/(tabs)/explore') },
+    { icon: 'map-outline', label: 'Round Trek', onPress: () => router.push('/round-trek') },
     { icon: 'cloud-upload-outline', label: 'Import GPX', onPress: handlePickAndNavigate },
-    { icon: 'cloud-download-outline', label: 'Offline Maps', onPress: () => {} },
+    { icon: 'cloud-download-outline', label: 'Offline Maps', onPress: () => router.push('/offline-maps') },
   ];
 
   return (
@@ -79,7 +62,11 @@ export default function HomeTab() {
             <Text style={styles.greeting}>Good evening, Nikhil 👋</Text>
             <Text style={styles.headline}>Plan your{`\n`}next trek</Text>
           </View>
-          <TouchableOpacity style={styles.avatar}>
+          <TouchableOpacity
+            style={styles.avatar}
+            onPress={() => router.push('/(tabs)/profile')}
+            activeOpacity={0.8}
+          >
             <Text style={styles.avatarText}>N</Text>
           </TouchableOpacity>
         </View>
@@ -112,7 +99,10 @@ export default function HomeTab() {
               activeOpacity={0.8}
               onPress={() => router.push(`/trek/${trek.id}`)}
             >
-              <Image source={trek.image} style={styles.trekCardImage} />
+              <Image
+                source={trek.imageUrl ? { uri: trek.imageUrl } : require('../../../assets/images/home_assets/card_pandavleni.jpg')}
+                style={styles.trekCardImage}
+              />
               <View style={styles.trekCardBody}>
                 <View style={styles.trekDiffRow}>
                   <View style={[styles.diffBadge, { backgroundColor: DIFFICULTY_COLORS[trek.difficulty] + '20' }]}>

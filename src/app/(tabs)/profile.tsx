@@ -3,17 +3,19 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { useAuth } from '../../context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 
 export default function ProfileTab() {
   const { user, signOut } = useAuth();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const initial = user?.email?.[0]?.toUpperCase() ?? 'N';
 
   const menuItems = [
-    { icon: 'map-outline', label: 'My Routes', onPress: () => {} },
-    { icon: 'cloud-download-outline', label: 'Offline Maps', onPress: () => {} },
-    { icon: 'settings-outline', label: 'Settings', onPress: () => {} },
-    { icon: 'help-circle-outline', label: 'Help & Support', onPress: () => {} },
+    { icon: 'map-outline', label: 'My Routes', onPress: () => router.push('/(tabs)/activity') },
+    { icon: 'cloud-download-outline', label: 'Offline Maps', onPress: () => router.push('/offline-maps') },
+    { icon: 'settings-outline', label: 'Settings', onPress: () => router.push('/settings') },
+    { icon: 'help-circle-outline', label: 'Help & Support', onPress: () => router.push('/help-support') },
   ];
 
   return (
