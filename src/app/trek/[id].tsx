@@ -9,7 +9,6 @@ import { useAuth } from '../../context/AuthContext';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { downloadTrekForOffline, isMapDownloaded } from '../../lib/offlineMaps';
-import { getTrekById } from '../../constants/maharashtraTreks';
 
 const DIFFICULTY_COLORS: Record<string, string> = {
   Easy: '#22C55E', Medium: '#F59E0B', Hard: '#EF4444',
@@ -63,31 +62,51 @@ export default function TrekDetailScreen() {
   const fetchTrekAndRoutes = async () => {
     setLoading(true);
 
-    const realTrek = typeof id === 'string' ? getTrekById(id) : undefined;
-    if (realTrek) {
+    if (id === 'pandavleni') {
       setTrek({
-        id: realTrek.id,
-        name: realTrek.name,
-        region: `${realTrek.region} (${realTrek.district})`,
-        description: `${realTrek.description}\n\n🏛️ Historical Significance: ${realTrek.historicalSignificance}\n\n📍 Base Camp: ${realTrek.baseVillage}`,
-        image_url: realTrek.imageUrl,
-        days: realTrek.duration.includes('hrs') ? '1' : '2',
-        km: realTrek.distance,
-        elevation: realTrek.elevation,
-        difficulty: realTrek.difficulty,
+        id: 'pandavleni', name: 'Pandavleni Caves', region: 'Nashik, Maharashtra',
+        description: 'Pandavleni Caves are a group of 24 caves carved between the 1st century BCE and the 3rd century CE, located on the Trivashmi Hills in Nashik. A short, steep hike with stone steps leading to ancient Buddhist caves and beautiful city views.',
+        image_url: 'https://s7ap1.scene7.com/is/image/incredibleindia/2-pandavleni-caves-nashik-maharashtra-attr-hero?qlt=82',
+        days: '1', km: '0.6 km', elevation: '90 m', difficulty: 'Easy',
       });
       setRoutes([{
-        id: `route-${realTrek.id}-1`,
-        title: realTrek.routeTitle,
-        description: `Official authentic trail from ${realTrek.baseVillage} to summit (${realTrek.elevation}).`,
-        distance: realTrek.distanceMeters,
-        elevation_gain: realTrek.elevationMeters,
-        gpx_url: realTrek.gpxUrl,
-        difficulty_self_rating: realTrek.difficulty,
-        profiles: { display_name: 'Sahyadri Trekking Club' },
+        id: 'route-pandavleni-1', title: 'Pandavleni Ascent Route',
+        description: 'Main route up the 200 stone steps to the caves and top of the mountain.',
+        distance: 600, elevation_gain: 90,
+        gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx',
+        difficulty_self_rating: 'Easy', profiles: { display_name: 'Nikhil Bhor' },
       }]);
-      setLoading(false);
-      return;
+      setLoading(false); return;
+    }
+
+    if (id === 'kalsubai') {
+      setTrek({
+        id: 'kalsubai', name: 'Kalsubai Peak', region: 'Igatpuri, Maharashtra',
+        description: 'Kalsubai is the highest peak in Maharashtra at 1,646 meters. The trek offers a mix of easy hiking and thrilling iron ladder climbs, culminating in breathtaking panoramic views of the Sahyadri mountain ranges.',
+        image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Kalasubai_from_base.jpg/800px-Kalasubai_from_base.jpg',
+        days: '2', km: '6.6 km', elevation: '800 m', difficulty: 'Hard',
+      });
+      setRoutes([{
+        id: 'route-kalsubai-1', title: 'Bari Village Route',
+        description: 'The most popular route to the highest peak in Maharashtra.',
+        distance: 6600, elevation_gain: 800, gpx_url: '', difficulty_self_rating: 'Hard',
+      }]);
+      setLoading(false); return;
+    }
+
+    if (id === 'rajmachi') {
+      setTrek({
+        id: 'rajmachi', name: 'Rajmachi Fort', region: 'Lonavala, Maharashtra',
+        description: 'Rajmachi is a historic fort consisting of two twin fortresses: Shrivardhan and Manaranjan. It offers a scenic trail through dense forests, popular during the monsoon.',
+        image_url: 'https://vl-prod-static.b-cdn.net/system/images/000/763/347/088b1b3c346e32db0f2ed781af304e2e/original/Rajmachi-Trek-22.jpeg',
+        days: '1', km: '16 km', elevation: '450 m', difficulty: 'Moderate',
+      });
+      setRoutes([{
+        id: 'route-rajmachi-1', title: 'Lonavala Route',
+        description: 'Long scenic walk to the base village of Udhewadi.',
+        distance: 16000, elevation_gain: 450, gpx_url: '', difficulty_self_rating: 'Medium',
+      }]);
+      setLoading(false); return;
     }
 
     try {

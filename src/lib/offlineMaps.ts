@@ -1,6 +1,5 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MAHARASHTRA_TREKS, getTrekById, generateRealTrekGpx } from '../constants/maharashtraTreks';
 
 export interface OfflineMapItem {
   id: string; // trek id or custom id
@@ -17,18 +16,63 @@ export interface OfflineMapItem {
 
 const OFFLINE_MAPS_KEY = 'nirdesh_offline_maps_list';
 
-// Exported presets directly from real Maharashtra treks
-export const PRESET_OFFLINE_TREKS = MAHARASHTRA_TREKS.map(trek => ({
-  id: trek.id,
-  name: trek.name,
-  region: `${trek.region} (${trek.district})`,
-  sizeText: `${Math.round(trek.distanceMeters / 400 + 10)} MB • Ready`,
-  distanceText: trek.distance,
-  routeTitle: trek.routeTitle,
-  elevationGain: trek.elevationMeters,
-  gpxUrl: trek.gpxUrl,
-  sampleCoords: trek.trailPoints
-}));
+// Default pre-packaged / popular routes data with full coordinates for guaranteed offline use
+export const PRESET_OFFLINE_TREKS = [
+  {
+    id: 'pandavleni',
+    name: 'Pandavleni Caves Trek',
+    region: 'Nashik, Maharashtra',
+    sizeText: '12 MB • Ready',
+    distanceText: '0.6 km',
+    routeTitle: 'Pandavleni Ascent Route',
+    elevationGain: 90,
+    gpxUrl: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx',
+    sampleCoords: [
+      [73.7482, 19.9634],
+      [73.7488, 19.9639],
+      [73.7495, 19.9644],
+      [73.7501, 19.9650],
+      [73.7508, 19.9655],
+      [73.7514, 19.9661],
+      [73.7521, 19.9667]
+    ]
+  },
+  {
+    id: 'kalsubai',
+    name: 'Kalsubai Peak Trek',
+    region: 'Igatpuri, Maharashtra',
+    sizeText: '18 MB • Ready',
+    distanceText: '6.6 km',
+    routeTitle: 'Bari Village Route',
+    elevationGain: 800,
+    gpxUrl: '',
+    sampleCoords: [
+      [73.7080, 19.6010],
+      [73.7100, 19.6025],
+      [73.7125, 19.6040],
+      [73.7150, 19.6055],
+      [73.7175, 19.6070],
+      [73.7200, 19.6085]
+    ]
+  },
+  {
+    id: 'rajmachi',
+    name: 'Rajmachi Fort Trail',
+    region: 'Lonavala, Maharashtra',
+    sizeText: '15 MB • Ready',
+    distanceText: '16.0 km',
+    routeTitle: 'Udhewadi Trail',
+    elevationGain: 450,
+    gpxUrl: '',
+    sampleCoords: [
+      [73.4010, 18.8250],
+      [73.4035, 18.8270],
+      [73.4060, 18.8295],
+      [73.4085, 18.8315],
+      [73.4110, 18.8340]
+    ]
+  }
+];
 
 export async function getDownloadedMaps(): Promise<OfflineMapItem[]> {
   try {
@@ -79,44 +123,43 @@ export async function downloadTrekForOffline(
   }
 
   const localGpxPath = `${offlineDir}${trek.id}.gpx`;
-  const matchedTrek = getTrekById(trek.id);
-  let coordinates: number[][] = matchedTrek ? matchedTrek.trailPoints : [];
+  let coordinates: number[][] = [];
 
-  // 1. If remote GPX is provided and accessible, download it
-  let downloadedOnline = false;
+  // Check if we have preset coords
+  const preset = PRESET_OFFLINE_TREKS.find(p => p.id === trek.id);
+  if (preset && preset.sampleCoords) {
+    coordinates = preset.sampleCoords;
+  }
+
+  // If there is a real GPX URL, download it
   if (route?.gpx_url && route.gpx_url.startsWith('http')) {
     try {
-      const res = await FileSystem.downloadAsync(route.gpx_url, localGpxPath);
-      if (res.status === 200) {
-        const xmlStr = await FileSystem.readAsStringAsync(localGpxPath);
-        const trkptRegex = /lat=["']([0-9.-]+)["']\s+lon=["']([0-9.-]+)["']/g;
-        let match;
-        const parsedCoords: number[][] = [];
-        while ((match = trkptRegex.exec(xmlStr)) !== null) {
-          const lat = parseFloat(match[1]);
-          const lon = parseFloat(match[2]);
-          if (!isNaN(lat) && !isNaN(lon)) {
-            parsedCoords.push([lon, lat]);
-          }
-        }
-        if (parsedCoords.length > 0) {
-          coordinates = parsedCoords;
-          downloadedOnline = true;
+      await FileSystem.downloadAsync(route.gpx_url, localGpxPath);
+      const xmlStr = await FileSystem.readAsStringAsync(localGpxPath);
+      // Extract coordinates from GPX
+      const trkptRegex = /lat=["']([0-9.-]+)["']\s+lon=["']([0-9.-]+)["']/g;
+      let match;
+      const parsedCoords: number[][] = [];
+      while ((match = trkptRegex.exec(xmlStr)) !== null) {
+        const lat = parseFloat(match[1]);
+        const lon = parseFloat(match[2]);
+        if (!isNaN(lat) && !isNaN(lon)) {
+          parsedCoords.push([lon, lat]);
         }
       }
+      if (parsedCoords.length > 0) {
+        coordinates = parsedCoords;
+      }
     } catch (err) {
-      console.warn('Remote GPX download skipped, generating from real database:', err);
+      console.warn('Could not download online GPX, using fallback coordinates', err);
     }
   }
 
-  // 2. If not downloaded from remote URL, generate standard valid GPX from authentic database
-  if (!downloadedOnline) {
-    let gpxContent = '';
-    if (matchedTrek) {
-      gpxContent = generateRealTrekGpx(matchedTrek);
-    } else {
-      const trkptsXml = coordinates.map(c => `      <trkpt lat="${c[1]}" lon="${c[0]}"><ele>0</ele></trkpt>`).join('\n');
-      gpxContent = `<?xml version="1.0" encoding="UTF-8"?>
+  // If local gpx file wasn't created via download, create a valid local GPX XML
+  const fileExists = await FileSystem.getInfoAsync(localGpxPath);
+  if (!fileExists.exists) {
+    const trkptsXml = coordinates.map(c => `      <trkpt lat="${c[1]}" lon="${c[0]}"><ele>0</ele></trkpt>`).join('\n');
+    const gpxContent = `<?xml version="1.0" encoding="UTF-8"?>
 <gpx version="1.1" creator="Nirdesh">
   <trk>
     <name>${trek.name}</name>
@@ -125,25 +168,23 @@ ${trkptsXml}
     </trkseg>
   </trk>
 </gpx>`;
-    }
     await FileSystem.writeAsStringAsync(localGpxPath, gpxContent);
   }
 
-  const distM = route?.distance || matchedTrek?.distanceMeters || 4000;
-  const distanceText = matchedTrek?.distance || (distM >= 1000 ? `${(distM / 1000).toFixed(1)} km` : `${Math.round(distM)} m`);
-  const sizeText = `${Math.round(distM / 400 + 10)} MB • Ready`;
+  const distM = route?.distance || (preset ? parseFloat(preset.distanceText) * 1000 : 1000);
+  const distanceText = distM >= 1000 ? `${(distM / 1000).toFixed(1)} km` : `${Math.round(distM)} m`;
 
   const offlineItem: OfflineMapItem = {
     id: trek.id,
-    name: matchedTrek?.name || trek.name,
-    region: matchedTrek ? `${matchedTrek.region} (${matchedTrek.district})` : (trek.region || 'Maharashtra, India'),
-    sizeText,
+    name: trek.name,
+    region: trek.region || 'Maharashtra, India',
+    sizeText: preset?.sizeText || '14 MB • Ready',
     downloadedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     gpxLocalUri: localGpxPath,
-    routeTitle: route?.title || matchedTrek?.routeTitle || 'Main Summit Route',
+    routeTitle: route?.title || preset?.routeTitle || 'Main Trail',
     distanceText,
     coordinates,
-    elevationGain: route?.elevation_gain || matchedTrek?.elevationMeters || 800,
+    elevationGain: route?.elevation_gain || preset?.elevationGain || 100,
   };
 
   await saveMapOffline(offlineItem);

@@ -12,7 +12,6 @@ import { DOMParser } from '@xmldom/xmldom';
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabase';
 import { ARCGIS_API_KEY } from '../../constants/supabase';
-import { MAHARASHTRA_TREKS } from '../../constants/maharashtraTreks';
 
 // ─── ArcGIS WebView Template ─────────────────────────────────────────────────
 const getExploreMapHtml = (apiKey: string, treks: any[]) => `
@@ -294,33 +293,14 @@ useEffect(() => {
 
   const fetchTreks = async () => {
     setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('treks_with_coords')
-        .select('id, name, region, description, lat, lng');
-      
-      const realMapTreks = MAHARASHTRA_TREKS.map(t => ({
-        id: t.id,
-        name: t.name,
-        region: t.region,
-        description: t.description,
-        lat: t.lat,
-        lng: t.lng,
-      }));
-
-      if (!error && data && data.length > 0) {
-        // Merge without duplicating IDs
-        const existingIds = new Set(data.map((d: any) => d.id));
-        const merged = [...data, ...realMapTreks.filter(m => !existingIds.has(m.id))];
-        setTreks(merged);
-      } else {
-        setTreks(realMapTreks);
-      }
-    } catch (e) {
-      setTreks(MAHARASHTRA_TREKS);
-    } finally {
-      setLoading(false);
+    const { data, error } = await supabase
+      .from('treks_with_coords')
+      .select('id, name, region, description, lat, lng');
+    
+    if (!error && data) {
+      setTreks(data);
     }
+    setLoading(false);
   };
 
   const handleMessage = (event: any) => {
