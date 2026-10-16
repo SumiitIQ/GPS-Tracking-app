@@ -1,65 +1,64 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { BlurView } from 'expo-blur';
+import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function CustomTabBar({ state, descriptors, navigation }: any) {
   const insets = useSafeAreaInsets();
-  
+
+  const tabs = [
+    { name: 'index', icon: 'home', label: 'Home' },
+    { name: 'explore', icon: 'map', label: 'Explore' },
+    { name: 'record', icon: 'add', label: '', isCenter: true },
+    { name: 'activity', icon: 'list', label: 'Activity' },
+    { name: 'profile', icon: 'person', label: 'Profile' },
+  ];
+
   return (
-    <View style={[styles.floatingNavContainer, { paddingBottom: insets.bottom + 10 }]}>
-      <ImageBackground source={require('../../../assets/images/home_assets/bottom_bg.jpg')} style={styles.bottomNavBg} imageStyle={{ borderRadius: 40 }}>
-        <BlurView intensity={70} tint="dark" style={styles.bottomNavInner}>
-          {state.routes.map((route: any, index: number) => {
-            const { options } = descriptors[route.key];
-            const isFocused = state.index === index;
-            
-            const onPress = () => {
-              const event = navigation.emit({
-                type: 'tabPress',
-                target: route.key,
-                canPreventDefault: true,
-              });
+    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+      <View style={styles.tabRow}>
+        {tabs.map((tab, idx) => {
+          // find matching route
+          const routeIdx = state.routes.findIndex((r: any) => r.name === tab.name);
+          const isFocused = state.index === routeIdx;
 
-              if (!isFocused && !event.defaultPrevented) {
-                navigation.navigate(route.name);
-              }
-            };
-
-            // Custom mapping for icons
-            if (route.name === 'record') {
-              return (
-                <View key={route.key} style={styles.navCenterItem}>
-                  <TouchableOpacity onPress={onPress} style={styles.fabBtn}>
-                    <MaterialCommunityIcons name="image-filter-hdr" size={28} color="#fff" />
-                    <View style={styles.fabGlow} />
-                  </TouchableOpacity>
-                </View>
-              );
+          const onPress = () => {
+            if (routeIdx === -1) return;
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: state.routes[routeIdx].key,
+              canPreventDefault: true,
+            });
+            if (!isFocused && !event.defaultPrevented) {
+              navigation.navigate(tab.name);
             }
+          };
 
-            let iconName = 'ellipse';
-            let IconComponent = Ionicons;
-            
-            if (route.name === 'index') iconName = isFocused ? 'home' : 'home-outline';
-            if (route.name === 'explore') iconName = isFocused ? 'compass' : 'compass-outline';
-            if (route.name === 'navigate') iconName = isFocused ? 'map' : 'map-outline';
-            if (route.name === 'activity') iconName = isFocused ? 'person' : 'person-outline';
-
-            const color = isFocused ? '#79d773' : '#a0a0a0';
-
+          if (tab.isCenter) {
             return (
-              <TouchableOpacity key={route.key} onPress={onPress} style={styles.navItem}>
-                <Ionicons name={iconName as any} size={24} color={color} />
-                <Text style={[styles.navText, { color }]}>{options.title}</Text>
-                {isFocused && <View style={styles.navActiveDot} />}
+              <TouchableOpacity key={tab.name} style={styles.centerBtn} onPress={onPress} activeOpacity={0.85}>
+                <View style={styles.centerCircle}>
+                  <Ionicons name="add" size={28} color="#fff" />
+                </View>
               </TouchableOpacity>
             );
-          })}
-        </BlurView>
-      </ImageBackground>
+          }
+
+          return (
+            <TouchableOpacity key={tab.name} style={styles.tabItem} onPress={onPress} activeOpacity={0.7}>
+              <Ionicons
+                name={isFocused ? tab.icon as any : (tab.icon + '-outline') as any}
+                size={22}
+                color={isFocused ? '#2D7D78' : '#9CA3AF'}
+              />
+              {isFocused && tab.label ? (
+                <View style={styles.activeDot} />
+              ) : null}
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </View>
   );
 }
@@ -68,92 +67,65 @@ export default function TabLayout() {
   return (
     <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}
-      screenOptions={{
-        headerShown: false,
-      }}>
-      <Tabs.Screen name="index" options={{ title: 'Home' }} />
-      <Tabs.Screen name="explore" options={{ title: 'Explore' }} />
-      <Tabs.Screen name="record" options={{ title: 'Record' }} />
-      <Tabs.Screen name="navigate" options={{ title: 'Map' }} />
-      <Tabs.Screen name="activity" options={{ title: 'Profile' }} />
+      screenOptions={{ headerShown: false }}
+    >
+      <Tabs.Screen name="index" />
+      <Tabs.Screen name="explore" />
+      <Tabs.Screen name="record" />
+      <Tabs.Screen name="activity" />
+      <Tabs.Screen name="profile" />
     </Tabs>
   );
 }
 
 const styles = StyleSheet.create({
-  floatingNavContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 20,
-    right: 20,
-    height: 90, // Includes padding
-    justifyContent: 'flex-end',
-    zIndex: 50,
-  },
-  bottomNavBg: {
-    width: '100%',
-    height: 70,
-    borderRadius: 40,
+  container: {
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1,
+    borderTopColor: '#E5E0D8',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 10,
-  },
-  bottomNavInner: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    borderRadius: 40,
-    overflow: 'hidden',
-    paddingHorizontal: 10,
-  },
-  navItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 50,
-    height: '100%',
-  },
-  navText: {
-    fontSize: 10,
-    marginTop: 4,
-    fontWeight: '500',
-  },
-  navActiveDot: {
-    width: 16,
-    height: 2,
-    backgroundColor: '#79d773',
-    borderRadius: 1,
-    marginTop: 4,
-    position: 'absolute',
-    bottom: 10,
-  },
-  navCenterItem: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-  },
-  fabBtn: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#1b5e20',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 4,
-    borderColor: 'rgba(255,255,255,0.1)',
-    marginTop: -30, // Make it float above
-  },
-  fabGlow: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    borderRadius: 32,
-    shadowColor: '#79d773',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 15,
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
     elevation: 8,
-  }
+  },
+  tabRow: {
+    flexDirection: 'row',
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingHorizontal: 8,
+  },
+  tabItem: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+  },
+  activeDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#2D7D78',
+    marginTop: 3,
+  },
+  centerBtn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  centerCircle: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: '#D4522A',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#D4522A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 6,
+    marginTop: -16,
+  },
 });

@@ -1,18 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, StatusBar, Platform, Alert, Share, ImageBackground } from 'react-native';
-import * as FileSystem from 'expo-file-system/legacy';
+import {
+  View, Text, StyleSheet, ScrollView, TouchableOpacity,
+  ActivityIndicator, StatusBar, Platform, Share, ImageBackground,
+} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const DIFFICULTY_COLORS: Record<string, string> = {
+  Easy: '#22C55E', Medium: '#F59E0B', Hard: '#EF4444',
+  Moderate: '#F59E0B', Difficult: '#EF4444', Unrated: '#9CA3AF',
+};
 
 export default function TrekDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const { user } = useAuth();
-  
+  const insets = useSafeAreaInsets();
+
   const [trek, setTrek] = useState<any>(null);
   const [routes, setRoutes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'overview' | 'map' | 'directions' | 'photos'>('overview');
 
   useEffect(() => {
     fetchTrekAndRoutes();
@@ -20,52 +31,59 @@ export default function TrekDetailScreen() {
 
   const fetchTrekAndRoutes = async () => {
     setLoading(true);
-    
+
     if (id === 'pandavleni') {
       setTrek({
-        id: 'pandavleni', name: 'Pandavleni Caves Mountain', region: 'Nashik, Maharashtra',
-        description: 'Pandavleni Caves are a group of 24 caves carved between the 1st century BCE and the 3rd century CE, located on the Trivashmi Hills in Nashik, Maharashtra. It is a short, steep hike with stone steps leading to ancient Buddhist caves and a beautiful view of the city.',
-        image_url: 'https://s7ap1.scene7.com/is/image/incredibleindia/2-pandavleni-caves-nashik-maharashtra-attr-hero?qlt=82'
+        id: 'pandavleni', name: 'Pandavleni Caves', region: 'Nashik, Maharashtra',
+        description: 'Pandavleni Caves are a group of 24 caves carved between the 1st century BCE and the 3rd century CE, located on the Trivashmi Hills in Nashik. A short, steep hike with stone steps leading to ancient Buddhist caves and beautiful city views.',
+        image_url: 'https://s7ap1.scene7.com/is/image/incredibleindia/2-pandavleni-caves-nashik-maharashtra-attr-hero?qlt=82',
+        days: '1', km: '0.6 km', elevation: '90 m', difficulty: 'Easy',
       });
-      setRoutes([{ 
-        id: 'route-pandavleni-1', 
-        title: 'Pandavleni Ascent Route', 
-        description: 'Main route up the 200 stone steps to the caves and top of the mountain.', 
-        distance: 600, 
-        elevation_gain: 90, 
-        gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx', 
-        difficulty_self_rating: 'Easy',
-        profiles: { display_name: 'Nikhil Bhor' }
+      setRoutes([{
+        id: 'route-pandavleni-1', title: 'Pandavleni Ascent Route',
+        description: 'Main route up the 200 stone steps to the caves and top of the mountain.',
+        distance: 600, elevation_gain: 90,
+        gpx_url: 'https://pexkoxqazawomgvhjure.supabase.co/storage/v1/object/public/gpx-routes/Pandavleni_Final.gpx',
+        difficulty_self_rating: 'Easy', profiles: { display_name: 'Nikhil Bhor' },
       }]);
       setLoading(false); return;
     }
-    
+
     if (id === 'kalsubai') {
       setTrek({
         id: 'kalsubai', name: 'Kalsubai Peak', region: 'Igatpuri, Maharashtra',
         description: 'Kalsubai is the highest peak in Maharashtra at 1,646 meters. The trek offers a mix of easy hiking and thrilling iron ladder climbs, culminating in breathtaking panoramic views of the Sahyadri mountain ranges.',
-        image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Kalasubai_from_base.jpg/800px-Kalasubai_from_base.jpg'
+        image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Kalasubai_from_base.jpg/800px-Kalasubai_from_base.jpg',
+        days: '2', km: '6.6 km', elevation: '800 m', difficulty: 'Hard',
       });
-      setRoutes([{ id: 'route-kalsubai-1', title: 'Bari Village Route', description: 'The most popular route to the highest peak in Maharashtra.', distance: 6600, elevation_gain: 800, gpx_url: '', difficulty_self_rating: 'Hard' }]); // Removed fake route
+      setRoutes([{
+        id: 'route-kalsubai-1', title: 'Bari Village Route',
+        description: 'The most popular route to the highest peak in Maharashtra.',
+        distance: 6600, elevation_gain: 800, gpx_url: '', difficulty_self_rating: 'Hard',
+      }]);
       setLoading(false); return;
     }
 
     if (id === 'rajmachi') {
       setTrek({
         id: 'rajmachi', name: 'Rajmachi Fort', region: 'Lonavala, Maharashtra',
-        description: 'Rajmachi is a historic fort consisting of two twin fortresses: Shrivardhan and Manaranjan. It offers a scenic trail through dense forests, making it one of the most popular trekking destinations during the monsoon.',
-        image_url: 'https://vl-prod-static.b-cdn.net/system/images/000/763/347/088b1b3c346e32db0f2ed781af304e2e/original/Rajmachi-Trek-22.jpeg'
+        description: 'Rajmachi is a historic fort consisting of two twin fortresses: Shrivardhan and Manaranjan. It offers a scenic trail through dense forests, popular during the monsoon.',
+        image_url: 'https://vl-prod-static.b-cdn.net/system/images/000/763/347/088b1b3c346e32db0f2ed781af304e2e/original/Rajmachi-Trek-22.jpeg',
+        days: '1', km: '16 km', elevation: '450 m', difficulty: 'Moderate',
       });
-      setRoutes([{ id: 'route-rajmachi-1', title: 'Lonavala Route', description: 'Long scenic walk to the base village of Udhewadi.', distance: 16000, elevation_gain: 450, gpx_url: '', difficulty_self_rating: 'Medium' }]); // Removed fake route
+      setRoutes([{
+        id: 'route-rajmachi-1', title: 'Lonavala Route',
+        description: 'Long scenic walk to the base village of Udhewadi.',
+        distance: 16000, elevation_gain: 450, gpx_url: '', difficulty_self_rating: 'Medium',
+      }]);
       setLoading(false); return;
     }
 
     try {
       const [trekRes, routesRes] = await Promise.all([
         supabase.from('treks').select('*').eq('id', id).single(),
-        supabase.from('routes').select(`*, profiles(display_name, experience_level)`).eq('trek_id', id).order('distance', { ascending: true })
+        supabase.from('routes').select('*, profiles(display_name, experience_level)').eq('trek_id', id).order('distance', { ascending: true }),
       ]);
-      
       if (trekRes.data) setTrek(trekRes.data);
       if (routesRes.data) setRoutes(routesRes.data);
     } catch (error) {
@@ -75,180 +93,300 @@ export default function TrekDetailScreen() {
     }
   };
 
-  const formatDist = (m: number) => m >= 1000 ? `${(m/1000).toFixed(2)} km` : `${Math.round(m)} m`;
+  const formatDist = (m: number) => m >= 1000 ? `${(m / 1000).toFixed(1)} km` : `${Math.round(m)} m`;
 
   const handleShareGPX = async (gpx_url: string, title: string) => {
     try {
-      await Share.share({
-        message: `Check out this trek: ${title}!\n\nDownload the GPX Route here:\n${gpx_url}`,
-        url: gpx_url,
-      });
-    } catch (e) {
-      console.error(e);
-    }
+      await Share.share({ message: `Check out this trek: ${title}!\n\nDownload GPX: ${gpx_url}`, url: gpx_url });
+    } catch (e) { console.error(e); }
   };
 
   if (loading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator color="#ef4444" size="large" />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator color="#2D7D78" size="large" />
       </View>
     );
   }
 
   if (!trek) {
     return (
-      <View style={styles.center}>
-        <Text style={{color: 'white'}}>Trek not found</Text>
+      <View style={styles.loadingContainer}>
+        <MaterialCommunityIcons name="map-marker-off-outline" size={48} color="#D1C9BD" />
+        <Text style={styles.notFoundText}>Trek not found</Text>
+        <TouchableOpacity style={styles.backBtnAlt} onPress={() => router.back()}>
+          <Text style={styles.backBtnAltText}>Go Back</Text>
+        </TouchableOpacity>
       </View>
     );
   }
 
+  const diffColor = DIFFICULTY_COLORS[trek.difficulty] || '#9CA3AF';
+
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
-      
-      {(trek.image || trek.image_url) ? (
-        <ImageBackground source={trek.image ? trek.image : { uri: trek.image_url }} style={styles.heroImage}>
+
+      {/* HERO IMAGE */}
+      <View style={styles.heroWrapper}>
+        <ImageBackground
+          source={trek.image ? trek.image : { uri: trek.image_url }}
+          style={styles.heroImage}
+        >
           <View style={styles.heroOverlay}>
-            <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-              <Text style={styles.backBtnText}>←</Text>
-            </TouchableOpacity>
+            <View style={{ paddingTop: insets.top + 12, paddingHorizontal: 16, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TouchableOpacity onPress={() => router.back()} style={styles.circleBtn}>
+                <Ionicons name="arrow-back" size={20} color="#1C1C1E" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.circleBtn}>
+                <Ionicons name="bookmark-outline" size={20} color="#1C1C1E" />
+              </TouchableOpacity>
+            </View>
           </View>
         </ImageBackground>
-      ) : (
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <Text style={styles.backBtnText}>←</Text>
-          </TouchableOpacity>
+      </View>
+
+      {/* CONTENT */}
+      <ScrollView style={styles.content} contentContainerStyle={{ paddingBottom: 120 }} showsVerticalScrollIndicator={false}>
+        {/* TITLE ROW */}
+        <View style={styles.titleRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.trekName}>{trek.name}</Text>
+            <View style={styles.locationRow}>
+              <Ionicons name="location-outline" size={14} color="#6B7280" />
+              <Text style={styles.location}>{trek.region || 'India'}</Text>
+            </View>
+          </View>
+          <View style={[styles.diffBadge, { backgroundColor: diffColor + '20' }]}>
+            <Text style={[styles.diffBadgeText, { color: diffColor }]}>{trek.difficulty || 'Easy'}</Text>
+          </View>
         </View>
-      )}
 
-      <View style={{ paddingHorizontal: 20, paddingTop: 20 }}>
-        <Text style={styles.title}>{trek.name}</Text>
-        <Text style={styles.region}>{trek.region || 'Unknown Region'}</Text>
-        <Text style={styles.desc}>{trek.description || 'No description available for this trek.'}</Text>
-      </View>
-      
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Community Routes</Text>
-        <Text style={styles.routeCount}>{routes.length} Available</Text>
-      </View>
-
-      <FlatList
-        data={routes}
-        keyExtractor={r => r.id}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
-        renderItem={({ item }) => (
-          <View style={styles.routeCard}>
-            <View style={styles.routeHeader}>
-              <Text style={styles.routeTitle}>{item.title}</Text>
-              <View style={[styles.badge, { backgroundColor: item.difficulty_self_rating === 'Hard' ? '#ef4444' : item.difficulty_self_rating === 'Medium' ? '#f59e0b' : '#10b981' }]}>
-                <Text style={styles.badgeText}>{item.difficulty_self_rating || 'Unrated'}</Text>
-              </View>
-            </View>
-            
-            <View style={styles.statsRow}>
-              <View>
-                <Text style={styles.statLabel}>DISTANCE</Text>
-                <Text style={styles.statValue}>{formatDist(item.distance)}</Text>
-              </View>
-              <View>
-                <Text style={styles.statLabel}>ELEVATION</Text>
-                <Text style={styles.statValue}>{Math.round(item.elevation_gain)}m</Text>
-              </View>
-              <View>
-                <Text style={styles.statLabel}>SUBMITTED BY</Text>
-                <Text style={styles.statValue}>{item.profiles?.display_name || 'Anonymous'}</Text>
-              </View>
-            </View>
-            
-            <View style={styles.actionRow}>
-              <TouchableOpacity 
-                style={[styles.navigateBtn, { flex: 1, marginRight: 10 }]}
-                onPress={() => {
-                  router.push({ pathname: '/(tabs)/navigate', params: { routeUrl: item.gpx_url, title: item.title } });
-                }}
-              >
-                <Text style={styles.navigateBtnText}>Navigate →</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={styles.shareBtn}
-                onPress={() => handleShareGPX(item.gpx_url, item.title)}
-              >
-                <Text style={styles.shareBtnText}>Share GPX</Text>
-              </TouchableOpacity>
-            </View>
+        {/* STATS ROW */}
+        <View style={styles.statsCard}>
+          <View style={styles.statItem}>
+            <Ionicons name="calendar-outline" size={20} color="#2D7D78" />
+            <Text style={styles.statValue}>{trek.days || '1'}</Text>
+            <Text style={styles.statLabel}>days</Text>
           </View>
-        )}
-        ListEmptyComponent={() => (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyText}>No routes recorded yet. Be the first to track this mountain!</Text>
-            <TouchableOpacity style={styles.emptyBtn} onPress={() => router.push('/(tabs)/record')}>
-              <Text style={styles.emptyBtnText}>Start Tracking</Text>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}>
+            <MaterialCommunityIcons name="map-marker-distance" size={20} color="#2D7D78" />
+            <Text style={styles.statValue}>{trek.km || formatDist(routes[0]?.distance || 0)}</Text>
+            <Text style={styles.statLabel}>distance</Text>
+          </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}>
+            <MaterialCommunityIcons name="elevation-rise" size={20} color="#2D7D78" />
+            <Text style={styles.statValue}>{trek.elevation || `${routes[0]?.elevation_gain || 0} m`}</Text>
+            <Text style={styles.statLabel}>elevation</Text>
+          </View>
+        </View>
+
+        {/* TABS */}
+        <View style={styles.tabRow}>
+          {(['overview', 'map', 'directions', 'photos'] as const).map(tab => (
+            <TouchableOpacity
+              key={tab}
+              style={[styles.tabBtn, activeTab === tab && styles.tabBtnActive]}
+              onPress={() => setActiveTab(tab)}
+            >
+              <Text style={[styles.tabBtnText, activeTab === tab && styles.tabBtnTextActive]}>
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </Text>
             </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* OVERVIEW CONTENT */}
+        {activeTab === 'overview' && (
+          <View style={styles.overviewContent}>
+            <Text style={styles.sectionTitle}>About</Text>
+            <Text style={styles.description}>{trek.description || 'No description available for this trek.'}</Text>
+
+            <Text style={[styles.sectionTitle, { marginTop: 24 }]}>Community Routes</Text>
+            <Text style={styles.routeCount}>{routes.length} route{routes.length !== 1 ? 's' : ''} available</Text>
+
+            {routes.map(route => (
+              <View key={route.id} style={styles.routeCard}>
+                <View style={styles.routeCardHeader}>
+                  <Text style={styles.routeCardTitle}>{route.title}</Text>
+                  <View style={[styles.routeBadge, { backgroundColor: (DIFFICULTY_COLORS[route.difficulty_self_rating] || '#9CA3AF') + '20' }]}>
+                    <Text style={[styles.routeBadgeText, { color: DIFFICULTY_COLORS[route.difficulty_self_rating] || '#9CA3AF' }]}>
+                      {route.difficulty_self_rating || 'Unrated'}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.routeStats}>
+                  <View style={styles.routeStatItem}>
+                    <Text style={styles.routeStatLabel}>DISTANCE</Text>
+                    <Text style={styles.routeStatValue}>{formatDist(route.distance)}</Text>
+                  </View>
+                  <View style={styles.routeStatItem}>
+                    <Text style={styles.routeStatLabel}>ELEVATION</Text>
+                    <Text style={styles.routeStatValue}>{Math.round(route.elevation_gain)}m</Text>
+                  </View>
+                  {route.profiles?.display_name && (
+                    <View style={styles.routeStatItem}>
+                      <Text style={styles.routeStatLabel}>SUBMITTED BY</Text>
+                      <Text style={styles.routeStatValue}>{route.profiles.display_name}</Text>
+                    </View>
+                  )}
+                </View>
+
+                <View style={styles.routeActions}>
+                  <TouchableOpacity
+                    style={styles.navigateBtn}
+                    onPress={() => router.push({ pathname: '/(tabs)/navigate', params: { routeUrl: route.gpx_url, title: route.title } })}
+                  >
+                    <Ionicons name="navigate" size={16} color="#fff" />
+                    <Text style={styles.navigateBtnText}>Navigate</Text>
+                  </TouchableOpacity>
+                  {route.gpx_url ? (
+                    <TouchableOpacity style={styles.shareBtn} onPress={() => handleShareGPX(route.gpx_url, route.title)}>
+                      <Ionicons name="share-outline" size={16} color="#2D7D78" />
+                      <Text style={styles.shareBtnText}>Share GPX</Text>
+                    </TouchableOpacity>
+                  ) : null}
+                </View>
+              </View>
+            ))}
+
+            {routes.length === 0 && (
+              <View style={styles.emptyRoutes}>
+                <MaterialCommunityIcons name="map-plus" size={36} color="#D1C9BD" />
+                <Text style={styles.emptyRoutesText}>No routes recorded yet.</Text>
+                <TouchableOpacity style={styles.recordBtn} onPress={() => router.push('/(tabs)/record')}>
+                  <Text style={styles.recordBtnText}>Start Tracking</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         )}
-      />
+
+        {activeTab !== 'overview' && (
+          <View style={styles.comingSoon}>
+            <MaterialCommunityIcons name="hammer-wrench" size={36} color="#D1C9BD" />
+            <Text style={styles.comingSoonText}>Coming soon</Text>
+          </View>
+        )}
+      </ScrollView>
+
+      {/* BOTTOM CTA */}
+      <View style={[styles.bottomCta, { paddingBottom: insets.bottom + 16 }]}>
+        <TouchableOpacity style={styles.downloadBtn}>
+          <Ionicons name="cloud-download-outline" size={18} color="#fff" />
+          <Text style={styles.downloadBtnText}>Download for Offline</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#060912' },
-  center: { flex: 1, backgroundColor: '#060912', justifyContent: 'center', alignItems: 'center' },
-  header: {
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight! + 10 : 50,
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-    backgroundColor: '#0a0d14',
+  container: { flex: 1, backgroundColor: '#F5F2ED' },
+  loadingContainer: { flex: 1, backgroundColor: '#F5F2ED', justifyContent: 'center', alignItems: 'center', gap: 16 },
+  notFoundText: { fontSize: 16, color: '#6B7280', marginTop: 8 },
+  backBtnAlt: { backgroundColor: '#2D7D78', borderRadius: 10, paddingVertical: 10, paddingHorizontal: 20, marginTop: 12 },
+  backBtnAltText: { color: '#fff', fontWeight: '600' },
+
+  heroWrapper: { height: 280 },
+  heroImage: { width: '100%', height: '100%' },
+  heroOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.15)' },
+  circleBtn: {
+    width: 38, height: 38, borderRadius: 19,
+    backgroundColor: 'rgba(255,255,255,0.92)',
+    alignItems: 'center', justifyContent: 'center',
   },
-  heroImage: {
-    width: '100%',
-    height: 250,
+
+  content: { flex: 1 },
+  titleRow: {
+    flexDirection: 'row', alignItems: 'flex-start',
+    paddingHorizontal: 20, paddingTop: 20, paddingBottom: 4,
+    gap: 12,
   },
-  heroOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight! + 10 : 50,
-    paddingHorizontal: 20,
+  trekName: { fontSize: 22, fontWeight: '700', color: '#1C1C1E', marginBottom: 4 },
+  locationRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  location: { fontSize: 13, color: '#6B7280' },
+  diffBadge: { paddingHorizontal: 12, paddingVertical: 4, borderRadius: 20, alignSelf: 'flex-start', marginTop: 4 },
+  diffBadgeText: { fontSize: 12, fontWeight: '600' },
+
+  statsCard: {
+    flexDirection: 'row', backgroundColor: '#FFFFFF',
+    marginHorizontal: 20, marginTop: 16, borderRadius: 14,
+    paddingVertical: 16,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
-  backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.1)', justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
-  backBtnText: { color: '#fff', fontSize: 20 },
-  title: { color: '#fff', fontSize: 28, fontWeight: '900', letterSpacing: -0.5 },
-  region: { color: '#9ca3af', fontSize: 14, marginTop: 4, fontWeight: '500' },
-  desc: { color: '#d1d5db', fontSize: 15, lineHeight: 22, padding: 20, paddingBottom: 10 },
-  
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', paddingHorizontal: 20, marginTop: 10, marginBottom: 16 },
-  sectionTitle: { color: '#fff', fontSize: 20, fontWeight: '800' },
-  routeCount: { color: '#60a5fa', fontSize: 13, fontWeight: '700' },
-  
+  statItem: { flex: 1, alignItems: 'center', gap: 4 },
+  statValue: { fontSize: 16, fontWeight: '700', color: '#1C1C1E' },
+  statLabel: { fontSize: 11, color: '#9CA3AF' },
+  statDivider: { width: 1, backgroundColor: '#E5E0D8' },
+
+  tabRow: {
+    flexDirection: 'row', paddingHorizontal: 20, marginTop: 20, gap: 8,
+    marginBottom: 4,
+  },
+  tabBtn: {
+    paddingHorizontal: 14, paddingVertical: 8,
+    borderRadius: 20, backgroundColor: '#FFFFFF',
+    borderWidth: 1, borderColor: '#E5E0D8',
+  },
+  tabBtnActive: { backgroundColor: '#2D7D78', borderColor: '#2D7D78' },
+  tabBtnText: { fontSize: 13, fontWeight: '500', color: '#6B7280' },
+  tabBtnTextActive: { color: '#FFFFFF' },
+
+  overviewContent: { paddingHorizontal: 20, paddingTop: 20 },
+  sectionTitle: { fontSize: 17, fontWeight: '700', color: '#1C1C1E', marginBottom: 8 },
+  description: { fontSize: 14, color: '#6B7280', lineHeight: 22 },
+  routeCount: { fontSize: 13, color: '#9CA3AF', marginBottom: 14 },
+
   routeCard: {
-    backgroundColor: 'rgba(255,255,255,0.03)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.06)',
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
+    backgroundColor: '#FFFFFF', borderRadius: 14,
+    padding: 16, marginBottom: 14,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
-  routeHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 },
-  routeTitle: { color: '#fff', fontSize: 18, fontWeight: '700', flex: 1, marginRight: 10 },
-  badge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 },
-  badgeText: { color: '#fff', fontSize: 11, fontWeight: '800', textTransform: 'uppercase' },
-  
-  statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
-  statLabel: { color: '#6b7280', fontSize: 10, fontWeight: '800', letterSpacing: 1 },
-  statValue: { color: '#f3f4f6', fontSize: 14, fontWeight: '600', marginTop: 4 },
-  
-  actionRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  navigateBtn: { backgroundColor: '#2563eb', paddingVertical: 14, borderRadius: 10, alignItems: 'center' },
-  navigateBtnText: { color: '#fff', fontWeight: '800', fontSize: 15 },
-  shareBtn: { backgroundColor: 'rgba(255,255,255,0.1)', paddingVertical: 14, paddingHorizontal: 20, borderRadius: 10, alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' },
-  shareBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
-  
-  emptyState: { padding: 30, alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: 16, marginTop: 20 },
-  emptyText: { color: '#9ca3af', textAlign: 'center', lineHeight: 22, marginBottom: 16 },
-  emptyBtn: { backgroundColor: '#ef4444', paddingHorizontal: 20, paddingVertical: 12, borderRadius: 10 },
-  emptyBtnText: { color: '#fff', fontWeight: '800' }
+  routeCardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 },
+  routeCardTitle: { fontSize: 15, fontWeight: '700', color: '#1C1C1E', flex: 1, marginRight: 8 },
+  routeBadge: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: 20 },
+  routeBadgeText: { fontSize: 11, fontWeight: '600' },
+
+  routeStats: { flexDirection: 'row', gap: 20, marginBottom: 16 },
+  routeStatItem: {},
+  routeStatLabel: { fontSize: 10, color: '#9CA3AF', fontWeight: '600', letterSpacing: 0.5, marginBottom: 2 },
+  routeStatValue: { fontSize: 14, fontWeight: '600', color: '#1C1C1E' },
+
+  routeActions: { flexDirection: 'row', gap: 10 },
+  navigateBtn: {
+    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#2D7D78', borderRadius: 10, paddingVertical: 12, gap: 6,
+  },
+  navigateBtnText: { color: '#fff', fontWeight: '600', fontSize: 14 },
+  shareBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#EDF6F5', borderRadius: 10, paddingVertical: 12, paddingHorizontal: 16, gap: 6,
+  },
+  shareBtnText: { color: '#2D7D78', fontWeight: '600', fontSize: 14 },
+
+  emptyRoutes: { alignItems: 'center', paddingVertical: 32, gap: 10 },
+  emptyRoutesText: { fontSize: 14, color: '#9CA3AF' },
+  recordBtn: { backgroundColor: '#2D7D78', borderRadius: 10, paddingVertical: 10, paddingHorizontal: 20, marginTop: 4 },
+  recordBtnText: { color: '#fff', fontWeight: '600', fontSize: 14 },
+
+  comingSoon: { alignItems: 'center', paddingVertical: 48, gap: 12 },
+  comingSoonText: { fontSize: 14, color: '#9CA3AF' },
+
+  bottomCta: {
+    position: 'absolute', bottom: 0, left: 0, right: 0,
+    paddingHorizontal: 20, paddingTop: 12,
+    backgroundColor: '#FFFFFF',
+    borderTopWidth: 1, borderTopColor: '#E5E0D8',
+  },
+  downloadBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#2D7D78', borderRadius: 14, paddingVertical: 16, gap: 8,
+  },
+  downloadBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
 });
