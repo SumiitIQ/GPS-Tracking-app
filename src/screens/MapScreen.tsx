@@ -69,21 +69,25 @@ const getArcGISHtml = (apiKey: string) => `
           ui: { components: [] }
         });
 
+        // Layer with slight elevation offset so path never clips under 3D mountains
         const trackingLayer = new GraphicsLayer({
-          elevationInfo: { mode: "on-the-ground" }
+          elevationInfo: { mode: "relative-to-ground", offset: 2 }
         });
         map.add(trackingLayer);
 
         let markerGraphic = null;
+        let startMarkerGraphic = null;
         let routeGraphicOuter = null;
         let routeGraphicInner = null;
         let routePaths = [];
+        let lastAddedLat = null;
+        let lastAddedLng = null;
         
-        // ── Smooth Interpolation Logic ──
+        // ── Smooth Marker Interpolation ──
         let currentPos = null;
         let targetPos = null;
         let animStartTime = 0;
-        let animDuration = 500;
+        let animDuration = 400;
 
         function animateMarker(timestamp) {
           if (!currentPos || !targetPos || !markerGraphic) {
@@ -95,39 +99,74 @@ const getArcGISHtml = (apiKey: string) => `
           const elapsed = timestamp - animStartTime;
           let progress = Math.min(elapsed / animDuration, 1);
           
-          // Linear interpolation for constant smooth gliding
           const lat = currentPos.lat + (targetPos.lat - currentPos.lat) * progress;
           const lng = currentPos.lng + (targetPos.lng - currentPos.lng) * progress;
           
-          markerGraphic.geometry = new Point({ longitude: lng, latitude: lat });
+          markerGraphic.geometry = new Point({ longitude: lng, latitude: lat, spatialReference: { wkid: 4326 } });
           
           if (progress < 1) {
             requestAnimationFrame(animateMarker);
           } else {
             currentPos = targetPos;
-            animStartTime = 0; // Wait for next update
+            animStartTime = 0;
             requestAnimationFrame(animateMarker);
           }
         }
         
         requestAnimationFrame(animateMarker);
 
+        // Calculate distance between two lat/lng in meters
+        function distBetween(lat1, lon1, lat2, lon2) {
+          var R = 6371000;
+          var rad = Math.PI / 180;
+          var dLat = (lat2 - lat1) * rad;
+          var dLon = (lon2 - lon1) * rad;
+          var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(lat1 * rad) * Math.cos(lat2 * rad) *
+                  Math.sin(dLon/2) * Math.sin(dLon/2);
+          return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
         window.clearTrack = function() {
           routePaths = [];
+          lastAddedLat = null;
+          lastAddedLng = null;
           if (routeGraphicOuter) { trackingLayer.remove(routeGraphicOuter); routeGraphicOuter = null; }
           if (routeGraphicInner) { trackingLayer.remove(routeGraphicInner); routeGraphicInner = null; }
+          if (startMarkerGraphic) { trackingLayer.remove(startMarkerGraphic); startMarkerGraphic = null; }
         };
 
-        // Global function callable from React Native
+        window.startTrackingRoute = function(lat, lng) {
+          window.clearTrack();
+          routePaths = [[lng, lat]];
+          lastAddedLat = lat;
+          lastAddedLng = lng;
+          
+          // Place vivid green Start Trailhead pin
+          startMarkerGraphic = new Graphic({
+            geometry: new Point({ longitude: lng, latitude: lat, spatialReference: { wkid: 4326 } }),
+            symbol: new SimpleMarkerSymbol({
+              style: "circle",
+              color: [34, 197, 94, 1], // Emerald Green
+              size: "14px",
+              outline: { color: [255, 255, 255, 1], width: 3 }
+            })
+          });
+          trackingLayer.add(startMarkerGraphic);
+        };
+
+        // Global function called from React Native
         window.updateLocation = function(lat, lng, heading, follow, isTracking) {
-          const point = new Point({ longitude: lng, latitude: lat });
+          const point = new Point({ longitude: lng, latitude: lat, spatialReference: { wkid: 4326 } });
           
           if (!markerGraphic) {
             markerGraphic = new Graphic({
               geometry: point,
               symbol: new SimpleMarkerSymbol({
-                style: "circle", color: [59, 130, 246, 1], size: "18px",
-                outline: { color: [255, 255, 255, 1], width: 3 }
+                style: "circle",
+                color: [0, 122, 255, 1], // Vivid Royal Electric Blue
+                size: "20px",
+                outline: { color: [255, 255, 255, 1], width: 3.5 }
               })
             });
             trackingLayer.add(markerGraphic);
@@ -140,34 +179,80 @@ const getArcGISHtml = (apiKey: string) => `
           }
 
           if (isTracking) {
-            routePaths.push([lng, lat]);
-            if (routePaths.length >= 2) {
-              if (!routeGraphicInner) {
-                const polyline = new Polyline({ paths: [routePaths] });
-                
-                const outerSymbol = new SimpleLineSymbol({ color: [0, 85, 170, 0.9], width: 8, join: "round", cap: "round" });
-                routeGraphicOuter = new Graphic({ geometry: polyline, symbol: outerSymbol });
-                
-                const innerSymbol = new SimpleLineSymbol({ color: [45, 125, 120, 1], width: 4, join: "round", cap: "round" });
-                routeGraphicInner = new Graphic({ geometry: polyline, symbol: innerSymbol });
-                
-                trackingLayer.addMany([routeGraphicOuter, routeGraphicInner]); 
-              } else {
-                const geom = routeGraphicInner.geometry.clone();
-                geom.paths[0] = routePaths;
-                routeGraphicOuter.geometry = geom;
-                routeGraphicInner.geometry = geom;
+            var shouldAddPoint = false;
+            if (routePaths.length === 0) {
+              shouldAddPoint = true;
+            } else if (lastAddedLat !== null && lastAddedLng !== null) {
+              var d = distBetween(lastAddedLat, lastAddedLng, lat, lng);
+              if (d >= 2.0) { // Clean 2 meter filter prevents jitter/knots
+                shouldAddPoint = true;
+              }
+            } else {
+              shouldAddPoint = true;
+            }
+
+            if (shouldAddPoint) {
+              routePaths.push([lng, lat]);
+              lastAddedLat = lat;
+              lastAddedLng = lng;
+
+              // Ensure start pin exists
+              if (!startMarkerGraphic && routePaths.length >= 1) {
+                startMarkerGraphic = new Graphic({
+                  geometry: new Point({ longitude: routePaths[0][0], latitude: routePaths[0][1], spatialReference: { wkid: 4326 } }),
+                  symbol: new SimpleMarkerSymbol({
+                    style: "circle",
+                    color: [34, 197, 94, 1],
+                    size: "14px",
+                    outline: { color: [255, 255, 255, 1], width: 3 }
+                  })
+                });
+                trackingLayer.add(startMarkerGraphic);
+              }
+
+              // Draw or update the path polyline
+              if (routePaths.length >= 2) {
+                const newPolyline = new Polyline({
+                  paths: [routePaths],
+                  spatialReference: { wkid: 4326 }
+                });
+
+                if (!routeGraphicInner) {
+                  // Outer glowing electric blue halo
+                  const outerSymbol = new SimpleLineSymbol({
+                    color: [0, 102, 255, 0.45],
+                    width: 9,
+                    join: "round",
+                    cap: "round"
+                  });
+                  routeGraphicOuter = new Graphic({ geometry: newPolyline, symbol: outerSymbol });
+                  
+                  // Inner solid electric blue core line
+                  const innerSymbol = new SimpleLineSymbol({
+                    color: [0, 153, 255, 1],
+                    width: 4.5,
+                    join: "round",
+                    cap: "round"
+                  });
+                  routeGraphicInner = new Graphic({ geometry: newPolyline, symbol: innerSymbol });
+                  
+                  trackingLayer.addMany([routeGraphicOuter, routeGraphicInner]); 
+                } else {
+                  // Assign new Polyline instances to trigger immediate re-draw
+                  routeGraphicOuter.geometry = newPolyline;
+                  routeGraphicInner.geometry = newPolyline;
+                }
               }
             }
           }
           
           if (follow) {
-            view.goTo({ target: point, zoom: 19, tilt: 45, heading: heading || 0 }, { duration: 500 });
+            view.goTo({ target: point, zoom: 19, tilt: 45, heading: heading || 0 }, { duration: 400 });
           }
         };
         
         window.centerMap = function(lat, lng, heading) {
-          const point = new Point({ longitude: lng, latitude: lat });
+          const point = new Point({ longitude: lng, latitude: lat, spatialReference: { wkid: 4326 } });
           view.goTo({ target: point, zoom: 19, tilt: 45, heading: heading || 0 }, { duration: 500 });
         };
       });
@@ -357,9 +442,11 @@ export default function MapScreen() {
       const now = loc.timestamp || Date.now();
       if (lastRecordedPos.current) {
         const dist = getDistanceMeters(lastRecordedPos.current.lat, lastRecordedPos.current.lng, latitude, longitude);
-        setTotalDistance(prev => prev + dist);
-        lastRecordedPos.current = { lat: latitude, lng: longitude, ts: now };
-        trackPoints.current.push({ lat: latitude, lng: longitude, timestamp: now, elevation: loc.coords.altitude || 0 });
+        if (dist >= MIN_DISTANCE_TO_RECORD_M) {
+          setTotalDistance(prev => prev + dist);
+          lastRecordedPos.current = { lat: latitude, lng: longitude, ts: now };
+          trackPoints.current.push({ lat: latitude, lng: longitude, timestamp: now, elevation: loc.coords.altitude || 0 });
+        }
       } else {
         lastRecordedPos.current = { lat: latitude, lng: longitude, ts: now };
         trackPoints.current.push({ lat: latitude, lng: longitude, timestamp: now, elevation: loc.coords.altitude || 0 });
@@ -403,6 +490,9 @@ export default function MapScreen() {
             });
             lastRecordedPos.current = { lat: loc.coords.latitude, lng: loc.coords.longitude, ts: now };
           }
+          if (webViewRef.current) {
+            webViewRef.current.injectJavaScript(`if(window.startTrackingRoute) window.startTrackingRoute(${loc.coords.latitude}, ${loc.coords.longitude}); true;`);
+          }
         }
       }).catch(err => console.warn(err));
     }
@@ -415,7 +505,13 @@ export default function MapScreen() {
     timerRef.current = setInterval(() => setElapsedSeconds(prev => prev + 1), 1000);
     
     if (webViewRef.current) {
-      webViewRef.current.injectJavaScript('if(window.clearTrack) window.clearTrack(); true;');
+      const startLat = currentPos.current?.lat;
+      const startLng = currentPos.current?.lng;
+      if (startLat && startLng) {
+        webViewRef.current.injectJavaScript(`if(window.startTrackingRoute) window.startTrackingRoute(${startLat}, ${startLng}); true;`);
+      } else {
+        webViewRef.current.injectJavaScript('if(window.clearTrack) window.clearTrack(); true;');
+      }
     }
 
     if (Platform.OS === 'android' && Platform.Version >= 33) {
